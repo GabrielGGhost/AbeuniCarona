@@ -3,22 +3,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../Constants/cRoutes.dart';
 import '../../RouteGenerator.dart';
-import 'Home.dart';
+import 'Login.dart';
 
 
 void main() {
-  MaterialApp(
-    home: Home(),
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  theme: ThemeData(
-  primaryColor: Color(0xff075E54),
-  accentColor: Color(0xff25D366)
-  ),
-  initialRoute: cRoutes.INITIAL_ROUTE,
-  onGenerateRoute: RouteGenerator.generateRoute,
-  debugShowCheckedModeBanner: false,
-  );
+  runApp(MaterialApp(
+      home: Login(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    theme: ThemeData(
+    primaryColor: Color(0xff075E54),
+    accentColor: Color(0xff25D366)
+    ),
+    initialRoute: cRoutes.INITIAL_ROUTE,
+    onGenerateRoute: RouteGenerator.generateRoute,
+    debugShowCheckedModeBanner: false,
+    ));
 }
 
 class MyApp extends StatelessWidget {
