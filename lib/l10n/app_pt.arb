@@ -1,3 +1,68 @@
 {
+    "acessoEmailSenhaDesativado" : "Acesso com email e senha desativado",
+    "ajuda" : "Ajuda",
+    "aparelhosConectados" : "Aparelhos Conectados",
+    "armazenamentoDados" : "Armazenamento e Dados",
 
+    "cadastro" : "Cadastro",
+    "cadastrarSe" : "Cadastrar-se",
+    "cadastroNaoEncontrado" : "Cadastro não encontrado",
+    "cadastroDesativado" : "Cadastro desativado",
+    "camera" : "Câmera",
+    "centralDeAjudaFaleConoscoPoliticaDePrivacidade" : "Central de ajuda, fale conosco, política de privacidade",
+    "chamadas" : "Chamadas",
+    "conta" : "Conta",
+    "contatos" : "Contatos",
+    "configuracoes" : "Configurações",
+    "conversas" : "Conversas",
+    "convidaUmAmigo" : "Convidar um amigo",
+
+
+    "email" : "E-mail",
+    "emailInvalido" : "E-mail inválido",
+    "emailJaEmUso" : "E-mail já em uso",
+    "emailValidoNecessario" : "Um E-mail válido é necessário",
+    "entrar" : "Entrar",
+    "erroDesconhecido" : "Erro desconhecido",
+    "erroNoServidorTenteNovamenteMaisTarde" : "Erro no servidor. Tente Novamente Mais Tarde",
+    "esseNaoESeuNome" : "Esse não é seu nome de usuário nem seu PIN. Esse nome será visível para seus contatos do WhatApp",
+    "excessoTentativas" : "Excesso de tentativas. Tente novamente mais tarde",
+
+
+    "mensagensFavoritas" : "Mensagens Favoritas",
+    "mensagensGruposChamadas" : "Mensagens, grupos, chamadas",
+
+    "naoPossuiContaCadastrese": "Não Possui Conta? Cadastre-se!",
+    "nome" : "Nome",
+    "nomeNecessarioParaCadastro" : "O nome é necessário para o cadastro",
+    "novaTransmissao" : "Nova Transmissão",
+    "novoGrupo" : "Novo Grupo",
+    "notificacoes" : "Notificações",
+
+
+    "ok" : "Ok",
+
+
+    "pagamentos" : "Pagamentos",
+    "perfil": "Perfil",
+    "privacidadeContaMudarNumero" : "Privacidade, segurança, mudar número",
+
+
+    "rotaNaoEncontrada" : "Rota não encontrada",
+
+
+    "sair" : "Sair",
+    "senha" : "Senha",
+    "senhaInvalida" : "Senha inválida",
+    "senhaDeveTerAoMenos7Caracteres" : "A senha deve ter ao menos 7 caracteres!",
+    "status": "Status",
+
+    "temasPapelDeParedeHistoricoDeConversas" : "Temas, papel de parede, historico de conversas",
+
+
+    "usoDeRedeDownloadAutomatico" : "Uso de rede, download automático",
+    "usuarioCadastradoComSucesso" : "Usuário cadastrado com sucesso!",
+
+
+    "whatsApp" : "WhatsApp"
 }
