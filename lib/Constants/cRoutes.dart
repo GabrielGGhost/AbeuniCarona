@@ -6,5 +6,5 @@ class cRoutes {
   static const CONFIGURATIONS = "configurations";
   static const VEHICLES = "vehicles";
   static const VEHICLES_REGISTER = "vehiclesRegister";
-
+  static const EVENTS = "events";
 }

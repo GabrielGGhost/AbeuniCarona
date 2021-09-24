@@ -90,6 +90,23 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 ),
                 ListTile(
                   title: Text(
+                    "Eventos",
+                    style: TextStyle(
+                        fontSize: 15
+                    ),
+                  ),
+                  leading: Icon(Icons.car_rental),
+                  onTap: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.EVENTS
+                    );
+                  },
+                  subtitle: Text("Cadastre seus veículos para usar em suas viagens"),
+                  horizontalTitleGap: 1,
+                ),
+                ListTile(
+                  title: Text(
                     "Histórico de viagens",
                     style: TextStyle(
                         fontSize: 15

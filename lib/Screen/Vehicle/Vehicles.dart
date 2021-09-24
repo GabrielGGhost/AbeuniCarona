@@ -34,6 +34,7 @@ class _VechiclesState extends State<Vechicles> {
         backgroundColor: Colors.blueAccent,
         child: Icon(
             Icons.add,
+          color: Colors.white,
         ),
       ),
     );
