@@ -1,7 +1,11 @@
+import 'package:abeuni_carona/Screen/Configurations.dart';
+import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 
 import 'Screen/Login.dart';
+import 'Screen/Vehicle/VehicleRegister.dart';
+import 'Util/Utils.dart';
 
 class RouteGenerator {
 
@@ -15,12 +19,24 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => Login()
         );
+      case cRoutes.CONFIGURATIONS:
+        return MaterialPageRoute(
+            builder: (_) => Configurations()
+        );
+      case cRoutes.VEHICLES:
+        return MaterialPageRoute(
+            builder: (_) => Vechicles()
+        );
+      case cRoutes.VEHICLES_REGISTER:
+        return MaterialPageRoute(
+            builder: (_) => VehicleRegister()
+        );
       default :
         _routeNotFound();
     }
   }
 
   static void _routeNotFound() {
-    //Utils.showToast("Erro ao acessar a tela", Colors.redAccent);
+    Utils.showToast("Erro ao acessar a tela", Colors.redAccent);
   }
 }

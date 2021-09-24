@@ -1,3 +1,4 @@
+import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -26,26 +27,40 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
         title: Text("Abeuni Carona"),
         centerTitle: true,
         actions: [
           Padding(
               padding: EdgeInsets.only(right: 15),
-              child: Icon(Icons.account_circle, size: 35),
+              child: IconButton(
+                  onPressed: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.CONFIGURATIONS
+                    );
+                  },
+                  icon: Icon(Icons.account_circle, size: 35),
+              ),
           )
         ],
         bottom: TabBar(
           controller: _tabController,
           tabs: [
             Tab(
-              text: "Buscar",
+              child: Text(
+                "Buscar\nCarona",
+                textAlign: TextAlign.center,
+              ),
             ),
             Tab(
               text: "Menu",
             ),
             Tab(
-              text: "Minhas",
+              child: Text(
+                  "Minhas\nCarona",
+                  textAlign: TextAlign.center,
+              ),
 
             ),
           ],
@@ -64,7 +79,12 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                     ),
                   ),
                   leading: Icon(Icons.car_rental),
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.VEHICLES
+                    );
+                  },
                   subtitle: Text("Cadastre seus veículos para usar em suas viagens"),
                   horizontalTitleGap: 1,
                 ),
