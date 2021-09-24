@@ -39,13 +39,13 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           controller: _tabController,
           tabs: [
             Tab(
-              text: "Buscar\nCarona",
+              text: "Buscar",
             ),
             Tab(
               text: "Menu",
             ),
             Tab(
-              text: "Minhas\nCaronas",
+              text: "Minhas",
 
             ),
           ],
@@ -87,9 +87,37 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
       body: TabBarView(
         controller: _tabController,
         children: [
+          Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Não há caronas\ndisponíveis para agendar",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              )
+          ),
           Text(""),
-          Text(""),
-          Text(""),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Você não possui\ncaronas para realizar",
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            )
+          )
         ],
       ),
     );
