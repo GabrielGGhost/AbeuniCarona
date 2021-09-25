@@ -1,5 +1,8 @@
+import 'package:abeuni_carona/Styles/MyStyles.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
 
 class VehicleRegister extends StatefulWidget {
   const VehicleRegister({Key? key}) : super(key: key);
@@ -17,11 +20,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Registro de veículo"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
           child: Column(
             children: [
               Padding(
@@ -113,7 +116,20 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                         });
                       },
                     ),
-                    Text("Este carro é meu")
+                    RichText(
+                      text: TextSpan(
+                          text: "Este é meu veículo",
+                          style: TextStyle(
+                              color: myCar! ? Colors.black : Colors.grey
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              setState(() {
+                                myCar = !myCar!;
+                              });
+                            }
+                      ),
+                    )
                   ],
                 )
               ),

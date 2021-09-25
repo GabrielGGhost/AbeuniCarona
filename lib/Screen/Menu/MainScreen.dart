@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
         title: Text("Abeuni Carona"),
         centerTitle: true,
         actions: [

@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/material.dart';
 
 class Events extends StatefulWidget {
@@ -14,20 +15,29 @@ class _EventsState extends State<Events> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Eventos"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(
-              context,
-              cRoutes.EVENT_REGISTER
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                      context,
+                      cRoutes.EVENT_REGISTER
+                  );
+                },
+                child: Icon(Icons.add),
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+              ),
+          )
+
+        ],
+      )
     );
   }
 }

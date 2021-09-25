@@ -1,5 +1,8 @@
 import 'package:abeuni_carona/Entity/EventBase.dart';
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
 
 class EventRegister extends StatefulWidget {
   const EventRegister({Key? key}) : super(key: key);
@@ -15,8 +18,6 @@ class _EventRegisterState extends State<EventRegister> {
   List<DropdownMenuItem<EventBase>>? _dropdownMenuItems;
   List<EventBase> _eventsBase = EventBase.getEventsBase();
   EventBase? _selectedEventBase;
-
-
 
   @override
   void initState() {
@@ -43,11 +44,11 @@ class _EventRegisterState extends State<EventRegister> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cadastro de eventos"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
             child: Column(
               children: [
                 Padding(
@@ -65,9 +66,10 @@ class _EventRegisterState extends State<EventRegister> {
                       Spacer(),
                       IconButton(
                         highlightColor: Colors.blueAccent,
-
                         icon: Icon(Icons.add),
-                        onPressed: () {  },
+                        onPressed: () {
+                          Navigator.pushNamed(context, cRoutes.EVENT_BASE_REGISTER);
+                        },
                       )
                     ],
                   ),
@@ -76,15 +78,7 @@ class _EventRegisterState extends State<EventRegister> {
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
                     keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                        hintText: "Localização",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(radiusBorder!)
-                        )
-                    ),
+                    decoration: textFieldDefaultDecoration("Localização")
                   ),
                 ),
                 Padding(
@@ -120,15 +114,7 @@ class _EventRegisterState extends State<EventRegister> {
                               padding: EdgeInsets.only(top: 5, right: 10),
                               child: TextField(
                                 keyboardType: TextInputType.datetime,
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                    hintText: "Ínicio",
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(radiusBorder!)
-                                    )
-                                ),
+                                decoration: textFieldDefaultDecoration("Início"),
                               ),
                             )
                         ),
@@ -137,16 +123,7 @@ class _EventRegisterState extends State<EventRegister> {
                               padding: EdgeInsets.only(top: 5, left: 10),
                               child: TextField(
                                 keyboardType: TextInputType.datetime,
-
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                    hintText: "Fim",
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(radiusBorder!)
-                                    )
-                                ),
+                                decoration: textFieldDefaultDecoration("Fim")
                               ),
                             )
                         ),
@@ -168,7 +145,7 @@ class _EventRegisterState extends State<EventRegister> {
                         ), Row(
                           children: [
                             Expanded(
-                                child:                             Text(
+                                child: Text(
                                   "Esta é a data que a realização de caronas estará disponível",
                                   style: TextStyle(
                                       color: Colors.grey
@@ -186,16 +163,8 @@ class _EventRegisterState extends State<EventRegister> {
                         child: Padding(
                           padding: EdgeInsets.only(top: 5, right: 10),
                           child: TextField(
-                            keyboardType: TextInputType.datetime,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                hintText: "Ínicio",
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(radiusBorder!)
-                                )
-                            ),
+                              keyboardType: TextInputType.datetime,
+                              decoration: textFieldDefaultDecoration("Início")
                           ),
                         )
                     ),
@@ -204,16 +173,7 @@ class _EventRegisterState extends State<EventRegister> {
                           padding: EdgeInsets.only(top: 5, left: 10),
                           child: TextField(
                             keyboardType: TextInputType.datetime,
-
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                                hintText: "Fim",
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(radiusBorder!)
-                                )
-                            ),
+                            decoration: textFieldDefaultDecoration("Fim")
                           ),
                         )
                     ),
@@ -227,15 +187,7 @@ class _EventRegisterState extends State<EventRegister> {
                         child: TextField(
                           keyboardType: TextInputType.text,
                           maxLines: 5,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                              hintText: "Observações",
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(radiusBorder!)
-                              )
-                          ),
+                          decoration: textFieldDefaultDecoration("Observações")
                         ),
                       ),
                     ),

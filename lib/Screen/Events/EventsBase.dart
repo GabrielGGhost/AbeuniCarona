@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
 
 class EventsBase extends StatefulWidget {
   const EventsBase({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class _EventsBaseState extends State<EventsBase> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
           child: Column(
             children: [
               Padding(

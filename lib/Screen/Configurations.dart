@@ -1,4 +1,7 @@
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
 
 class Configurations extends StatefulWidget {
   const Configurations({Key? key}) : super(key: key);
@@ -15,13 +18,13 @@ class _ConfigurationsState extends State<Configurations> {
         title: Text(
           "Configurações",
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: Container(
         child: Column(
           children: [
             Padding(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
               child: Column(
                 children: [
                   Center(

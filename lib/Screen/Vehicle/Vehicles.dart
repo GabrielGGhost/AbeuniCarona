@@ -1,6 +1,8 @@
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
 
 class Vechicles extends StatefulWidget {
   const Vechicles({Key? key}) : super(key: key);
@@ -15,11 +17,11 @@ class _VechiclesState extends State<Vechicles> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Meus Veículos"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
           child: Container()
         ),
       ),
