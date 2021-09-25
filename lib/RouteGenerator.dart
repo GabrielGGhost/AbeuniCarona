@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Screen/Configurations.dart';
+import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
 import 'package:abeuni_carona/Screen/Events/Events.dart';
 import 'package:abeuni_carona/Screen/Events/EventsBase.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
@@ -37,7 +38,15 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => Events()
         );
-      default :
+      case cRoutes.EVENT_REGISTER:
+        return MaterialPageRoute(
+            builder: (_) => EventRegister()
+        );
+      case cRoutes.EVENT_BASE_REGISTER:
+        return MaterialPageRoute(
+            builder: (_) => EventBaseRegister()
+        );
+      default:
         _routeNotFound();
     }
   }

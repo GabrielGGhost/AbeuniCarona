@@ -1,3 +1,4 @@
+import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter/material.dart';
 
 class Events extends StatefulWidget {
@@ -17,7 +18,12 @@ class _EventsState extends State<Events> {
       ),
       body: SingleChildScrollView(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {  },
+        onPressed: () {
+          Navigator.pushNamed(
+              context,
+              cRoutes.EVENT_REGISTER
+          );
+        },
         child: Icon(Icons.add),
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,

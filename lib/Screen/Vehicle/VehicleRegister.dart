@@ -11,7 +11,7 @@ class VehicleRegister extends StatefulWidget {
 class _VehicleRegisterState extends State<VehicleRegister> {
 
   bool? myCar = false;
-
+  double? radiusBorder = 16;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +35,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32)
+                          borderRadius: BorderRadius.circular(radiusBorder!)
                       )
                   ),
                 ),
@@ -50,7 +50,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32)
+                          borderRadius: BorderRadius.circular(radiusBorder!)
                       )
                   ),
                 ),
@@ -65,7 +65,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32)
+                          borderRadius: BorderRadius.circular(radiusBorder!)
                       )
                   ),
                 ),
@@ -80,7 +80,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32)
+                          borderRadius: BorderRadius.circular(radiusBorder!)
                       )
                   ),
                 ),
@@ -95,7 +95,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(32)
+                          borderRadius: BorderRadius.circular(radiusBorder!)
                       )
                   ),
                 ),
@@ -124,11 +124,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                         backgroundColor: Colors.blue,
                         padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32)
+                            borderRadius: BorderRadius.circular(30)
                         )
                     ),
                     child: Text(
-                      "Registrar esse carro",
+                      "Registrar veículo",
                       style: (
                           TextStyle(
                               color: Colors.white, fontSize: 20
