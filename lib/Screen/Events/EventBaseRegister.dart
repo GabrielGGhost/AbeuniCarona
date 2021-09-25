@@ -12,13 +12,13 @@ class EventBaseRegister extends StatefulWidget {
 
 class _EventBaseRegisterState extends State<EventBaseRegister> {
 
-  bool? _active = false;
+  bool? _active = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastro de evento"),
+        title: Text("Cadastro de evento base"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -38,7 +38,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                 child: TextField(
                     keyboardType: TextInputType.text,
                     maxLines: 5,
-                    decoration: textFieldDefaultDecoration("Nome do evento")
+                    decoration: textFieldDefaultDecoration("Descrição do evento")
                 ),
               ),
               Row(

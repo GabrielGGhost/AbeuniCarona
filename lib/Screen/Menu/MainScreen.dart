@@ -91,19 +91,36 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 ),
                 ListTile(
                   title: Text(
-                    "Eventos",
+                    "Eventos Base",
                     style: TextStyle(
                         fontSize: 15
                     ),
                   ),
-                  leading: Icon(Icons.car_rental),
+                  leading: Icon(Icons.model_training),
+                  onTap: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.EVENT_BASE
+                    );
+                  },
+                  subtitle: Text("Gerencie os eventos ativos."),
+                  horizontalTitleGap: 1,
+                ),
+                ListTile(
+                  title: Text(
+                    "Eventos Ativos",
+                    style: TextStyle(
+                        fontSize: 15
+                    ),
+                  ),
+                  leading: Icon(Icons.stream),
                   onTap: (){
                     Navigator.pushNamed(
                         context,
                         cRoutes.EVENTS
                     );
                   },
-                  subtitle: Text("Cadastre seus veículos para usar em suas viagens"),
+                  subtitle: Text("Gerencie os eventos ativos."),
                   horizontalTitleGap: 1,
                 ),
                 ListTile(
@@ -153,6 +170,28 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   ),
                   textAlign: TextAlign.center,
                 ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                        )
+                    ),
+                    child: Text(
+                      "Registrar uma nova carona",
+                      style: (
+                          TextStyle(
+                              color: Colors.white, fontSize: 20
+                          )
+                      ),
+                    ),
+                    onPressed: (){
+                    },
+                  ),
+                )
               ],
             )
           )

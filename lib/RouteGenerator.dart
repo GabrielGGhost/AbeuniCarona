@@ -1,15 +1,15 @@
 import 'package:abeuni_carona/Screen/Configurations.dart';
 import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
 import 'package:abeuni_carona/Screen/Events/Events.dart';
-import 'package:abeuni_carona/Screen/Events/EventsBase.dart';
+import 'package:abeuni_carona/Screen/Events/EventBase.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
-
 import 'Screen/Events/EventBaseRegister.dart';
 import 'Screen/Login.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
+import 'package:abeuni_carona/Screen/Events/EventBase.dart';
 
 class RouteGenerator {
 
@@ -46,6 +46,10 @@ class RouteGenerator {
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(
             builder: (_) => EventBaseRegister()
+        );
+      case cRoutes.EVENT_BASE:
+        return MaterialPageRoute(
+            builder: (_) => EventBase()
         );
       default:
         _routeNotFound();

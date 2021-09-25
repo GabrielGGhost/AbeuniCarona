@@ -185,7 +185,7 @@ class _EventRegisterState extends State<EventRegister> {
                       child: Padding(
                         padding: EdgeInsets.only(top:20),
                         child: TextField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.multiline,
                           maxLines: 5,
                           decoration: textFieldDefaultDecoration("Observações")
                         ),

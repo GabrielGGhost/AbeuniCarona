@@ -8,5 +8,6 @@ class cRoutes {
   static const VEHICLES_REGISTER = "vehiclesRegister";
   static const EVENTS = "events";
   static const EVENT_REGISTER = "eventRegister";
+  static const EVENT_BASE = "eventBase";
   static const EVENT_BASE_REGISTER = "eventBaseRegister";
 }
