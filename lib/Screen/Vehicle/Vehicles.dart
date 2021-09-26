@@ -122,7 +122,7 @@ class _VechiclesState extends State<Vechicles> {
                         itemCount: _myVehicles!.length,
                         itemBuilder: (_, index){
                           eVehicle vehicle = _myVehicles![index];
-                          return Dismissible(
+                          return  Dismissible(
                               child: Padding(
                                 padding: EdgeInsets.only(bottom: 15),
                                 child: Card(
@@ -420,19 +420,41 @@ class _VechiclesState extends State<Vechicles> {
               ],
             )
           ),
-          floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            Navigator.pushNamed(
-              context,
-              cRoutes.VEHICLES_REGISTER
-            );
-          },
-          backgroundColor: Colors.blueAccent,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child:FloatingActionButton(
+                  onPressed: (){
+                    Utils.showDialogBox("Teste", context);
+                  },
+                  backgroundColor: Colors.blueAccent,
+                  child: Icon(
+                    Icons.filter_alt_sharp,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.zero,
+                  child:FloatingActionButton(
+                    onPressed: (){
+                      Navigator.pushNamed(
+                          context,
+                          cRoutes.VEHICLES_REGISTER
+                      );
+                    },
+                    backgroundColor: Colors.blueAccent,
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+              ),
+
+            ],
           ),
-        ),
       );
     }
   }
