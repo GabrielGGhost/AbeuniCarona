@@ -11,4 +11,6 @@ class cRoutes {
   static const EVENT_BASE = "eventBase";
   static const EVENT_BASE_REGISTER = "eventBaseRegister";
   static const PERMISSION = "permission";
+  static const PERMISSION_MANAGER = "permissionManager";
+
 }

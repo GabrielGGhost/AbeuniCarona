@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Entity/eEventBase.dart';
+import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Screen/Configurations.dart';
 import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
@@ -11,6 +12,7 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'Entity/eEvent.dart';
 import 'Screen/Events/EventBaseRegister.dart';
 import 'Screen/Login.dart';
+import 'Screen/Permission/PermissionManager.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
 import 'package:abeuni_carona/Screen/Events/EventBase.dart';
@@ -58,6 +60,10 @@ class RouteGenerator {
       case cRoutes.PERMISSION:
         return MaterialPageRoute(
             builder: (_) => Permission()
+        );
+      case cRoutes.PERMISSION_MANAGER:
+        return MaterialPageRoute(
+            builder: (_) => PermissionManager(args as eUser)
         );
       default:
         _routeNotFound();

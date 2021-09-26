@@ -6,7 +6,7 @@ class eUser {
 
   eUser(this._idUser, this._userName, this._picturePath);
 
-  static List<eUser> getEvents(){
+  static List<eUser> getUsers(){
     return <eUser> [
       eUser("1", "Fábio Roberto Evangelista", ""),
       eUser("2", "Gabriel Carnelós Seara", ""),

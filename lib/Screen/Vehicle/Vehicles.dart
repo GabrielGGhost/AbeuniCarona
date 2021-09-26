@@ -445,7 +445,7 @@ class _VechiclesState extends State<Vechicles> {
                           cRoutes.VEHICLES_REGISTER
                       );
                     },
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: APP_BAR_BACKGROUND_COLOR,
                     child: Icon(
                       Icons.add,
                       color: Colors.white,
