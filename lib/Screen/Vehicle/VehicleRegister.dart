@@ -19,15 +19,25 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   double? radiusBorder = 16;
   eVehicle? vehicle;
 
+  TextEditingController _signControler = TextEditingController();
+  TextEditingController _colorControler = TextEditingController();
+  TextEditingController _modelControler = TextEditingController();
+  TextEditingController _seatsControler = TextEditingController();
+  TextEditingController _luggageControler = TextEditingController();
   @override
   Widget build(BuildContext context) {
 
     vehicle = widget.vehicle;
-    String? title;
+    String? title = "Registro de veículo";
+    String? textButton = "Registrar veículo";
     if(vehicle != null){
       title = "Alteração de veículo";
-    } else {
-      title = "Registro de veículo";
+      textButton = "Atualizar";
+      _signControler.text = vehicle!.sign;
+      _colorControler.text = vehicle!.color;
+      _modelControler.text = vehicle!.model;
+      _seatsControler.text = vehicle!.seats;
+      _luggageControler.text = vehicle!.luggageSpaces;
     }
 
     return Scaffold(
@@ -43,6 +53,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
+                  controller: _signControler,
                   autofocus: true,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
@@ -59,6 +70,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
+                  controller: _colorControler,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -74,6 +86,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
+                  controller: _modelControler,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -89,6 +102,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
+                  controller: _seatsControler,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -104,6 +118,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
+                  controller: _luggageControler,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -157,7 +172,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                         )
                     ),
                     child: Text(
-                      "Registrar veículo",
+                      textButton,
                       style: (
                           TextStyle(
                               color: Colors.white, fontSize: 20
