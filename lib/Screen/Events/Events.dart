@@ -2,8 +2,10 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
+import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:filter_list/filter_list.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -182,17 +184,38 @@ class _EventsState extends State<Events> {
         children: [
           Padding(
               padding: EdgeInsets.only(bottom: 10),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                      context,
-                      cRoutes.EVENT_REGISTER
-                  );
-                },
-                child: Icon(Icons.add),
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-              ),
+              child: Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child:FloatingActionButton(
+                          onPressed: (){
+                          },
+                          backgroundColor: Colors.blueAccent,
+                          child: Icon(
+                            Icons.filter_alt_sharp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      FloatingActionButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context,
+                              cRoutes.EVENT_REGISTER
+                          );
+                        },
+                        child: Icon(Icons.add),
+                        backgroundColor: Colors.blueAccent,
+                        foregroundColor: Colors.white,
+                      ),
+                    ],
+                  ),
+                ],
+              )
           )
 
         ],
