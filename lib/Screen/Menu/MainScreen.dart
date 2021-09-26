@@ -135,6 +135,23 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   subtitle: Text("Registro de suas viagens"),
                   horizontalTitleGap: 1,
                 ),
+                ListTile(
+                  title: Text(
+                    "Permissões",
+                    style: TextStyle(
+                        fontSize: 15
+                    ),
+                  ),
+                  leading: Icon(Icons.vpn_key_outlined),
+                  onTap: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.PERMISSION
+                    );
+                  },
+                  subtitle: Text("Gerencie as permissões dos usuários."),
+                  horizontalTitleGap: 1,
+                ),
               ],
             )
         ),

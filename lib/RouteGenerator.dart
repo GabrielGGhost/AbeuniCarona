@@ -4,6 +4,7 @@ import 'package:abeuni_carona/Screen/Configurations.dart';
 import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
 import 'package:abeuni_carona/Screen/Events/Events.dart';
 import 'package:abeuni_carona/Screen/Events/EventBase.dart';
+import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
@@ -53,6 +54,10 @@ class RouteGenerator {
       case cRoutes.EVENT_BASE:
         return MaterialPageRoute(
             builder: (_) => EventBase()
+        );
+      case cRoutes.PERMISSION:
+        return MaterialPageRoute(
+            builder: (_) => Permission()
         );
       default:
         _routeNotFound();
