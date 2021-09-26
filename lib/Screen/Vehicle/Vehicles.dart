@@ -419,7 +419,7 @@ class _VechiclesState extends State<Vechicles> {
                 ),
               ],
             )
-      ),
+          ),
           floatingActionButton: FloatingActionButton(
           onPressed: (){
             Navigator.pushNamed(

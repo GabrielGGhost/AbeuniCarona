@@ -31,7 +31,7 @@ class _EventRegisterState extends State<EventRegister> {
       items.add(
         DropdownMenuItem(
           value: event,
-          child: Text(event.eventName!),
+          child: Text(event.eventName),
         ),
       );
     }
