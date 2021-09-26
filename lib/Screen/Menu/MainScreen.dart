@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   onTap: (){
                     Navigator.pushNamed(
                         context,
-                        cRoutes.REGISTER_RIDE
+                        cRoutes.REGISTER_RIDE1
                     );
                   },
                   subtitle: Text("Programe uma carona."),

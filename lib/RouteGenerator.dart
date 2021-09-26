@@ -7,6 +7,7 @@ import 'package:abeuni_carona/Screen/Events/Events.dart';
 import 'package:abeuni_carona/Screen/Events/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_1.dart';
+import 'package:abeuni_carona/Screen/RideRegister/RideRegister_2.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
@@ -14,6 +15,7 @@ import 'Entity/eEvent.dart';
 import 'Screen/Events/EventBaseRegister.dart';
 import 'Screen/Login.dart';
 import 'Screen/Permission/PermissionManager.dart';
+import 'Screen/RideRegister/RideRegister_3.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
 import 'package:abeuni_carona/Screen/Events/EventBase.dart';
@@ -66,9 +68,17 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => PermissionManager(args as eUser)
         );
-      case cRoutes.REGISTER_RIDE:
+      case cRoutes.REGISTER_RIDE1:
         return MaterialPageRoute(
             builder: (_) => RideRegister_1()
+        );
+      case cRoutes.REGISTER_RIDE2:
+        return MaterialPageRoute(
+            builder: (_) => RideRegister_2()
+        );
+      case cRoutes.REGISTER_RIDE3:
+        return MaterialPageRoute(
+            builder: (_) => RideRegister_3()
         );
       default:
         _routeNotFound();

@@ -32,61 +32,7 @@ class _VechiclesState extends State<Vechicles> {
       body:
         _myVehicles != null && _myVehicles!.length > 0 ||
         _myBorrowedVehicles != null && _myBorrowedVehicles!.length > 0
-          ? /*StreamBuilder(
-            stream: null,
-            builder: (_, snapshot) {
-              switch(snapshot.connectionState){
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  return Center(
-                    child: Column(
-                      children: [
-                        CircularProgressIndicator()
-                      ],
-                    ),
-                  );
-                case ConnectionState.active:
-                case ConnectionState.done:
-
-                  QuerySnapshot query = snapshot.data as QuerySnapshot;
-
-                  if(snapshot.hasError){
-                    return Center(
-                      child: Column(
-                        children: [
-                          Text("Erro ao carregar dados")
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Expanded(
-                      child: ListView.builder(
-                          itemCount: query.docs.length,
-                          itemBuilder: (_, index) {
-
-                            List<DocumentSnapshot> messages = query.docs.toList();
-                            DocumentSnapshot item = messages[index];
-
-                            return Align(
-                              child: Padding(
-                                padding: EdgeInsets.all(6),
-                                child: Container(
-                                    padding: EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                                    child: Text(
-                                      "Teste",
-                                      style: TextStyle(fontSize: 18),
-                                    )
-                                ),
-                              ),
-                            );
-                          }),
-                    );
-                  }
-              }
-            },
-          )*/
+          ?
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),

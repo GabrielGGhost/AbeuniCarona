@@ -26,7 +26,7 @@ class _RideRegister_1State extends State<RideRegister_1> {
         title: Text("Cadastro de evento"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
-      body: true ? SingleChildScrollView(
+      body: _events != null && _events.length > 0 ? SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
           child: Column(
@@ -58,6 +58,7 @@ class _RideRegister_1State extends State<RideRegister_1> {
                               onTap: (){
                                 Navigator.pushNamed(
                                   context,
+                                  cRoutes.REGISTER_RIDE2
                                 );
                               },
                               onLongPress: (){
