@@ -38,6 +38,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
       _modelControler.text = vehicle!.model;
       _seatsControler.text = vehicle!.seats;
       _luggageControler.text = vehicle!.luggageSpaces;
+      myCar = vehicle!.myCar;
     }
 
     return Scaffold(

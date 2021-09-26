@@ -302,15 +302,6 @@ class _VechiclesState extends State<Vechicles> {
                                               fontSize: 16
                                           ),
                                         ),
-                                        Spacer(),
-                                        IconButton(
-                                          onPressed: (){},
-                                          icon: Icon(Icons.edit),
-                                          color: Colors.grey,
-                                          constraints: BoxConstraints(),
-                                          splashRadius: 20,
-                                          padding: EdgeInsets.zero,
-                                        )
                                       ],
                                     ),
                                     Row(
