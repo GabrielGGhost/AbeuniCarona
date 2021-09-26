@@ -119,13 +119,9 @@ class _VechiclesState extends State<Vechicles> {
                     _myVehiclesOpened ?
                     ListView.builder(
                         shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
                         itemCount: _myVehicles!.length,
-
                         itemBuilder: (_, index){
-
                           eVehicle vehicle = _myVehicles![index];
-
                           return Dismissible(
                               child: Padding(
                                 padding: EdgeInsets.only(bottom: 15),
@@ -194,7 +190,11 @@ class _VechiclesState extends State<Vechicles> {
                               ),
                               confirmDismiss: (d) async {
                                 if(d == DismissDirection.startToEnd) {
-                                  Navigator.pushNamed(context, cRoutes.VEHICLES_REGISTER);
+                                  Navigator.pushNamed(
+                                      context,
+                                      cRoutes.VEHICLES_REGISTER,
+                                      arguments: vehicle
+                                  );
                                   return false;
                                 } else {
                                   return await showDialog(
@@ -354,7 +354,11 @@ class _VechiclesState extends State<Vechicles> {
                         ),
                           confirmDismiss: (d) async {
                             if(d == DismissDirection.startToEnd) {
-                              Navigator.pushNamed(context, cRoutes.VEHICLES_REGISTER);
+                              Navigator.pushNamed(
+                                  context,
+                                  cRoutes.VEHICLES_REGISTER,
+                                  arguments: vehicle
+                              );
                               return false;
                             } else {
                               return await showDialog(

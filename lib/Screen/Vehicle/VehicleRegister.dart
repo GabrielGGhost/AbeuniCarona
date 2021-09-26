@@ -1,3 +1,4 @@
+import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 
 class VehicleRegister extends StatefulWidget {
-  const VehicleRegister({Key? key}) : super(key: key);
+  eVehicle? vehicle;
+  VehicleRegister(this.vehicle);
 
   @override
   _VehicleRegisterState createState() => _VehicleRegisterState();
@@ -15,11 +17,22 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
   bool? myCar = false;
   double? radiusBorder = 16;
+  eVehicle? vehicle;
+
   @override
   Widget build(BuildContext context) {
+
+    vehicle = widget.vehicle;
+    String? title;
+    if(vehicle != null){
+      title = "Alteração de veículo";
+    } else {
+      title = "Registro de veículo";
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registro de veículo"),
+        title: Text(title),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(

@@ -1,4 +1,4 @@
-import 'package:abeuni_carona/Entity/EventBase.dart';
+import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
@@ -15,9 +15,9 @@ class _EventRegisterState extends State<EventRegister> {
 
   double? radiusBorder = 16;
 
-  List<DropdownMenuItem<EventBase>>? _dropdownMenuItems;
-  List<EventBase> _eventsBase = EventBase.getEventsBase();
-  EventBase? _selectedEventBase;
+  List<DropdownMenuItem<eEventBase>>? _dropdownMenuItems;
+  List<eEventBase> _eventsBase = eEventBase.getEventsBase();
+  eEventBase? _selectedEventBase;
 
   @override
   void initState() {
@@ -25,9 +25,9 @@ class _EventRegisterState extends State<EventRegister> {
     super.initState();
   }
 
-  List<DropdownMenuItem<EventBase>>? buildDropdownMenuItems(List events) {
-    List<DropdownMenuItem<EventBase>>? items = [];
-    for (EventBase event in events) {
+  List<DropdownMenuItem<eEventBase>>? buildDropdownMenuItems(List events) {
+    List<DropdownMenuItem<eEventBase>>? items = [];
+    for (eEventBase event in events) {
       items.add(
         DropdownMenuItem(
           value: event,
@@ -224,7 +224,7 @@ class _EventRegisterState extends State<EventRegister> {
     );
   }
 
-  void _eventChanged(EventBase? value) {
+  void _eventChanged(eEventBase? value) {
     setState(() {
       _selectedEventBase = value;
     });
