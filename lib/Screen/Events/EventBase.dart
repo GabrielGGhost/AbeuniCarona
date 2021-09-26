@@ -14,6 +14,7 @@ class _EventBaseState extends State<EventBase> {
   double? radiusBorder = 16;
   List<eEventBase> _eventBase = eEventBase.getEventsBase();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

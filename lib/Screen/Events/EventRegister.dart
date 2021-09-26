@@ -1,11 +1,16 @@
+import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
+import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class EventRegister extends StatefulWidget {
-  const EventRegister({Key? key}) : super(key: key);
+
+  eEvent? event;
+  EventRegister(this.event);
 
   @override
   _EventRegisterState createState() => _EventRegisterState();
@@ -14,10 +19,19 @@ class EventRegister extends StatefulWidget {
 class _EventRegisterState extends State<EventRegister> {
 
   double? radiusBorder = 16;
+  var maskFormatter = new MaskTextInputFormatter(mask: '##/##/####');
 
   List<DropdownMenuItem<eEventBase>>? _dropdownMenuItems;
   List<eEventBase> _eventsBase = eEventBase.getEventsBase();
+
   eEventBase? _selectedEventBase;
+
+  TextEditingController _locationControler = TextEditingController();
+  TextEditingController _eventStartDate = TextEditingController();
+  TextEditingController _eventEndDate = TextEditingController();
+  TextEditingController _registerStartDate = TextEditingController();
+  TextEditingController _registerEndDate = TextEditingController();
+  TextEditingController _obsEvent = TextEditingController();
 
   @override
   void initState() {
@@ -40,6 +54,18 @@ class _EventRegisterState extends State<EventRegister> {
 
   @override
   Widget build(BuildContext context) {
+
+    eEvent? event = widget.event;
+
+    if(event != null) {
+      _locationControler.text = event.location;
+      _eventStartDate.text = event.dateEventStart;
+      _eventEndDate.text = event.dateEventEnd;
+      _registerStartDate.text = event.dateRegisterStart;
+      _registerEndDate.text = event.dateRegisterEnd;
+      _obsEvent.text = event.obsEvent;
+      _selectedEventBase = _eventsBase[int.parse(event.codBaseEvent)];
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -77,6 +103,7 @@ class _EventRegisterState extends State<EventRegister> {
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
+                    controller: _locationControler,
                     keyboardType: TextInputType.text,
                     decoration: textFieldDefaultDecoration("Localização")
                   ),
@@ -88,7 +115,7 @@ class _EventRegisterState extends State<EventRegister> {
                         Row(
                           children: [
                             Text(
-                                "Data do evento",
+                              "Data do evento",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold
                               ),
@@ -113,7 +140,9 @@ class _EventRegisterState extends State<EventRegister> {
                             child: Padding(
                               padding: EdgeInsets.only(top: 5, right: 10),
                               child: TextField(
-                                keyboardType: TextInputType.datetime,
+                                controller: _eventStartDate,
+                                inputFormatters: [maskFormatter],
+                                keyboardType: TextInputType.number,
                                 decoration: textFieldDefaultDecoration("Início"),
                               ),
                             )
@@ -122,7 +151,9 @@ class _EventRegisterState extends State<EventRegister> {
                             child: Padding(
                               padding: EdgeInsets.only(top: 5, left: 10),
                               child: TextField(
-                                keyboardType: TextInputType.datetime,
+                                controller: _eventEndDate,
+                                  inputFormatters: [maskFormatter],
+                                  keyboardType: TextInputType.number,
                                 decoration: textFieldDefaultDecoration("Fim")
                               ),
                             )
@@ -163,7 +194,9 @@ class _EventRegisterState extends State<EventRegister> {
                         child: Padding(
                           padding: EdgeInsets.only(top: 5, right: 10),
                           child: TextField(
-                              keyboardType: TextInputType.datetime,
+                              controller: _registerStartDate,
+                              inputFormatters: [maskFormatter],
+                              keyboardType: TextInputType.number,
                               decoration: textFieldDefaultDecoration("Início")
                           ),
                         )
@@ -172,7 +205,9 @@ class _EventRegisterState extends State<EventRegister> {
                         child: Padding(
                           padding: EdgeInsets.only(top: 5, left: 10),
                           child: TextField(
-                            keyboardType: TextInputType.datetime,
+                            controller: _registerEndDate,
+                              inputFormatters: [maskFormatter],
+                              keyboardType: TextInputType.number,
                             decoration: textFieldDefaultDecoration("Fim")
                           ),
                         )
@@ -185,6 +220,7 @@ class _EventRegisterState extends State<EventRegister> {
                       child: Padding(
                         padding: EdgeInsets.only(top:20),
                         child: TextField(
+                          controller: _obsEvent,
                           keyboardType: TextInputType.multiline,
                           maxLines: 5,
                           decoration: textFieldDefaultDecoration("Observações")
@@ -213,7 +249,8 @@ class _EventRegisterState extends State<EventRegister> {
                       ),
                     ),
                     onPressed: (){
-
+                      Utils.showToast("Sucesso ao registrar novo evento.", Colors.green);
+                      Navigator.pop(context);
                     },
                   ),
                 ),

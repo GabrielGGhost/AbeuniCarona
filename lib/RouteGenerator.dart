@@ -7,6 +7,7 @@ import 'package:abeuni_carona/Screen/Events/EventBase.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'Entity/eEvent.dart';
 import 'Screen/Events/EventBaseRegister.dart';
 import 'Screen/Login.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
@@ -43,7 +44,7 @@ class RouteGenerator {
         );
       case cRoutes.EVENT_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => EventRegister()
+            builder: (_) => EventRegister(args as eEvent)
         );
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(
