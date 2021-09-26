@@ -1,10 +1,13 @@
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class EventBaseRegister extends StatefulWidget {
-  const EventBaseRegister({Key? key}) : super(key: key);
+
+  eEventBase? eventBase;
+  EventBaseRegister(this.eventBase);
 
   @override
   _EventBaseRegisterState createState() => _EventBaseRegisterState();
@@ -13,12 +16,28 @@ class EventBaseRegister extends StatefulWidget {
 class _EventBaseRegisterState extends State<EventBaseRegister> {
 
   bool? _active = true;
+  TextEditingController _eventName = TextEditingController();
+  TextEditingController _obsEvent = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    eEventBase? eventBase = widget.eventBase;
+
+    String title = "Cadastro de evento base";
+    String buttonText = "Registrar evento base";
+
+    if(eventBase != null){
+      _eventName.text = eventBase.eventName;
+      _obsEvent.text = eventBase.obsEvent;
+      _active = eventBase.active;
+      title = "Alteração de evento base";
+      buttonText = "Atualizar";
+    }
+
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastro de evento base"),
+        title: Text(title),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -29,6 +48,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
+                      controller: _eventName,
                       keyboardType: TextInputType.text,
                       decoration: textFieldDefaultDecoration("Nome do evento")
                   ),
@@ -36,6 +56,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
+                    controller: _obsEvent,
                     keyboardType: TextInputType.text,
                     maxLines: 5,
                     decoration: textFieldDefaultDecoration("Descrição do evento")
@@ -86,7 +107,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                       )
                   ),
                   child: Text(
-                    "Registrar evento base",
+                    buttonText,
                     style: (
                         TextStyle(
                             color: Colors.white, fontSize: 20

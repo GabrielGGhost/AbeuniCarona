@@ -1,3 +1,4 @@
+import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Screen/Configurations.dart';
 import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
@@ -46,7 +47,7 @@ class RouteGenerator {
         );
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => EventBaseRegister()
+            builder: (_) => EventBaseRegister(args as eEventBase)
         );
       case cRoutes.EVENT_BASE:
         return MaterialPageRoute(

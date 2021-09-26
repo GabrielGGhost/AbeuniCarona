@@ -5,8 +5,6 @@ import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 
 class EventBase extends StatefulWidget {
-  const EventBase({Key? key}) : super(key: key);
-
   @override
   _EventBaseState createState() => _EventBaseState();
 }
