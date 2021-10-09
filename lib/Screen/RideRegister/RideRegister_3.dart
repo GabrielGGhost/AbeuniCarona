@@ -1,7 +1,10 @@
+import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
+
+import 'RideRegister_4.dart';
 
 class RideRegister_3 extends StatefulWidget {
   const RideRegister_3({Key? key}) : super(key: key);
@@ -133,7 +136,10 @@ class _RideRegister_3State extends State<RideRegister_3> {
             padding: EdgeInsets.zero,
             child:FloatingActionButton(
               onPressed: (){
-
+                Navigator.pushNamed(
+                    context,
+                    cRoutes.REGISTER_RIDE4
+                );
               },
               backgroundColor: APP_BAR_BACKGROUND_COLOR,
               child: Icon(
