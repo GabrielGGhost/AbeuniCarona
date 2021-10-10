@@ -160,60 +160,6 @@ class _EventRegisterState extends State<EventRegister> {
                         ),
                   ],
                 ),
-                Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Data disponível para carona",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ],
-                        ), Row(
-                          children: [
-                            Expanded(
-                                child: Text(
-                                  "Esta é a data que a realização de caronas estará disponível",
-                                  style: TextStyle(
-                                      color: Colors.grey
-                                  ),
-                                ),
-                            )
-                          ],
-                        ),
-                      ],
-                    )
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 5, right: 10),
-                          child: TextField(
-                              controller: _registerStartDate,
-                              inputFormatters: [maskFormatter],
-                              keyboardType: TextInputType.number,
-                              decoration: textFieldDefaultDecoration("Início")
-                          ),
-                        )
-                    ),
-                    Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 5, left: 10),
-                          child: TextField(
-                            controller: _registerEndDate,
-                              inputFormatters: [maskFormatter],
-                              keyboardType: TextInputType.number,
-                            decoration: textFieldDefaultDecoration("Fim")
-                          ),
-                        )
-                    ),
-                  ],
-                ),
                 Row(
                   children: [
                     Expanded(

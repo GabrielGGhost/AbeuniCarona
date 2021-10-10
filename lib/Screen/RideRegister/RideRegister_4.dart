@@ -2,6 +2,8 @@ import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class RideRegister_4 extends StatefulWidget {
   const RideRegister_4({Key? key}) : super(key: key);
@@ -11,6 +13,10 @@ class RideRegister_4 extends StatefulWidget {
 }
 
 class _RideRegister_4State extends State<RideRegister_4> {
+
+  var timeFormat = new MaskTextInputFormatter(mask: 'HH:mm');
+  var dateFormat = new MaskTextInputFormatter(mask: 'dd/MM/yyyy');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +72,147 @@ class _RideRegister_4State extends State<RideRegister_4> {
                     ),
                   ),
                 ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 20, right: 10, bottom: 10),
+                              child: Text(
+                                "Data de saída",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: null,
+                                keyboardType: TextInputType.datetime,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [dateFormat],
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(cStyles.RADIUS_BORDER_TEXT_FIELD)
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                    Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 20, right: 10, bottom: 10),
+                              child: Text(
+                                "Horário de saída",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: null,
+                                keyboardType: TextInputType.datetime,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [timeFormat],
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(cStyles.RADIUS_BORDER_TEXT_FIELD)
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                  ],
+                ),
+                Row (
+                  children: [
+                    Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 20, right: 10, bottom: 10),
+                              child: Text(
+                                "Data de retorno",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: null,
+                                keyboardType: TextInputType.datetime,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [dateFormat],
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(cStyles.RADIUS_BORDER_TEXT_FIELD)
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                    Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 20, right: 10, bottom: 10),
+                              child: Text(
+                                "Horário de retorno",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: null,
+                                keyboardType: TextInputType.datetime,
+                                textAlign: TextAlign.center,
+                                inputFormatters: [timeFormat],
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(cStyles.RADIUS_BORDER_TEXT_FIELD)
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                  ],
+                )
+
               ],
             ),
           ),
