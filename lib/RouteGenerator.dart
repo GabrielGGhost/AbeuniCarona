@@ -17,6 +17,7 @@ import 'Screen/Login.dart';
 import 'Screen/Permission/PermissionManager.dart';
 import 'Screen/RideRegister/RideRegister_3.dart';
 import 'Screen/RideRegister/RideRegister_4.dart';
+import 'Screen/RideRegister/RideRegister_5.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
 import 'package:abeuni_carona/Screen/Events/EventBase.dart';
@@ -84,6 +85,10 @@ class RouteGenerator {
       case cRoutes.REGISTER_RIDE4:
         return MaterialPageRoute(
             builder: (_) => RideRegister_4()
+        );
+      case cRoutes.REGISTER_RIDE5:
+        return MaterialPageRoute(
+            builder: (_) => RideRegister_5()
         );
       default:
         _routeNotFound();

@@ -224,7 +224,10 @@ class _RideRegister_4State extends State<RideRegister_4> {
             padding: EdgeInsets.zero,
             child:FloatingActionButton(
               onPressed: (){
+                Navigator.pushNamed(
+                    context,
 
+                )
               },
               backgroundColor: APP_BAR_BACKGROUND_COLOR,
               child: Icon(
