@@ -169,23 +169,33 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
   void saveVehicle() {
     FirebaseFirestore db = FirebaseFirestore.instance;
+    eVehicle v = eVehicle.register(_signControler.text,
+        _colorControler.text,
+        _modelControler.text,
+        _seatsControler.text,
+        _luggageControler.text);
 
     if(vehicle != null){
+
+      update(v);
+
       Navigator.pop(context);
       Utils.showToast("Atualizado");
     } else {
-      eVehicle vehicle = eVehicle.register(_signControler.text,
-                                            _colorControler.text,
-                                            _modelControler.text,
-                                            _seatsControler.text,
-                                            _luggageControler.text);
 
-
-      insert(vehicle);
+      insert(v);
 
       Navigator.pop(context);
       Utils.showToast("Cadastrado");
     }
+
+  }
+
+  void update(vehicle){
+
+    db.collection(DbData.TABLE_VEHICLE)
+        .doc(_signControler.text)
+        .update(vehicle.toMap());
 
   }
 
