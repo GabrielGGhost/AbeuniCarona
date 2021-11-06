@@ -180,13 +180,13 @@ class _VehicleRegisterState extends State<VehicleRegister> {
       update(v);
 
       Navigator.pop(context);
-      Utils.showToast("Atualizado");
+      Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado);
     } else {
 
       insert(v);
 
       Navigator.pop(context);
-      Utils.showToast("Cadastrado");
+      Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
     }
 
   }

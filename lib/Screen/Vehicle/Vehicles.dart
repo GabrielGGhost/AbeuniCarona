@@ -7,6 +7,7 @@ import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Vechicles extends StatefulWidget {
   const Vechicles({Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class _VechiclesState extends State<Vechicles> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Meus Veículos"),
+        title: Text(AppLocalizations.of(context)!.meusVeiculos),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -69,7 +70,7 @@ class _VechiclesState extends State<Vechicles> {
                   child: Row(
                     children: [
                       Text(
-                        "Veículos próprios",
+                        AppLocalizations.of(context)!.veiculosProprios,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
@@ -99,7 +100,7 @@ class _VechiclesState extends State<Vechicles> {
                       if (snapshot.hasError) {
                         return Center(
                           child: Column(
-                            children: [Text("Erro ao carregar dados")],
+                            children: [Text(AppLocalizations.of(context)!.erroAoCarregarDados)],
                           ),
                         );
                       } else {
@@ -149,7 +150,7 @@ class _VechiclesState extends State<Vechicles> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        "Assentos",
+                                                      AppLocalizations.of(context)!.assentos,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -167,7 +168,7 @@ class _VechiclesState extends State<Vechicles> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        "Malas",
+                                                        AppLocalizations.of(context)!.malas,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -198,16 +199,16 @@ class _VechiclesState extends State<Vechicles> {
                                             builder: (BuildContext context) {
                                               return AlertDialog(
                                                 title:
-                                                    Text("Confirmar exclusão"),
+                                                    Text(AppLocalizations.of(context)!.confirmarExclusao),
                                                 content: Text(
-                                                    "Tem certeza que deseja cancelar este carro?"),
+                                                    AppLocalizations.of(context)!.temCertezaQueDesejaExcluirEsteVeiculo),
                                                 actions: <Widget>[
                                                   TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(context)
                                                               .pop(true),
                                                       child: Text(
-                                                          "Tenho certeza")),
+                                                          AppLocalizations.of(context)!.tenhoCerteza)),
                                                   TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(context)
@@ -216,7 +217,7 @@ class _VechiclesState extends State<Vechicles> {
                                                         padding:
                                                             EdgeInsets.all(5),
                                                         child: Text(
-                                                          "Cancelar",
+                                                          AppLocalizations.of(context)!.cancelar,
                                                           style: TextStyle(
                                                             color: Colors.black,
                                                           ),
@@ -262,7 +263,7 @@ class _VechiclesState extends State<Vechicles> {
                   child: Row(
                     children: [
                       Text(
-                        "Veículos emprestados",
+                        AppLocalizations.of(context)!.veiculosEmprestados,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
@@ -292,7 +293,7 @@ class _VechiclesState extends State<Vechicles> {
                       if (snapshot.hasError) {
                         return Center(
                           child: Column(
-                            children: [Text("Erro ao carregar dados")],
+                            children: [Text(AppLocalizations.of(context)!.erroAoCarregarDados)],
                           ),
                         );
                       } else {
@@ -341,7 +342,7 @@ class _VechiclesState extends State<Vechicles> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "Assentos",
+                                                    AppLocalizations.of(context)!.assentos,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -358,7 +359,7 @@ class _VechiclesState extends State<Vechicles> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "Malas",
+                                                    AppLocalizations.of(context)!.malas,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -387,15 +388,15 @@ class _VechiclesState extends State<Vechicles> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: Text("Confirmar exclusão"),
+                                            title: Text(AppLocalizations.of(context)!.confirmarExclusao),
                                             content: Text(
-                                                "Tem certeza que deseja cancelar este carro?"),
+                                                AppLocalizations.of(context)!.temCertezaQueDesejaExcluirEsteVeiculo),
                                             actions: <Widget>[
                                               TextButton(
                                                   onPressed: () =>
                                                       Navigator.of(context)
                                                           .pop(true),
-                                                  child: Text("Tenho certeza")),
+                                                  child: Text(AppLocalizations.of(context)!.tenhoCerteza)),
                                               TextButton(
                                                   onPressed: () =>
                                                       Navigator.of(context)
@@ -403,7 +404,7 @@ class _VechiclesState extends State<Vechicles> {
                                                   child: Padding(
                                                     padding: EdgeInsets.all(5),
                                                     child: Text(
-                                                      "Cancelar",
+                                                      AppLocalizations.of(context)!.cancelar,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                       ),
