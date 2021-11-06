@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "447032366773",
+    "project_id": "caronaabeuni",
+    "storage_bucket": "caronaabeuni.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447032366773:android:388207a52c518dd68b50fc",
+        "android_client_info": {
+          "package_name": "com.abeunicarona.abeuni_carona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447032366773-q3oq951i7015pksgiji9etfadhnlrel1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDglMOfw4R-pflWcoObumxjzTIvbOttZ-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "447032366773-q3oq951i7015pksgiji9etfadhnlrel1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

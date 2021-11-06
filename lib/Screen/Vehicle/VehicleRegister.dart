@@ -1,9 +1,13 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
+import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VehicleRegister extends StatefulWidget {
   eVehicle? vehicle;
@@ -14,6 +18,7 @@ class VehicleRegister extends StatefulWidget {
 }
 
 class _VehicleRegisterState extends State<VehicleRegister> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   bool? myCar = false;
   double? radiusBorder = 16;
@@ -28,11 +33,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   Widget build(BuildContext context) {
 
     vehicle = widget.vehicle;
-    String? title = "Registro de veículo";
-    String? textButton = "Registrar veículo";
+    String? title = AppLocalizations.of(context)!.registroDeVeiculo;
+    String? textButton = AppLocalizations.of(context)!.registrarVeiculo;;
     if(vehicle != null){
-      title = "Alteração de veículo";
-      textButton = "Atualizar";
+      title = AppLocalizations.of(context)!.alteracaoDeVeiculo;
+      textButton = AppLocalizations.of(context)!.atualizar;
       _signControler.text = vehicle!.sign;
       _colorControler.text = vehicle!.color;
       _modelControler.text = vehicle!.model;
@@ -59,7 +64,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "Placa",
+                      hintText: AppLocalizations.of(context)!.placa,
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -75,7 +80,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "Cor",
+                      hintText: AppLocalizations.of(context)!.cor,
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -91,7 +96,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "Modelo",
+                      hintText: AppLocalizations.of(context)!.modelo,
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -107,7 +112,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "Vagas",
+                      hintText: AppLocalizations.of(context)!.vagas,
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -123,7 +128,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: "Espaço para malas",
+                      hintText: AppLocalizations.of(context)!.espacoParaMalas,
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -147,7 +152,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                     ),
                     RichText(
                       text: TextSpan(
-                          text: "Este é meu veículo",
+                          text: AppLocalizations.of(context)!.esteEMeuVeiculo,
                           style: TextStyle(
                               color: myCar! ? Colors.black : Colors.grey
                           ),
@@ -181,6 +186,8 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       ),
                     ),
                     onPressed: (){
+
+                      saveVehicle();
                     },
                   ),
               )
@@ -189,5 +196,35 @@ class _VehicleRegisterState extends State<VehicleRegister> {
         )
       ),
     );
+  }
+
+  void saveVehicle() {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    if(vehicle != null){
+      Navigator.pop(context);
+      Utils.showToast("Atualizado");
+    } else {
+      eVehicle vehicle = eVehicle.register(_signControler.text,
+                                            _colorControler.text,
+                                            _modelControler.text,
+                                            _seatsControler.text,
+                                            _luggageControler.text,
+                                            myCar);
+
+
+      insert(vehicle);
+
+      Navigator.pop(context);
+      Utils.showToast("Cadastrado");
+    }
+
+  }
+
+  void insert(eVehicle vehicle) {
+
+    db.collection(DbData.TABLE_VEHICLE)
+        .doc(_signControler.text)
+        .set(vehicle.toMap());
   }
 }
