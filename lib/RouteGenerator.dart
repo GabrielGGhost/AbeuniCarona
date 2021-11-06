@@ -9,6 +9,7 @@ import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_1.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_2.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'Entity/eEvent.dart';
@@ -44,7 +45,7 @@ class RouteGenerator {
         );
       case cRoutes.VEHICLES_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => VehicleRegister(args as eVehicle)
+            builder: (_) => VehicleRegister(args as DocumentSnapshot)
         );
       case cRoutes.EVENTS:
         return MaterialPageRoute(

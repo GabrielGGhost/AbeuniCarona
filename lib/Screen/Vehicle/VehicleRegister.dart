@@ -10,7 +10,7 @@ import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VehicleRegister extends StatefulWidget {
-  eVehicle? vehicle;
+  DocumentSnapshot vehicle;
   VehicleRegister(this.vehicle);
 
   @override
@@ -22,7 +22,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
   bool? myCar = false;
   double? radiusBorder = 16;
-  eVehicle? vehicle;
+  DocumentSnapshot? vehicle;
 
   TextEditingController _signControler = TextEditingController();
   TextEditingController _colorControler = TextEditingController();
@@ -38,12 +38,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     if(vehicle != null){
       title = AppLocalizations.of(context)!.alteracaoDeVeiculo;
       textButton = AppLocalizations.of(context)!.atualizar;
-      _signControler.text = vehicle!.sign;
-      _colorControler.text = vehicle!.color;
-      _modelControler.text = vehicle!.model;
-      _seatsControler.text = vehicle!.seats;
-      _luggageControler.text = vehicle!.luggageSpaces;
-      myCar = vehicle!.myCar;
+      _signControler.text = vehicle![DbData.COLUMN_SIGN];
+      _colorControler.text = vehicle![DbData.COLUMN_COLOR];
+      _modelControler.text = vehicle![DbData.COLUMN_MODEL];
+      _seatsControler.text = vehicle![DbData.COLUMN_SEATS];
+      _luggageControler.text = vehicle![DbData.COLUMN_LUGGAGE_SPACES];
     }
 
     return Scaffold(
@@ -138,36 +137,6 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      checkColor: Colors.white,
-                      value: myCar,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          myCar = !myCar!;
-                        });
-                      },
-                    ),
-                    RichText(
-                      text: TextSpan(
-                          text: AppLocalizations.of(context)!.esteEMeuVeiculo,
-                          style: TextStyle(
-                              color: myCar! ? Colors.black : Colors.grey
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              setState(() {
-                                myCar = !myCar!;
-                              });
-                            }
-                      ),
-                    )
-                  ],
-                )
-              ),
-              Padding(
                   padding: EdgeInsets.all(20),
                   child: ElevatedButton(
                     style: TextButton.styleFrom(
@@ -209,8 +178,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                                             _colorControler.text,
                                             _modelControler.text,
                                             _seatsControler.text,
-                                            _luggageControler.text,
-                                            myCar);
+                                            _luggageControler.text);
 
 
       insert(vehicle);

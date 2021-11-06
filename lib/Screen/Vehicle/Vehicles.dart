@@ -21,7 +21,7 @@ class _VechiclesState extends State<Vechicles> {
   Future<List<eVehicle>?> _myVehicles = _findAllMyVehicles();
 
   bool _myVehiclesOpened = false;
-  bool _borrowedVehiclesOpened = true;
+  bool _borrowedVehiclesOpened = false;
 
   final _controllerBorrowedVehicles =
       StreamController<QuerySnapshot>.broadcast();
@@ -29,10 +29,13 @@ class _VechiclesState extends State<Vechicles> {
 
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
     final borrowedCars = db.collection(DbData.TABLE_VEHICLE).snapshots();
+    final myCars = db.collection(DbData.TABLE_VEHICLE).snapshots();
 
+    myCars.listen((data) {
+      _controllerMyVehicles.add(data);
+    });
     borrowedCars.listen((data) {
       _controllerBorrowedVehicles.add(data);
-      _controllerMyVehicles.add(data);
     });
   }
 
@@ -100,170 +103,23 @@ class _VechiclesState extends State<Vechicles> {
                           ),
                         );
                       } else {
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: query.docs.length,
-                            itemBuilder: (_, index) {
-                              List<DocumentSnapshot> vechicles =
-                                  query.docs.toList();
+                        return Padding(
+                            padding: EdgeInsets.only(
+                                left: 10, right: 20),
+                            child: ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: query.docs.length,
+                                itemBuilder: (_, index) {
+                                  List<DocumentSnapshot> vechicles =
+                                      query.docs.toList();
 
-                              DocumentSnapshot vehicle = vechicles[index];
-                              return Visibility(
-                                child: Dismissible(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: 15),
-                                    child: Card(
+                                  DocumentSnapshot vehicle = vechicles[index];
+                                  return Visibility(
+                                    child: Dismissible(
                                       child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 15, horizontal: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    vehicle[
-                                                        DbData.COLUMN_MODEL],
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(" - "),
-                                                  Text(
-                                                    vehicle[DbData.COLUMN_SIGN],
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 16),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Assentos",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(": "),
-                                                  Text(
-                                                    vehicle[
-                                                        DbData.COLUMN_SEATS],
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Malas",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(": "),
-                                                  Text(
-                                                    vehicle[DbData
-                                                        .COLUMN_LUGGAGE_SPACES],
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  ),
-                                  confirmDismiss: (d) async {
-                                    if (d == DismissDirection.startToEnd) {
-                                      Navigator.pushNamed(
-                                          context, cRoutes.VEHICLES_REGISTER,
-                                          arguments: vehicle);
-                                      return false;
-                                    } else {
-                                      return await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text("Confirmar exclusão"),
-                                            content: Text(
-                                                "Tem certeza que deseja cancelar este carro?"),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(true),
-                                                  child: Text("Tenho certeza")),
-                                              TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(false),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(5),
-                                                    child: Text(
-                                                      "Cancelar",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  )),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
-                                  key: Key(vehicle[DbData.COLUMN_SIGN]),
-                                  background: Container(
-                                    color: Colors.green,
-                                    child: Icon(Icons.edit),
-                                    alignment: Alignment.centerLeft,
-                                    padding: EdgeInsets.only(left: 15),
-                                    margin: EdgeInsets.only(bottom: 20),
-                                  ),
-                                  secondaryBackground: Container(
-                                    color: Colors.redAccent,
-                                    child: Icon(Icons.delete),
-                                    alignment: Alignment.centerRight,
-                                    padding: EdgeInsets.only(right: 15),
-                                    margin: EdgeInsets.only(bottom: 20),
-                                  ),
-                                ),
-                                visible: _myVehiclesOpened,
-                              );
-                            });
-                      }
-                  }
-                })
-
-            /*
-            FutureBuilder<List<eVehicle>>(
-                future: _myVehicles as Future<List<eVehicle>>,
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return Center(
-                          child: Column(
-                        children: [CircularProgressIndicator()],
-                      ));
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                      int size = snapshot.data!.length;
-                      return size > 0
-                          ? Visibility(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: size,
-                                  itemBuilder: (_, index) {
-                                    List<eVehicle> vehicles =
-                                        snapshot.data!.toList();
-                                    eVehicle vehicle = vehicles[index];
-                                    return Dismissible(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(bottom: 15),
+                                        padding: EdgeInsets.only(bottom: 10),
                                         child: Card(
                                           child: Padding(
                                               padding: EdgeInsets.symmetric(
@@ -273,7 +129,8 @@ class _VechiclesState extends State<Vechicles> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        vehicle.model,
+                                                        vehicle[DbData
+                                                            .COLUMN_MODEL],
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -281,7 +138,8 @@ class _VechiclesState extends State<Vechicles> {
                                                       ),
                                                       Text(" - "),
                                                       Text(
-                                                        vehicle.sign,
+                                                        vehicle[
+                                                            DbData.COLUMN_SIGN],
                                                         style: TextStyle(
                                                             color: Colors.grey,
                                                             fontSize: 16),
@@ -299,7 +157,8 @@ class _VechiclesState extends State<Vechicles> {
                                                       ),
                                                       Text(": "),
                                                       Text(
-                                                        vehicle.seats,
+                                                        vehicle[DbData
+                                                            .COLUMN_SEATS],
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -316,7 +175,8 @@ class _VechiclesState extends State<Vechicles> {
                                                       ),
                                                       Text(": "),
                                                       Text(
-                                                        vehicle.luggageSpaces,
+                                                        vehicle[DbData
+                                                            .COLUMN_LUGGAGE_SPACES],
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -368,7 +228,7 @@ class _VechiclesState extends State<Vechicles> {
                                           );
                                         }
                                       },
-                                      key: Key(vehicle.sign),
+                                      key: Key(vehicle[DbData.COLUMN_SIGN]),
                                       background: Container(
                                         color: Colors.green,
                                         child: Icon(Icons.edit),
@@ -383,14 +243,13 @@ class _VechiclesState extends State<Vechicles> {
                                         padding: EdgeInsets.only(right: 15),
                                         margin: EdgeInsets.only(bottom: 20),
                                       ),
-                                    );
-                                  }),
-                              visible: _myVehiclesOpened,
-                            )
-                          : Container();
+                                    ),
+                                    visible: _myVehiclesOpened,
+                                  );
+                                }));
+                      }
                   }
-                })*/
-            ,
+                }),
             GestureDetector(
               onTap: () {
                 setState(
@@ -439,6 +298,7 @@ class _VechiclesState extends State<Vechicles> {
                       } else {
                         return ListView.builder(
                             shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             itemCount: query.docs.length,
                             itemBuilder: (_, index) {
@@ -452,8 +312,11 @@ class _VechiclesState extends State<Vechicles> {
                                     padding: EdgeInsets.only(bottom: 15),
                                     child: Card(
                                       child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 15, horizontal: 10),
+                                          padding: EdgeInsets.only(
+                                              left: 10,
+                                              top: 10,
+                                              bottom: 10,
+                                              right: 50),
                                           child: Column(
                                             children: [
                                               Row(
@@ -625,8 +488,7 @@ class _VechiclesState extends State<Vechicles> {
           data[DbData.COLUMN_COLOR],
           data[DbData.COLUMN_MODEL],
           data[DbData.COLUMN_SEATS],
-          data[DbData.COLUMN_LUGGAGE_SPACES],
-          data[DbData.COLUMN_MY_CAR]);
+          data[DbData.COLUMN_LUGGAGE_SPACES]);
       myVehicles.add(vehicle);
     }
 

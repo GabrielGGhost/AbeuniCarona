@@ -8,7 +8,6 @@ class eVehicle {
   String? _model;
   String? _seats;
   String? _luggageSpaces;
-  bool? _myCar;
 
 
 
@@ -17,23 +16,21 @@ class eVehicle {
   String get model => _model!;
   String get color => _color!;
   String get sign => _sign!;
-  bool get myCar => _myCar!;
 
   eVehicle(this._sign, this._color, this._model, this._seats,
-      this._luggageSpaces, this._myCar);
+      this._luggageSpaces);
 
   eVehicle.register(this._sign, this._color, this._model, this._seats,
-      this._luggageSpaces, this._myCar);
+      this._luggageSpaces);
 
   static List<eVehicle> getVehicles(){
     return <eVehicle> [
-      eVehicle("ABC-123", "COR A", "Modelo A", "4", "3", true),
-      eVehicle("DEF-456", "COR B", "Modelo B", "6", "4", true),
-      eVehicle("GHI-789", "COR C", "Modelo C", "4", "2", false),
-      eVehicle("JKL-012", "COR D", "Modelo D", "2", "4", false),
+      eVehicle("ABC-123", "COR A", "Modelo A", "4", "3"),
+      eVehicle("DEF-456", "COR B", "Modelo B", "6", "4"),
+      eVehicle("GHI-789", "COR C", "Modelo C", "4", "2"),
+      eVehicle("JKL-012", "COR D", "Modelo D", "2", "4"),
     ];
   }
-
   Map<String, dynamic> toMap(){
 
     return {
@@ -42,7 +39,6 @@ class eVehicle {
       DbData.COLUMN_MODEL : this._model,
       DbData.COLUMN_SEATS : this._seats,
       DbData.COLUMN_LUGGAGE_SPACES : this._luggageSpaces,
-      DbData.COLUMN_MY_CAR : this._myCar,
     };
 
   }
@@ -61,8 +57,5 @@ class eVehicle {
   }
   set sign(String value) {
     _sign = value;
-  }
-  set myCar(bool value) {
-    _myCar = value;
   }
 }
