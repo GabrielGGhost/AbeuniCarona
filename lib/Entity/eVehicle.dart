@@ -10,22 +10,22 @@ class eVehicle {
   String? _luggageSpaces;
 
 
-
+  String get id => _id!;
   String get luggageSpaces => _luggageSpaces!;
   String get seats => _seats!;
   String get model => _model!;
   String get color => _color!;
   String get sign => _sign!;
 
-  eVehicle(this._sign, this._color, this._model, this._seats,
+  eVehicle(this._id ,this._sign, this._color, this._model, this._seats,
       this._luggageSpaces);
 
   static List<eVehicle> getVehicles(){
     return <eVehicle> [
-      eVehicle("ABC-123", "COR A", "Modelo A", "4", "3"),
-      eVehicle("DEF-456", "COR B", "Modelo B", "6", "4"),
-      eVehicle("GHI-789", "COR C", "Modelo C", "4", "2"),
-      eVehicle("JKL-012", "COR D", "Modelo D", "2", "4"),
+      eVehicle("","ABC-123", "COR A", "Modelo A", "4", "3"),
+      eVehicle("","DEF-456", "COR B", "Modelo B", "6", "4"),
+      eVehicle("","GHI-789", "COR C", "Modelo C", "4", "2"),
+      eVehicle("","JKL-012", "COR D", "Modelo D", "2", "4"),
     ];
   }
   Map<String, dynamic> toMap(){
@@ -40,6 +40,9 @@ class eVehicle {
 
   }
 
+  set id(String value) {
+    _id = value;
+  }
   set luggageSpaces(String value) {
     _luggageSpaces = value;
   }

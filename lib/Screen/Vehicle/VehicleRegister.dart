@@ -169,7 +169,8 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
   void saveVehicle() {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    eVehicle v = eVehicle(_signControler.text,
+    eVehicle v = eVehicle(null,
+                          _signControler.text,
                           _colorControler.text,
                           _modelControler.text,
                           _seatsControler.text,
@@ -177,16 +178,26 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
     if(vehicle != null){
 
-      update(v);
+      try{
+        v.id = vehicle!.id;
+        update(v);
 
-      Navigator.pop(context);
-      Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado);
+        Navigator.pop(context);
+        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado);
+      } catch (e){
+        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar, Colors.redAccent);
+      }
+
     } else {
+      try{
+        insert(v);
 
-      insert(v);
+        Navigator.pop(context);
+        Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
+      } catch (e){
+        Utils.showToast(AppLocalizations.of(context)!.erroAoInserir, Colors.redAccent);
+      }
 
-      Navigator.pop(context);
-      Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
     }
 
   }
@@ -194,7 +205,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   void update(vehicle){
 
     db.collection(DbData.TABLE_VEHICLE)
-        .doc(_signControler.text)
+        .doc(vehicle.id)
         .update(vehicle.toMap());
 
   }
@@ -202,7 +213,6 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   void insert(eVehicle vehicle) {
 
     db.collection(DbData.TABLE_VEHICLE)
-        .doc(_signControler.text)
-        .set(vehicle.toMap());
+        .add(vehicle.toMap());
   }
 }

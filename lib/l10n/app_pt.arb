@@ -30,6 +30,8 @@
     "emailValidoNecessario" : "Um E-mail válido é necessário",
     "entrar" : "Entrar",
     "erroAoCarregarDados" : "Erro ao carregar dados",
+    "erroAoAtualizar" : "Erro ao atualizar",
+    "erroAoInserir" : "Erro ao inserir",
     "erroDesconhecido" : "Erro desconhecido",
     "erroNoServidorTenteNovamenteMaisTarde" : "Erro no servidor. Tente Novamente Mais Tarde",
     "esseNaoESeuNome" : "Esse não é seu nome de usuário nem seu PIN. Esse nome será visível para seus contatos do WhatApp",

@@ -515,12 +515,12 @@ class _VechiclesState extends State<Vechicles> {
     for (DocumentSnapshot item in querySnapshot.docs) {
       var data = item.data() as Map;
 
-      eVehicle vehicle = eVehicle(
-          data[DbData.COLUMN_SIGN],
-          data[DbData.COLUMN_COLOR],
-          data[DbData.COLUMN_MODEL],
-          data[DbData.COLUMN_SEATS],
-          data[DbData.COLUMN_LUGGAGE_SPACES]);
+      eVehicle vehicle = eVehicle(item.id,
+                            data[DbData.COLUMN_SIGN],
+                            data[DbData.COLUMN_COLOR],
+                            data[DbData.COLUMN_MODEL],
+                            data[DbData.COLUMN_SEATS],
+                            data[DbData.COLUMN_LUGGAGE_SPACES]);
       myVehicles.add(vehicle);
     }
 
