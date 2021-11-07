@@ -1,12 +1,16 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
+import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventBaseRegister extends StatefulWidget {
 
-  eEventBase? eventBase;
+  DocumentSnapshot? eventBase;
   EventBaseRegister(this.eventBase);
 
   @override
@@ -15,23 +19,30 @@ class EventBaseRegister extends StatefulWidget {
 
 class _EventBaseRegisterState extends State<EventBaseRegister> {
 
+  String? _registrationDate = "";
+  String? _id = "";
   bool? _active = true;
-  TextEditingController _eventName = TextEditingController();
-  TextEditingController _obsEvent = TextEditingController();
-
+  TextEditingController _eventNameController = TextEditingController();
+  TextEditingController _obsEventController = TextEditingController();
+  DocumentSnapshot? eventBase;
+  bool _loeaded = false;
+  String title = "Cadastro de evento base";
+  String buttonText = "Registrar evento base";
   @override
   Widget build(BuildContext context) {
-    eEventBase? eventBase = widget.eventBase;
+    eventBase = widget.eventBase;
 
-    String title = "Cadastro de evento base";
-    String buttonText = "Registrar evento base";
 
-    if(eventBase != null){
-      _eventName.text = eventBase.eventName;
-      _obsEvent.text = eventBase.obsEvent;
-      _active = eventBase.active;
+
+    if(eventBase != null && !_loeaded){
+      _eventNameController.text = eventBase![DbData.COLUMN_NAME];
+      _obsEventController.text = eventBase![DbData.COLUMN_OBS];
+      _id = eventBase!.id;
+      _active = eventBase![DbData.COLUMN_ACTIVE] != null && eventBase![DbData.COLUMN_ACTIVE] != "0"?  true : false;
+      _registrationDate = eventBase![DbData.COLUMN_REGISTRATION_DATE];
       title = "Alteração de evento base";
       buttonText = "Atualizar";
+      _loeaded = true;
     }
 
 
@@ -48,7 +59,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
               Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
-                      controller: _eventName,
+                      controller: _eventNameController,
                       keyboardType: TextInputType.text,
                       decoration: textFieldDefaultDecoration("Nome do evento")
                   ),
@@ -56,7 +67,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
-                    controller: _obsEvent,
+                    controller: _obsEventController,
                     keyboardType: TextInputType.text,
                     maxLines: 5,
                     decoration: textFieldDefaultDecoration("Descrição do evento")
@@ -115,6 +126,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                     ),
                   ),
                   onPressed: (){
+                    save();
                   },
                 ),
               )
@@ -123,5 +135,43 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
       )
       )
     );
+  }
+
+  void save() {
+    eEventBase base = eEventBase(_id.toString(),
+                                _eventNameController.text,
+                                _obsEventController.text,
+                                _active!,
+                                _registrationDate!);
+
+    if(eventBase != null){
+
+      update(base);
+
+      Navigator.pop(context);
+      Utils.showToast(AppLocalizations.of(context)!.eventoBaseAtualizaco);
+    } else {
+      base.registerDate = DateTime.now().toString();
+      insert(base);
+
+      Navigator.pop(context);
+      Utils.showToast(AppLocalizations.of(context)!.eventoBaseCadastrado);
+    }
+
+  }
+
+  void insert(eEventBase base) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection(DbData.TABLE_BASE_EVENT)
+        .add(
+          base.toMap()
+        );
+  }
+
+  void update(eEventBase base) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection(DbData.TABLE_BASE_EVENT)
+        .doc(_id)
+        .update(base.toMap());
   }
 }

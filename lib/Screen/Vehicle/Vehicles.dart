@@ -100,13 +100,15 @@ class _VechiclesState extends State<Vechicles> {
                       if (snapshot.hasError) {
                         return Center(
                           child: Column(
-                            children: [Text(AppLocalizations.of(context)!.erroAoCarregarDados)],
+                            children: [
+                              Text(AppLocalizations.of(context)!
+                                  .erroAoCarregarDados)
+                            ],
                           ),
                         );
                       } else {
                         return Padding(
-                            padding: EdgeInsets.only(
-                                left: 10, right: 20),
+                            padding: EdgeInsets.only(left: 10, right: 20),
                             child: ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
@@ -150,7 +152,9 @@ class _VechiclesState extends State<Vechicles> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                      AppLocalizations.of(context)!.assentos,
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .assentos,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -168,7 +172,9 @@ class _VechiclesState extends State<Vechicles> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        AppLocalizations.of(context)!.malas,
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .malas,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -198,17 +204,21 @@ class _VechiclesState extends State<Vechicles> {
                                             context: context,
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title:
-                                                    Text(AppLocalizations.of(context)!.confirmarExclusao),
-                                                content: Text(
-                                                    AppLocalizations.of(context)!.temCertezaQueDesejaExcluirEsteVeiculo),
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .confirmarExclusao),
+                                                content: Text(AppLocalizations
+                                                        .of(context)!
+                                                    .temCertezaQueDesejaExcluirEsteVeiculo),
                                                 actions: <Widget>[
                                                   TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(context)
                                                               .pop(true),
                                                       child: Text(
-                                                          AppLocalizations.of(context)!.tenhoCerteza)),
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .tenhoCerteza)),
                                                   TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(context)
@@ -217,7 +227,9 @@ class _VechiclesState extends State<Vechicles> {
                                                         padding:
                                                             EdgeInsets.all(5),
                                                         child: Text(
-                                                          AppLocalizations.of(context)!.cancelar,
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .cancelar,
                                                           style: TextStyle(
                                                             color: Colors.black,
                                                           ),
@@ -293,7 +305,10 @@ class _VechiclesState extends State<Vechicles> {
                       if (snapshot.hasError) {
                         return Center(
                           child: Column(
-                            children: [Text(AppLocalizations.of(context)!.erroAoCarregarDados)],
+                            children: [
+                              Text(AppLocalizations.of(context)!
+                                  .erroAoCarregarDados)
+                            ],
                           ),
                         );
                       } else {
@@ -342,7 +357,9 @@ class _VechiclesState extends State<Vechicles> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    AppLocalizations.of(context)!.assentos,
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .assentos,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -359,7 +376,9 @@ class _VechiclesState extends State<Vechicles> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    AppLocalizations.of(context)!.malas,
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .malas,
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -388,15 +407,21 @@ class _VechiclesState extends State<Vechicles> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: Text(AppLocalizations.of(context)!.confirmarExclusao),
-                                            content: Text(
-                                                AppLocalizations.of(context)!.temCertezaQueDesejaExcluirEsteVeiculo),
+                                            title: Text(
+                                                AppLocalizations.of(context)!
+                                                    .confirmarExclusao),
+                                            content: Text(AppLocalizations.of(
+                                                    context)!
+                                                .temCertezaQueDesejaExcluirEsteVeiculo),
                                             actions: <Widget>[
                                               TextButton(
                                                   onPressed: () =>
                                                       Navigator.of(context)
                                                           .pop(true),
-                                                  child: Text(AppLocalizations.of(context)!.tenhoCerteza)),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .tenhoCerteza)),
                                               TextButton(
                                                   onPressed: () =>
                                                       Navigator.of(context)
@@ -404,7 +429,9 @@ class _VechiclesState extends State<Vechicles> {
                                                   child: Padding(
                                                     padding: EdgeInsets.all(5),
                                                     child: Text(
-                                                      AppLocalizations.of(context)!.cancelar,
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .cancelar,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                       ),

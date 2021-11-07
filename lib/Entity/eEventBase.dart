@@ -1,3 +1,5 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
+
 class eEventBase{
 
   String? _id;
@@ -6,7 +8,7 @@ class eEventBase{
   bool _active;
   String? _registerDate;
 
-  eEventBase(this._id, this._eventName, this._obsEvent, this._active);
+  eEventBase(this._id, this._eventName, this._obsEvent, this._active, this._registerDate);
 
   String get id => _id!;
   String get eventName => _eventName!;
@@ -15,12 +17,21 @@ class eEventBase{
   String get registerDate => _registerDate!;
 
 
+  toMap(){
+    return {
+      DbData.COLUMN_NAME : this._eventName,
+      DbData.COLUMN_OBS : this._obsEvent,
+      DbData.COLUMN_ACTIVE : this._id,
+      DbData.COLUMN_REGISTRATION_DATE : this._registerDate,
+    };
+  }
+
   static List<eEventBase> getEventsBase(){
     return <eEventBase> [
-      eEventBase("0", "Evento A", "Observação A", true),
-      eEventBase("1", "Evento B", "Observação B", false),
-      eEventBase("2", "Evento C", "Observação C", false),
-      eEventBase("3", "Evento D", "Observação D", true),
+      eEventBase("0", "Evento A", "Observação A", true, ""),
+      eEventBase("1", "Evento B", "Observação B", false, ""),
+      eEventBase("2", "Evento C", "Observação C", false, ""),
+      eEventBase("3", "Evento D", "Observação D", true, ""),
     ];
   }
 

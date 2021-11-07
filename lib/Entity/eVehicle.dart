@@ -20,9 +20,6 @@ class eVehicle {
   eVehicle(this._sign, this._color, this._model, this._seats,
       this._luggageSpaces);
 
-  eVehicle.register(this._sign, this._color, this._model, this._seats,
-      this._luggageSpaces);
-
   static List<eVehicle> getVehicles(){
     return <eVehicle> [
       eVehicle("ABC-123", "COR A", "Modelo A", "4", "3"),

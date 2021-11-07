@@ -57,7 +57,7 @@ class RouteGenerator {
         );
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => EventBaseRegister(args as eEventBase)
+            builder: (_) => EventBaseRegister(args as DocumentSnapshot)
         );
       case cRoutes.EVENT_BASE:
         return MaterialPageRoute(

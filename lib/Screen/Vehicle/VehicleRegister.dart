@@ -169,11 +169,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
   void saveVehicle() {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    eVehicle v = eVehicle.register(_signControler.text,
-        _colorControler.text,
-        _modelControler.text,
-        _seatsControler.text,
-        _luggageControler.text);
+    eVehicle v = eVehicle(_signControler.text,
+                          _colorControler.text,
+                          _modelControler.text,
+                          _seatsControler.text,
+                          _luggageControler.text);
 
     if(vehicle != null){
 
