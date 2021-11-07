@@ -29,6 +29,30 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   TextEditingController _modelControler = TextEditingController();
   TextEditingController _seatsControler = TextEditingController();
   TextEditingController _luggageControler = TextEditingController();
+
+  FocusNode? _signFocus;
+  FocusNode? _colorFocus;
+  FocusNode? _modelFocus;
+
+  @override
+  void initState() {
+
+    _signFocus = FocusNode();
+    _colorFocus = FocusNode();
+    _modelFocus = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+
+    _signFocus!.dispose();
+    _colorFocus!.dispose();
+    _modelFocus!.dispose();
+    super.dispose();
+
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -60,10 +84,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                 child: TextField(
                   controller: _signControler,
                   autofocus: true,
+                  focusNode: _signFocus,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.placa,
+                      hintText: AppLocalizations.of(context)!.placa + "*",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -77,9 +102,10 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                 child: TextField(
                   controller: _colorControler,
                   keyboardType: TextInputType.text,
+                  focusNode: _colorFocus,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.cor,
+                      hintText: AppLocalizations.of(context)!.cor + "*",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -93,9 +119,10 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                 child: TextField(
                   controller: _modelControler,
                   keyboardType: TextInputType.text,
+                  focusNode: _modelFocus,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.modelo,
+                      hintText: AppLocalizations.of(context)!.modelo + "*",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -190,10 +217,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
     } else {
       try{
-        insert(v);
-
-        Navigator.pop(context);
-        Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
+        if(checkFields()){
+          insert(v);
+          Navigator.pop(context);
+          Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
+        }
       } catch (e){
         Utils.showToast(AppLocalizations.of(context)!.erroAoInserir, Colors.redAccent);
       }
@@ -214,5 +242,37 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
     db.collection(DbData.TABLE_VEHICLE)
         .add(vehicle.toMap());
+  }
+
+  bool checkFields() {
+
+    if(_signControler.text.length == 0){
+
+      Utils.showDialogBox("O veículo precisa de uma placa!", context);
+      _signFocus!.requestFocus();
+      return false;
+    }
+    if(_signControler.text.length > 8 || _signControler.text.length < 8){
+
+      Utils.showDialogBox("A placa deve conter 8 caracteres!", context);
+      _signFocus!.requestFocus();
+      return false;
+    }
+
+    if(_colorControler.text.length == 0){
+
+      Utils.showDialogBox("Informe a cor do veículo!", context);
+      _colorFocus!.requestFocus();
+      return false;
+    }
+
+    if(_modelControler.text.length == 0){
+
+      Utils.showDialogBox("Informe o modelo do veículo!", context);
+      _modelFocus!.requestFocus();
+      return false;
+    }
+
+    return true;
   }
 }

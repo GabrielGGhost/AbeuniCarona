@@ -163,7 +163,9 @@ class _VechiclesState extends State<Vechicles> {
                                                       Text(": "),
                                                       Text(
                                                         vehicle[DbData
-                                                            .COLUMN_SEATS],
+                                                            .COLUMN_SEATS] != "" ? vehicle[DbData.COLUMN_SEATS] : AppLocalizations.of(
+                                                            context)!
+                                                            .naoInformado,
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -183,7 +185,9 @@ class _VechiclesState extends State<Vechicles> {
                                                       Text(": "),
                                                       Text(
                                                         vehicle[DbData
-                                                            .COLUMN_LUGGAGE_SPACES],
+                                                            .COLUMN_LUGGAGE_SPACES] != "" ? vehicle[DbData.COLUMN_LUGGAGE_SPACES] : AppLocalizations.of(
+                                                            context)!
+                                                            .naoInformado,
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -368,8 +372,9 @@ class _VechiclesState extends State<Vechicles> {
                                                   ),
                                                   Text(": "),
                                                   Text(
-                                                    vehicle[
-                                                        DbData.COLUMN_SEATS],
+                                                    vehicle[DbData.COLUMN_SEATS] != "" ? vehicle[DbData.COLUMN_SEATS] : AppLocalizations.of(
+                                                        context)!
+                                                        .naoInformado,
                                                     style: TextStyle(
                                                         color: Colors.grey),
                                                   )
@@ -388,7 +393,9 @@ class _VechiclesState extends State<Vechicles> {
                                                   Text(": "),
                                                   Text(
                                                     vehicle[DbData
-                                                        .COLUMN_LUGGAGE_SPACES],
+                                                        .COLUMN_LUGGAGE_SPACES] != "" ? vehicle[DbData.COLUMN_LUGGAGE_SPACES] : AppLocalizations.of(
+                                                        context)!
+                                                        .naoInformado,
                                                     style: TextStyle(
                                                         color: Colors.grey),
                                                   )

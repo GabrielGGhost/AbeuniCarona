@@ -48,7 +48,8 @@
     "meusVeiculos" : "Meus Veículos",
     "modelo" : "Modelo",
 
-    "naoPossuiContaCadastrese": "Não Possui Conta? Cadastre-se!",
+    "naoInformado" : "Não Informado",
+    "naoPossuiContaCadastrese" : "Não Possui Conta? Cadastre-se!",
     "nome" : "Nome",
     "nomeNecessarioParaCadastro" : "O nome é necessário para o cadastro",
     "novaTransmissao" : "Nova Transmissão",
