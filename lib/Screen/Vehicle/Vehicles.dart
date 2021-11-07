@@ -19,8 +19,6 @@ class Vechicles extends StatefulWidget {
 class _VechiclesState extends State<Vechicles> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  Future<List<eVehicle>?> _myVehicles = _findAllMyVehicles();
-
   bool _myVehiclesOpened = false;
   bool _borrowedVehiclesOpened = false;
 
@@ -163,9 +161,13 @@ class _VechiclesState extends State<Vechicles> {
                                                       Text(": "),
                                                       Text(
                                                         vehicle[DbData
-                                                            .COLUMN_SEATS] != "" ? vehicle[DbData.COLUMN_SEATS] : AppLocalizations.of(
-                                                            context)!
-                                                            .naoInformado,
+                                                                    .COLUMN_SEATS] !=
+                                                                ""
+                                                            ? vehicle[DbData
+                                                                .COLUMN_SEATS]
+                                                            : AppLocalizations
+                                                                    .of(context)!
+                                                                .naoInformado,
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -185,9 +187,13 @@ class _VechiclesState extends State<Vechicles> {
                                                       Text(": "),
                                                       Text(
                                                         vehicle[DbData
-                                                            .COLUMN_LUGGAGE_SPACES] != "" ? vehicle[DbData.COLUMN_LUGGAGE_SPACES] : AppLocalizations.of(
-                                                            context)!
-                                                            .naoInformado,
+                                                                    .COLUMN_LUGGAGE_SPACES] !=
+                                                                ""
+                                                            ? vehicle[DbData
+                                                                .COLUMN_LUGGAGE_SPACES]
+                                                            : AppLocalizations
+                                                                    .of(context)!
+                                                                .naoInformado,
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -372,9 +378,14 @@ class _VechiclesState extends State<Vechicles> {
                                                   ),
                                                   Text(": "),
                                                   Text(
-                                                    vehicle[DbData.COLUMN_SEATS] != "" ? vehicle[DbData.COLUMN_SEATS] : AppLocalizations.of(
-                                                        context)!
-                                                        .naoInformado,
+                                                    vehicle[DbData
+                                                                .COLUMN_SEATS] !=
+                                                            ""
+                                                        ? vehicle[
+                                                            DbData.COLUMN_SEATS]
+                                                        : AppLocalizations.of(
+                                                                context)!
+                                                            .naoInformado,
                                                     style: TextStyle(
                                                         color: Colors.grey),
                                                   )
@@ -393,9 +404,13 @@ class _VechiclesState extends State<Vechicles> {
                                                   Text(": "),
                                                   Text(
                                                     vehicle[DbData
-                                                        .COLUMN_LUGGAGE_SPACES] != "" ? vehicle[DbData.COLUMN_LUGGAGE_SPACES] : AppLocalizations.of(
-                                                        context)!
-                                                        .naoInformado,
+                                                                .COLUMN_LUGGAGE_SPACES] !=
+                                                            ""
+                                                        ? vehicle[DbData
+                                                            .COLUMN_LUGGAGE_SPACES]
+                                                        : AppLocalizations.of(
+                                                                context)!
+                                                            .naoInformado,
                                                     style: TextStyle(
                                                         color: Colors.grey),
                                                   )
@@ -522,12 +537,13 @@ class _VechiclesState extends State<Vechicles> {
     for (DocumentSnapshot item in querySnapshot.docs) {
       var data = item.data() as Map;
 
-      eVehicle vehicle = eVehicle(item.id,
-                            data[DbData.COLUMN_SIGN],
-                            data[DbData.COLUMN_COLOR],
-                            data[DbData.COLUMN_MODEL],
-                            data[DbData.COLUMN_SEATS],
-                            data[DbData.COLUMN_LUGGAGE_SPACES]);
+      eVehicle vehicle = eVehicle(
+          item.id,
+          data[DbData.COLUMN_SIGN],
+          data[DbData.COLUMN_COLOR],
+          data[DbData.COLUMN_MODEL],
+          data[DbData.COLUMN_SEATS],
+          data[DbData.COLUMN_LUGGAGE_SPACES]);
       myVehicles.add(vehicle);
     }
 

@@ -218,6 +218,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     } else {
       try{
         if(checkFields()){
+          v.registrationDate = DateTime.now().toString();
           insert(v);
           Navigator.pop(context);
           Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
