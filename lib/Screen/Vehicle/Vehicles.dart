@@ -212,9 +212,11 @@ class _VechiclesState extends State<Vechicles> {
                                                     .temCertezaQueDesejaExcluirEsteVeiculo),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.of(context)
-                                                              .pop(true),
+                                                      onPressed: () {
+                                                        delete(vehicle.id);
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      },
                                                       child: Text(
                                                           AppLocalizations.of(
                                                                   context)!
@@ -222,7 +224,7 @@ class _VechiclesState extends State<Vechicles> {
                                                   TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(context)
-                                                              .pop(false),
+                                                              .pop(true),
                                                       child: Padding(
                                                         padding:
                                                             EdgeInsets.all(5),
@@ -415,9 +417,11 @@ class _VechiclesState extends State<Vechicles> {
                                                 .temCertezaQueDesejaExcluirEsteVeiculo),
                                             actions: <Widget>[
                                               TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(true),
+                                                  onPressed: () {
+                                                    delete(vehicle.id);
+                                                    Navigator.of(context)
+                                                        .pop(true);
+                                                  },
                                                   child: Text(
                                                       AppLocalizations.of(
                                                               context)!
@@ -521,5 +525,16 @@ class _VechiclesState extends State<Vechicles> {
     }
 
     return myVehicles;
+  }
+
+  void delete(String id) {
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      db.collection(DbData.TABLE_VEHICLE).doc(id).delete();
+
+      Utils.showToast("Deletado", Colors.green);
+    } catch (e) {
+      Utils.showToast("Falha ao deletar veículo", Colors.redAccent);
+    }
   }
 }
