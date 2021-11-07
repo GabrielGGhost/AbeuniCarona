@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
+import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 
 class Vechicles extends StatefulWidget {
   const Vechicles({Key? key}) : super(key: key);
@@ -63,7 +65,7 @@ class _VechiclesState extends State<Vechicles> {
                 setState(() => _myVehiclesOpened = !_myVehiclesOpened);
               },
               child: Card(
-                color: Colors.white,
+                color: APP_CARD_BACKGROUND,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Row(
@@ -143,7 +145,7 @@ class _VechiclesState extends State<Vechicles> {
                                                         vehicle[
                                                             DbData.COLUMN_SIGN],
                                                         style: TextStyle(
-                                                            color: Colors.grey,
+                                                            color: APP_HINT_TEXT_FIELD,
                                                             fontSize: 16),
                                                       ),
                                                     ],
@@ -170,7 +172,7 @@ class _VechiclesState extends State<Vechicles> {
                                                                     .of(context)!
                                                                 .naoInformado,
                                                         style: TextStyle(
-                                                            color: Colors.grey),
+                                                            color: APP_HINT_TEXT_FIELD),
                                                       )
                                                     ],
                                                   ),
@@ -196,7 +198,7 @@ class _VechiclesState extends State<Vechicles> {
                                                                     .of(context)!
                                                                 .naoInformado,
                                                         style: TextStyle(
-                                                            color: Colors.grey),
+                                                            color: APP_HINT_TEXT_FIELD),
                                                       )
                                                     ],
                                                   ),
@@ -215,7 +217,7 @@ class _VechiclesState extends State<Vechicles> {
                                                         Utils.getDateFromBD(vehicle[DbData
                                                             .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
                                                         style: TextStyle(
-                                                            color: Colors.grey),
+                                                            color: APP_HINT_TEXT_FIELD),
                                                       )
                                                     ],
                                                   )
@@ -263,7 +265,7 @@ class _VechiclesState extends State<Vechicles> {
                                                                   context)!
                                                               .cancelar,
                                                           style: TextStyle(
-                                                            color: Colors.black,
+                                                            color: APP_CANCEL_BUTTON,
                                                           ),
                                                         ),
                                                       )),
@@ -275,14 +277,14 @@ class _VechiclesState extends State<Vechicles> {
                                       },
                                       key: Key(vehicle[DbData.COLUMN_SIGN]),
                                       background: Container(
-                                        color: Colors.green,
+                                        color: APP_EDIT_DISMISS,
                                         child: Icon(Icons.edit),
                                         alignment: Alignment.centerLeft,
                                         padding: EdgeInsets.only(left: 15),
                                         margin: EdgeInsets.only(bottom: 20),
                                       ),
                                       secondaryBackground: Container(
-                                        color: Colors.redAccent,
+                                        color: APP_REMOVE_DISMISS,
                                         child: Icon(Icons.delete),
                                         alignment: Alignment.centerRight,
                                         padding: EdgeInsets.only(right: 15),
@@ -301,7 +303,7 @@ class _VechiclesState extends State<Vechicles> {
                     () => _borrowedVehiclesOpened = !_borrowedVehiclesOpened);
               },
               child: Card(
-                color: Colors.white,
+                color: APP_CARD_BACKGROUND,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Row(
@@ -381,7 +383,7 @@ class _VechiclesState extends State<Vechicles> {
                                                   Text(
                                                     vehicle[DbData.COLUMN_SIGN],
                                                     style: TextStyle(
-                                                        color: Colors.grey,
+                                                        color: APP_HINT_TEXT_FIELD,
                                                         fontSize: 16),
                                                   ),
                                                 ],
@@ -407,7 +409,7 @@ class _VechiclesState extends State<Vechicles> {
                                                                 context)!
                                                             .naoInformado,
                                                     style: TextStyle(
-                                                        color: Colors.grey),
+                                                        color: APP_HINT_TEXT_FIELD),
                                                   )
                                                 ],
                                               ),
@@ -432,7 +434,7 @@ class _VechiclesState extends State<Vechicles> {
                                                                 context)!
                                                             .naoInformado,
                                                     style: TextStyle(
-                                                        color: Colors.grey),
+                                                        color: APP_HINT_TEXT_FIELD),
                                                   )
                                                 ],
                                               ),
@@ -451,7 +453,7 @@ class _VechiclesState extends State<Vechicles> {
                                                     Utils.getDateFromBD(vehicle[DbData
                                                         .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
                                                     style: TextStyle(
-                                                        color: Colors.grey),
+                                                        color: APP_HINT_TEXT_FIELD),
                                                   )
                                                 ],
                                               )
@@ -498,7 +500,7 @@ class _VechiclesState extends State<Vechicles> {
                                                               context)!
                                                           .cancelar,
                                                       style: TextStyle(
-                                                        color: Colors.black,
+                                                        color: APP_CANCEL_BUTTON,
                                                       ),
                                                     ),
                                                   )),
@@ -510,14 +512,14 @@ class _VechiclesState extends State<Vechicles> {
                                   },
                                   key: Key(vehicle[DbData.COLUMN_SIGN]),
                                   background: Container(
-                                    color: Colors.green,
+                                    color: APP_EDIT_DISMISS,
                                     child: Icon(Icons.edit),
                                     alignment: Alignment.centerLeft,
                                     padding: EdgeInsets.only(left: 15),
                                     margin: EdgeInsets.only(bottom: 20),
                                   ),
                                   secondaryBackground: Container(
-                                    color: Colors.redAccent,
+                                    color: APP_REMOVE_DISMISS,
                                     child: Icon(Icons.delete),
                                     alignment: Alignment.centerRight,
                                     padding: EdgeInsets.only(right: 15),
@@ -542,10 +544,10 @@ class _VechiclesState extends State<Vechicles> {
               onPressed: () {
                 Utils.showDialogBox("Teste", context);
               },
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: APP_BAR_BACKGROUND_COLOR,
               child: Icon(
                 Icons.filter_alt_sharp,
-                color: Colors.white,
+                color: APP_WHITE_FONT,
               ),
             ),
           ),
@@ -558,7 +560,7 @@ class _VechiclesState extends State<Vechicles> {
               backgroundColor: APP_BAR_BACKGROUND_COLOR,
               child: Icon(
                 Icons.add,
-                color: Colors.white,
+                color: APP_WHITE_FONT,
               ),
             ),
           ),
@@ -595,9 +597,9 @@ class _VechiclesState extends State<Vechicles> {
       FirebaseFirestore db = FirebaseFirestore.instance;
       db.collection(DbData.TABLE_VEHICLE).doc(id).delete();
 
-      Utils.showToast("Deletado", Colors.green);
+      Utils.showToast(AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast("Falha ao deletar veículo", Colors.redAccent);
+      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarVeiculo, APP_ERROR_BACKGROUND);
     }
   }
 }

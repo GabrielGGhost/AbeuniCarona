@@ -38,7 +38,7 @@ class _EventBaseState extends State<EventBase> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Eventos base"),
+        title: Text(AppLocalizations.of(context)!.eventosBase),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -117,7 +117,7 @@ class _EventBaseState extends State<EventBase> {
                                                               .COLUMN_OBS],
                                                           style: TextStyle(
                                                               color:
-                                                                  Colors.grey),
+                                                              APP_SUB_TEXT),
                                                         )
                                                       ],
                                                     ),
@@ -138,9 +138,9 @@ class _EventBaseState extends State<EventBase> {
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   title: Text(
-                                                      "Confirmar exclusão"),
+                                                      AppLocalizations.of(context)!.confirmarExclusao),
                                                   content: Text(
-                                                      "Tem certeza que deseja cancelar este evento?"),
+                                                      AppLocalizations.of(context)!.temCertezaQueDesejaExcluirEstaBase),
                                                   actions: <Widget>[
                                                     TextButton(
                                                         onPressed: () {
@@ -149,7 +149,7 @@ class _EventBaseState extends State<EventBase> {
                                                               .pop(true);
                                                         },
                                                         child: Text(
-                                                            "Tenho certeza")),
+                                                            AppLocalizations.of(context)!.tenhoCerteza)),
                                                     TextButton(
                                                         onPressed: () =>
                                                             Navigator.of(
@@ -159,10 +159,10 @@ class _EventBaseState extends State<EventBase> {
                                                           padding:
                                                               EdgeInsets.all(5),
                                                           child: Text(
-                                                            "Cancelar",
+                                                            AppLocalizations.of(context)!.cancelar,
                                                             style: TextStyle(
                                                               color:
-                                                                  Colors.black,
+                                                              APP_MAIN_TEXT,
                                                             ),
                                                           ),
                                                         )),
@@ -174,14 +174,14 @@ class _EventBaseState extends State<EventBase> {
                                         },
                                         key: Key(event.id),
                                         background: Container(
-                                          color: Colors.green,
+                                          color: APP_EDIT_DISMISS,
                                           child: Icon(Icons.edit),
                                           alignment: Alignment.centerLeft,
                                           padding: EdgeInsets.only(left: 15),
                                           margin: EdgeInsets.only(bottom: 20),
                                         ),
                                         secondaryBackground: Container(
-                                          color: Colors.redAccent,
+                                          color: APP_REMOVE_DISMISS,
                                           child: Icon(Icons.delete),
                                           alignment: Alignment.centerRight,
                                           padding: EdgeInsets.only(right: 15),
@@ -198,9 +198,9 @@ class _EventBaseState extends State<EventBase> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Não há eventos base cadastrados\nClique no + para registrar um",
+                                          AppLocalizations.of(context)!.naoHaEventosBaseCadastradosCliqueNoMaisParaRegistrarUm,
                                           style: TextStyle(
-                                            color: Colors.grey,
+                                            color: APP_SUB_TEXT,
                                             fontSize: 20,
                                           ),
                                           textAlign: TextAlign.center,
@@ -218,10 +218,10 @@ class _EventBaseState extends State<EventBase> {
         onPressed: () {
           Navigator.pushNamed(context, cRoutes.EVENT_BASE_REGISTER);
         },
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: APP_BAR_BACKGROUND_COLOR,
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: APP_WHITE_FONT,
         ),
       ),
     );
@@ -232,9 +232,9 @@ class _EventBaseState extends State<EventBase> {
       FirebaseFirestore db = FirebaseFirestore.instance;
       db.collection(DbData.TABLE_BASE_EVENT).doc(id).delete();
 
-      Utils.showToast("Deletado", Colors.green);
+      Utils.showToast("Deletado", APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast("Falha ao deletar base de evento", Colors.redAccent);
+      Utils.showToast("Falha ao deletar base de evento", APP_ERROR_BACKGROUND);
     }
   }
 }

@@ -21,7 +21,7 @@ class eEventBase{
     return {
       DbData.COLUMN_NAME : this._eventName,
       DbData.COLUMN_OBS : this._obsEvent,
-      DbData.COLUMN_ACTIVE : this._id,
+      DbData.COLUMN_ACTIVE : this._active,
       DbData.COLUMN_REGISTRATION_DATE : this._registerDate,
     };
   }

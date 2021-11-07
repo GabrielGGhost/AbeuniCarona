@@ -98,7 +98,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: AppLocalizations.of(context)!.placa + "*",
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(radiusBorder!)
                       )
@@ -115,7 +115,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: AppLocalizations.of(context)!.cor + "*",
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(radiusBorder!)
                       )
@@ -132,7 +132,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: AppLocalizations.of(context)!.modelo + "*",
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(radiusBorder!)
                       )
@@ -148,7 +148,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: AppLocalizations.of(context)!.vagas,
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(radiusBorder!)
                       )
@@ -164,7 +164,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: AppLocalizations.of(context)!.espacoParaMalas,
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(radiusBorder!)
                       )
@@ -187,7 +187,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                     Text(
                         _registration!,
                       style: TextStyle(
-                          color: Colors.grey),
+                          color: APP_SUB_TEXT),
                     )
                   ],
                 )
@@ -196,7 +196,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   padding: EdgeInsets.all(20),
                   child: ElevatedButton(
                     style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: APP_BAR_BACKGROUND_COLOR,
                         padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)
@@ -206,7 +206,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                       textButton,
                       style: (
                           TextStyle(
-                              color: Colors.white, fontSize: 20
+                              color: APP_WHITE_FONT, fontSize: 20
                           )
                       ),
                     ),
@@ -240,9 +240,9 @@ class _VehicleRegisterState extends State<VehicleRegister> {
         update(v);
 
         Navigator.pop(context);
-        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado);
+        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado, APP_SUCCESS_BACKGROUND);
       } catch (e){
-        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar, Colors.redAccent);
+        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar, APP_ERROR_BACKGROUND);
       }
 
     } else {
@@ -251,10 +251,10 @@ class _VehicleRegisterState extends State<VehicleRegister> {
           v.registrationDate = DateTime.now().toString();
           insert(v);
           Navigator.pop(context);
-          Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado);
+          Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado, APP_SUCCESS_BACKGROUND);
         }
       } catch (e){
-        Utils.showToast(AppLocalizations.of(context)!.erroAoInserir, Colors.redAccent);
+        Utils.showToast(AppLocalizations.of(context)!.erroAoInserir, APP_ERROR_BACKGROUND);
       }
 
     }
@@ -279,27 +279,27 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
     if(_signControler.text.length == 0){
 
-      Utils.showDialogBox("O veículo precisa de uma placa!", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.oVeiculoPrecisaDeUmaPlaca, context);
       _signFocus!.requestFocus();
       return false;
     }
     if(_signControler.text.length > 8 || _signControler.text.length < 8){
 
-      Utils.showDialogBox("A placa deve conter 8 caracteres!", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.aPlacaDeveConterOitoCaracteres, context);
       _signFocus!.requestFocus();
       return false;
     }
 
     if(_colorControler.text.length == 0){
 
-      Utils.showDialogBox("Informe a cor do veículo!", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.informeACorDoVeiculo, context);
       _colorFocus!.requestFocus();
       return false;
     }
 
     if(_modelControler.text.length == 0){
 
-      Utils.showDialogBox("Informe o modelo do veículo!", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.informeOModeloDoVeiculo, context);
       _modelFocus!.requestFocus();
       return false;
     }

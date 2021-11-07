@@ -26,23 +26,27 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
   TextEditingController _obsEventController = TextEditingController();
   DocumentSnapshot? eventBase;
   bool _loeaded = false;
-  String title = "Cadastro de evento base";
-  String buttonText = "Registrar evento base";
+
   @override
   Widget build(BuildContext context) {
     eventBase = widget.eventBase;
 
+    String title = AppLocalizations.of(context)!.cadastroDeEventoBase;
+    String buttonText = AppLocalizations.of(context)!.registrarEventoBase;
 
 
     if(eventBase != null && !_loeaded){
       _eventNameController.text = eventBase![DbData.COLUMN_NAME];
       _obsEventController.text = eventBase![DbData.COLUMN_OBS];
       _id = eventBase!.id;
-      _active = eventBase![DbData.COLUMN_ACTIVE] != null && eventBase![DbData.COLUMN_ACTIVE] != "0"?  true : false;
+      _active = eventBase![DbData.COLUMN_ACTIVE] != null && eventBase![DbData.COLUMN_ACTIVE] != false?  true : false;
       _registrationDate = eventBase![DbData.COLUMN_REGISTRATION_DATE];
-      title = "Alteração de evento base";
-      buttonText = "Atualizar";
+
       _loeaded = true;
+    }
+    if(eventBase != null){
+      title = AppLocalizations.of(context)!.alteracaoDeEventoBase;
+      buttonText = AppLocalizations.of(context)!.atualizar;
     }
 
 
@@ -61,7 +65,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                   child: TextField(
                       controller: _eventNameController,
                       keyboardType: TextInputType.text,
-                      decoration: textFieldDefaultDecoration("Nome do evento")
+                      decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.nomeDoEvento)
                   ),
               ),
               Padding(
@@ -70,7 +74,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                     controller: _obsEventController,
                     keyboardType: TextInputType.text,
                     maxLines: 5,
-                    decoration: textFieldDefaultDecoration("Descrição do evento")
+                    decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.descricaoDoEvento)
                 ),
               ),
               Row(
@@ -80,7 +84,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                       child: Row(
                         children: [
                           Checkbox(
-                            checkColor: Colors.white,
+                            checkColor: APP_CHECK_COLOR,
                             value: _active,
                             onChanged: (bool? value) {
                               setState(() {
@@ -90,9 +94,9 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                           ),
                           RichText(
                             text: TextSpan(
-                                text: "Evento Ativo",
+                                text: AppLocalizations.of(context)!.ativo,
                                 style: TextStyle(
-                                  color: _active! ? Colors.black : Colors.grey
+                                  color: _active! ? APP_MAIN_TEXT : APP_SUB_TEXT
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
@@ -111,7 +115,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                 padding: EdgeInsets.all(20),
                 child: ElevatedButton(
                   style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: APP_BAR_BACKGROUND_COLOR,
                       padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)
@@ -121,7 +125,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                     buttonText,
                     style: (
                         TextStyle(
-                            color: Colors.white, fontSize: 20
+                            color: APP_HINT_TEXT_FIELD, fontSize: 20
                         )
                     ),
                   ),
@@ -138,7 +142,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
   }
 
   void save() {
-    eEventBase base = eEventBase(_id.toString(),
+    eEventBase base = eEventBase(_id,
                                 _eventNameController.text,
                                 _obsEventController.text,
                                 _active!,
@@ -149,13 +153,13 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
       update(base);
 
       Navigator.pop(context);
-      Utils.showToast(AppLocalizations.of(context)!.eventoBaseAtualizaco);
+      Utils.showToast(AppLocalizations.of(context)!.eventoBaseAtualizaco, APP_SUCCESS_BACKGROUND);
     } else {
       base.registerDate = DateTime.now().toString();
       insert(base);
 
       Navigator.pop(context);
-      Utils.showToast(AppLocalizations.of(context)!.eventoBaseCadastrado);
+      Utils.showToast(AppLocalizations.of(context)!.eventoBaseCadastrado, APP_ERROR_BACKGROUND);
     }
 
   }
