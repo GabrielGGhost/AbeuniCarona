@@ -18,14 +18,14 @@ class eVehicle {
   String get registrationDate => _registrationDate!;
 
   eVehicle(this._id, this._sign, this._color, this._model, this._seats,
-      this._luggageSpaces);
+      this._luggageSpaces, this._registrationDate);
 
   static List<eVehicle> getVehicles() {
     return <eVehicle>[
-      eVehicle("", "ABC-123", "COR A", "Modelo A", "4", "3"),
-      eVehicle("", "DEF-456", "COR B", "Modelo B", "6", "4"),
-      eVehicle("", "GHI-789", "COR C", "Modelo C", "4", "2"),
-      eVehicle("", "JKL-012", "COR D", "Modelo D", "2", "4"),
+      eVehicle("", "ABC-123", "COR A", "Modelo A", "4", "3", ""),
+      eVehicle("", "DEF-456", "COR B", "Modelo B", "6", "4", ""),
+      eVehicle("", "GHI-789", "COR C", "Modelo C", "4", "2", ""),
+      eVehicle("", "JKL-012", "COR D", "Modelo D", "2", "4", ""),
     ];
   }
 

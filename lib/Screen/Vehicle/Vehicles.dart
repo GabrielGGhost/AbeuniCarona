@@ -543,7 +543,8 @@ class _VechiclesState extends State<Vechicles> {
           data[DbData.COLUMN_COLOR],
           data[DbData.COLUMN_MODEL],
           data[DbData.COLUMN_SEATS],
-          data[DbData.COLUMN_LUGGAGE_SPACES]);
+          data[DbData.COLUMN_LUGGAGE_SPACES],
+          data[DbData.COLUMN_REGISTRATION_DATE]);
       myVehicles.add(vehicle);
     }
 

@@ -201,12 +201,14 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                           _colorControler.text,
                           _modelControler.text,
                           _seatsControler.text,
-                          _luggageControler.text);
+                          _luggageControler.text,
+                          null);
 
     if(vehicle != null){
 
       try{
         v.id = vehicle!.id;
+        v.registrationDate = vehicle![DbData.COLUMN_REGISTRATION_DATE];
         update(v);
 
         Navigator.pop(context);
