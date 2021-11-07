@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class Vechicles extends StatefulWidget {
   const Vechicles({Key? key}) : super(key: key);
@@ -194,6 +195,25 @@ class _VechiclesState extends State<Vechicles> {
                                                             : AppLocalizations
                                                                     .of(context)!
                                                                 .naoInformado,
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                            context)!
+                                                            .registro,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                            FontWeight.bold),
+                                                      ),
+                                                      Text(": "),
+                                                      Text(
+                                                        Utils.getDateFromBD(vehicle[DbData
+                                                            .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
                                                         style: TextStyle(
                                                             color: Colors.grey),
                                                       )
@@ -411,6 +431,25 @@ class _VechiclesState extends State<Vechicles> {
                                                         : AppLocalizations.of(
                                                                 context)!
                                                             .naoInformado,
+                                                    style: TextStyle(
+                                                        color: Colors.grey),
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    AppLocalizations.of(
+                                                        context)!
+                                                        .registro,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                  Text(": "),
+                                                  Text(
+                                                    Utils.getDateFromBD(vehicle[DbData
+                                                        .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
                                                     style: TextStyle(
                                                         color: Colors.grey),
                                                   )

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class VehicleRegister extends StatefulWidget {
   DocumentSnapshot vehicle;
@@ -23,6 +24,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   bool? myCar = false;
   double? radiusBorder = 16;
   DocumentSnapshot? vehicle;
+  String? _registration = "";
 
   TextEditingController _signControler = TextEditingController();
   TextEditingController _colorControler = TextEditingController();
@@ -34,9 +36,10 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   FocusNode? _colorFocus;
   FocusNode? _modelFocus;
 
+
   @override
   void initState() {
-
+    _registration = Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
     _signFocus = FocusNode();
     _colorFocus = FocusNode();
     _modelFocus = FocusNode();
@@ -57,6 +60,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   Widget build(BuildContext context) {
 
     vehicle = widget.vehicle;
+
+    if(vehicle != null){
+      _registration = Utils.getDateFromBD(vehicle![DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
+    }
+
     String? title = AppLocalizations.of(context)!.registroDeVeiculo;
     String? textButton = AppLocalizations.of(context)!.registrarVeiculo;;
     if(vehicle != null){
@@ -164,6 +172,27 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                 ),
               ),
               Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(
+                          context)!
+                          .registro,
+                      style: TextStyle(
+                          fontWeight:
+                          FontWeight.bold),
+                    ),
+                    Text(": "),
+                    Text(
+                        _registration!,
+                      style: TextStyle(
+                          color: Colors.grey),
+                    )
+                  ],
+                )
+              ),
+              Padding(
                   padding: EdgeInsets.all(20),
                   child: ElevatedButton(
                     style: TextButton.styleFrom(
@@ -195,7 +224,6 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   }
 
   void saveVehicle() {
-    FirebaseFirestore db = FirebaseFirestore.instance;
     eVehicle v = eVehicle(null,
                           _signControler.text,
                           _colorControler.text,

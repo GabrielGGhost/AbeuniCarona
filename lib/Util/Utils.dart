@@ -6,6 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:abeuni_carona/Constants/cImages.dart';
 import 'package:abeuni_carona/Constants/cErrorCodes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class Utils{
 
@@ -107,5 +109,21 @@ class Utils{
             ],
           );
         });
+  }
+
+  static String getDateFromBD(String date, String format) {
+
+    DateTime dateTime = DateTime.parse(date);
+    String formattedDate = DateFormat(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM).format(dateTime);
+
+    return formattedDate;
+  }
+
+  static String? getDateTimeNow(String format) {
+
+    DateTime dateTime = DateTime.now();
+    String formattedDate = DateFormat(format).format(dateTime);
+
+    return formattedDate;
   }
 }
