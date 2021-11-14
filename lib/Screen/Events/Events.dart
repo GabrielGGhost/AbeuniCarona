@@ -17,7 +17,7 @@ class Events extends StatefulWidget {
 
 class _EventsState extends State<Events> {
 
-  List<eEvent> _events = eEvent.getEvents();
+  List<eEvent> _events = [];
   List<eEventBase> _eventsBase = [];
 
 

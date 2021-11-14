@@ -92,64 +92,62 @@ class _EventRegisterState extends State<EventRegister> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 0),
-              child:
-                  StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection(DbData.TABLE_BASE_EVENT)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return Center(
-                            child: Text(AppLocalizations.of(context)!.erroAoCarregarEventosBase),
-                          );
-
-                        return Container(
-                          padding: EdgeInsets.only(bottom: 16.0),
-                          child: Row(
-                            children: <Widget>[
-                              Text(AppLocalizations.of(context)!.base + ":"),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Expanded(
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton(
-                                      value: codBaseEvent,
-                                      isDense: true,
-                                      onChanged: (valueSelectedByUser) {},
-                                      hint: Text(AppLocalizations.of(context)!.escolhaEventoBase),
-                                      items: snapshot.data!.docs
-                                          .map((DocumentSnapshot document) {
-                                        return DropdownMenuItem<String>(
-                                          value: document.id,
-                                          child: Text(document[DbData.COLUMN_NAME]),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: (){
-                                    Navigator.pushNamed(
-                                        context,
-                                        cRoutes.EVENT_BASE_REGISTER
-                                    );
-                                  },
-                              )
-                            ],
-                          ),
+                padding: EdgeInsets.only(top: 0),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection(DbData.TABLE_BASE_EVENT)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(
+                          child: Text(AppLocalizations.of(context)!
+                              .erroAoCarregarEventosBase),
                         );
-                      })
-            ),
+
+                      return Container(
+                        padding: EdgeInsets.only(bottom: 16.0),
+                        child: Row(
+                          children: <Widget>[
+                            Text(AppLocalizations.of(context)!.base + ":  "),
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                value: codBaseEvent,
+                                isDense: true,
+                                onChanged: (value) {
+                                  setState(() {
+                                    codBaseEvent = value as String;
+                                  });
+                                },
+                                hint: Text(AppLocalizations.of(context)!
+                                    .escolhaEventoBase),
+                                items: snapshot.data!.docs
+                                    .map((DocumentSnapshot document) {
+                                  return DropdownMenuItem<String>(
+                                    value: document.id,
+                                    child: Text(document[DbData.COLUMN_NAME]),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            Spacer(),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, cRoutes.EVENT_BASE_REGISTER);
+                              },
+                            )
+                          ],
+                        ),
+                      );
+                    })),
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
                   controller: _locationControler,
                   keyboardType: TextInputType.text,
-                  decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.localizacao)),
+                  decoration: textFieldDefaultDecoration(
+                      AppLocalizations.of(context)!.localizacao)),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 20),
@@ -166,7 +164,8 @@ class _EventRegisterState extends State<EventRegister> {
                     Row(
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.essaEaDataQueOEventoSeraRealizado,
+                          AppLocalizations.of(context)!
+                              .essaEaDataQueOEventoSeraRealizado,
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -182,7 +181,8 @@ class _EventRegisterState extends State<EventRegister> {
                     controller: _eventStartDate,
                     inputFormatters: [maskFormatter],
                     keyboardType: TextInputType.number,
-                    decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.inicio),
+                    decoration: textFieldDefaultDecoration(
+                        AppLocalizations.of(context)!.inicio),
                   ),
                 )),
                 Expanded(
@@ -192,7 +192,8 @@ class _EventRegisterState extends State<EventRegister> {
                       controller: _eventEndDate,
                       inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
-                      decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.fim)),
+                      decoration: textFieldDefaultDecoration(
+                          AppLocalizations.of(context)!.fim)),
                 )),
               ],
             ),
@@ -205,7 +206,8 @@ class _EventRegisterState extends State<EventRegister> {
                         controller: _obsEvent,
                         keyboardType: TextInputType.multiline,
                         maxLines: 5,
-                        decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.observacoes)),
+                        decoration: textFieldDefaultDecoration(
+                            AppLocalizations.of(context)!.observacoes)),
                   ),
                 ),
               ],
@@ -224,7 +226,8 @@ class _EventRegisterState extends State<EventRegister> {
                 ),
                 onPressed: () {
                   Utils.showToast(
-                      AppLocalizations.of(context)!.sucessoAoRegistrarEvento, Colors.green);
+                      AppLocalizations.of(context)!.sucessoAoRegistrarEvento,
+                      Colors.green);
                   Navigator.pop(context);
                 },
               ),
