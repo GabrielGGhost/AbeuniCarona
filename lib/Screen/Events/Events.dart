@@ -6,6 +6,7 @@ import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -17,12 +18,14 @@ class Events extends StatefulWidget {
 class _EventsState extends State<Events> {
 
   List<eEvent> _events = eEvent.getEvents();
-  List<eEventBase> _eventsBase = eEventBase.getEventsBase();
+  List<eEventBase> _eventsBase = [];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Eventos"),
+        title: Text(AppLocalizations.of(context)!.eventos),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: _events != null && _events.length > 0 ?
