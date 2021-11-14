@@ -125,7 +125,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                     buttonText,
                     style: (
                         TextStyle(
-                            color: APP_HINT_TEXT_FIELD, fontSize: 20
+                            color: APP_WHITE_FONT, fontSize: 20
                         )
                     ),
                   ),
