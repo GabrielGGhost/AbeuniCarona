@@ -98,38 +98,39 @@ class _EventRegisterState extends State<EventRegister> {
                   StreamBuilder(
                       stream: db.collection(DbData.TABLE_BASE_EVENT)
                           .snapshots(),
-                      builder: (_, snapshot){
-                        if(!snapshot.hasData){
+                      builder: (_, snapshot) {
+                        if (!snapshot.hasData) {
                           return Text("Sem dados");
                         }
 
-                        QuerySnapshot baseEvents = snapshot.data as QuerySnapshot;
+                        QuerySnapshot baseEvents = snapshot
+                            .data as QuerySnapshot;
 
-                        ListView.builder(
-                          itemCount: baseEvents.docs.length,
-                          itemBuilder: (_, index){
 
-                          }
-                        );
 
-                        if(baseEvents.docs.length > 0){
+
+                        if (baseEvents.docs.length > 0) {
                           return DropdownButtonHideUnderline(
                             child: DropdownButton(
-                            value: _selectedEventBase,
-                            items: ,
-                            onChanged: _eventChanged,
-                            hint: Text("Selecione um evento"),
+                              value: _selectedEventBase,
+                              items: null,
+                              onChanged: _eventChanged,
+                              hint: Text("Selecione um evento"),
                             ),
                           );
+                        } else {
+                          return Container();
                         }
                         IconButton(
                           highlightColor: Colors.blueAccent,
                           icon: Icon(Icons.add),
                           onPressed: () {
-                            Navigator.pushNamed(context, cRoutes.EVENT_BASE_REGISTER);
+                            Navigator.pushNamed(
+                                context, cRoutes.EVENT_BASE_REGISTER);
                           },
                         );
-                ],
+                      })
+            ],
               ),
             ),
             Padding(
