@@ -96,7 +96,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.placa + "*",
+                      hintText: AppLocalizations.of(context)!.placa + AppLocalizations.of(context)!.obr,
                       filled: true,
                       fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
@@ -113,7 +113,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   focusNode: _colorFocus,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.cor + "*",
+                      hintText: AppLocalizations.of(context)!.cor + AppLocalizations.of(context)!.obr,
                       filled: true,
                       fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(
@@ -130,7 +130,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                   focusNode: _modelFocus,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.modelo + "*",
+                      hintText: AppLocalizations.of(context)!.modelo + AppLocalizations.of(context)!.obr,
                       filled: true,
                       fillColor: APP_TEXT_FIELD_BACKGROUND,
                       border: OutlineInputBorder(

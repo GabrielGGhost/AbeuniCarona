@@ -147,7 +147,7 @@ class _EventRegisterState extends State<EventRegister> {
                   controller: _locationControler,
                   keyboardType: TextInputType.text,
                   decoration: textFieldDefaultDecoration(
-                      AppLocalizations.of(context)!.localizacao)),
+                      AppLocalizations.of(context)!.localizacao + AppLocalizations.of(context)!.obr)),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 20),
@@ -182,7 +182,7 @@ class _EventRegisterState extends State<EventRegister> {
                     inputFormatters: [maskFormatter],
                     keyboardType: TextInputType.number,
                     decoration: textFieldDefaultDecoration(
-                        AppLocalizations.of(context)!.inicio),
+                        AppLocalizations.of(context)!.inicio + AppLocalizations.of(context)!.obr),
                   ),
                 )),
                 Expanded(
@@ -193,7 +193,7 @@ class _EventRegisterState extends State<EventRegister> {
                       inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
                       decoration: textFieldDefaultDecoration(
-                          AppLocalizations.of(context)!.fim)),
+                          AppLocalizations.of(context)!.fim + AppLocalizations.of(context)!.obr)),
                 )),
               ],
             ),
