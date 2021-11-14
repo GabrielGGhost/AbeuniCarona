@@ -10,11 +10,13 @@
     "ativo" : "Ativo",
     "atualizar" : "Atualizar",
 
+    "base" : "Base",
 
     "cadastro" : "Cadastro",
     "cadastrarSe" : "Cadastrar-se",
     "cadastroNaoEncontrado" : "Cadastro não encontrado",
     "cadastroDeEventoBase" : "Cadastro de evento base",
+    "cadastroDeEvento" : "Cadastro de evento",
     "cadastroDesativado" : "Cadastro desativado",
     "camera" : "Câmera",
     "cancelar" : "Cancelar",
@@ -28,6 +30,7 @@
     "convidaUmAmigo" : "Convidar um amigo",
     "cor" : "Cor",
 
+    "dataDoEvento" : "Data do Evento",
     "deletado": "Deletado",
     "descricaoDoEvento" : "Descrição do evento",
 
@@ -36,13 +39,16 @@
     "emailJaEmUso" : "E-mail já em uso",
     "emailValidoNecessario" : "Um E-mail válido é necessário",
     "entrar" : "Entrar",
-    "erroAoCarregarDados" : "Erro ao carregar dados",
     "erroAoAtualizar" : "Erro ao atualizar",
+    "erroAoCarregarDados" : "Erro ao carregar dados",
+    "erroAoCarregarEventosBase" : "Erro ao carregar os eventos base!",
     "erroAoInserir" : "Erro ao inserir",
     "erroDesconhecido" : "Erro desconhecido",
     "erroNoServidorTenteNovamenteMaisTarde" : "Erro no servidor. Tente Novamente Mais Tarde",
+    "escolhaEventoBase" : "Escolha o evento base",
     "esseNaoESeuNome" : "Esse não é seu nome de usuário nem seu PIN. Esse nome será visível para seus contatos do WhatApp",
     "espacoParaMalas" : "Espaço para Malas",
+    "essaEaDataQueOEventoSeraRealizado" : "Esta é a data que o evento será realizado",
     "esteEMeuVeiculo" : "Este é meu veículo",
     "eventos" : "Eventos",
     "eventosBase": "Eventos Base",
@@ -51,9 +57,13 @@
     "excessoTentativas" : "Excesso de tentativas. Tente novamente mais tarde",
 
     "falhaAoDeletarVeiculo" : "Falha ao deletar veículo",
+    "fim" : "Fim",
 
     "informeACorDoVeiculo" : "Informe a cor do veículo",
     "informeOModeloDoVeiculo" : "Informe o modelo do veículo!",
+    "inicio" : "Início",
+
+    "localizacao" : "Localização",
 
     "malas" : "Malas",
     "mensagensFavoritas" : "Mensagens Favoritas",
@@ -71,7 +81,7 @@
     "novoGrupo" : "Novo Grupo",
     "notificacoes" : "Notificações",
 
-
+    "observacoes" : "Observações",
     "ok" : "Ok",
     "oVeiculoPrecisaDeUmaPlaca" : "O veículo precisa de uma placa!",
 
@@ -81,6 +91,7 @@
     "privacidadeContaMudarNumero" : "Privacidade, segurança, mudar número",
 
 
+    "registrarEvento" : "Registrar evento",
     "registrarEventoBase" : "Registrar evento base",
     "registrarVeiculo" : "Registrar Veículo",
     "registro" : "Registro",
@@ -93,6 +104,7 @@
     "senhaInvalida" : "Senha inválida",
     "senhaDeveTerAoMenos7Caracteres" : "A senha deve ter ao menos 7 caracteres!",
     "status": "Status",
+    "sucessoAoRegistrarEvento" : "Sucesso ao registrar evento",
 
     "temCertezaQueDesejaExcluirEstaBase" : "Tem cereza que deseja excluir esta base?",
     "temCertezaQueDesejaExcluirEsteVeiculo" : "Tem certeza que deseja excluir este veículo?",

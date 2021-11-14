@@ -6,10 +6,12 @@ import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventRegister extends StatefulWidget {
   eEvent? event;
@@ -28,6 +30,7 @@ class _EventRegisterState extends State<EventRegister> {
   final eventsBase = StreamController<QuerySnapshot>.broadcast();
 
   eEventBase? _selectedEventBase;
+  String? codBaseEvent;
 
   TextEditingController _locationControler = TextEditingController();
   TextEditingController _eventStartDate = TextEditingController();
@@ -43,9 +46,8 @@ class _EventRegisterState extends State<EventRegister> {
     super.initState();
   }
 
-  Stream<QuerySnapshot>? _addListenerEventsBase(){
-    final stream = db.collection(DbData.TABLE_BASE_EVENT)
-                    .snapshots();
+  Stream<QuerySnapshot>? _addListenerEventsBase() {
+    final stream = db.collection(DbData.TABLE_BASE_EVENT).snapshots();
 
     stream.listen((data) {
       eventsBase.add(data);
@@ -64,8 +66,6 @@ class _EventRegisterState extends State<EventRegister> {
     }
     return items;
   }
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class _EventRegisterState extends State<EventRegister> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastro de eventos"),
+        title: Text(AppLocalizations.of(context)!.cadastroDeEvento),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -93,52 +93,63 @@ class _EventRegisterState extends State<EventRegister> {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 0),
-              child: Row(
-                children: [
-                  StreamBuilder(
-                      stream: db.collection(DbData.TABLE_BASE_EVENT)
+              child:
+                  StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection(DbData.TABLE_BASE_EVENT)
                           .snapshots(),
-                      builder: (_, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Text("Sem dados");
-                        }
-
-                        QuerySnapshot baseEvents = snapshot
-                            .data as QuerySnapshot;
-
-
-
-
-                        if (baseEvents.docs.length > 0) {
-                          return DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                              value: _selectedEventBase,
-                              items: null,
-                              onChanged: _eventChanged,
-                              hint: Text("Selecione um evento"),
-                            ),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData)
+                          return Center(
+                            child: Text(AppLocalizations.of(context)!.erroAoCarregarEventosBase),
                           );
-                        } else {
-                          return Container();
-                        }
-                        IconButton(
-                          highlightColor: Colors.blueAccent,
-                          icon: Icon(Icons.add),
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, cRoutes.EVENT_BASE_REGISTER);
-                          },
+
+                        return Container(
+                          padding: EdgeInsets.only(bottom: 16.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context)!.base + ":"),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Expanded(
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      value: codBaseEvent,
+                                      isDense: true,
+                                      onChanged: (valueSelectedByUser) {},
+                                      hint: Text(AppLocalizations.of(context)!.escolhaEventoBase),
+                                      items: snapshot.data!.docs
+                                          .map((DocumentSnapshot document) {
+                                        return DropdownMenuItem<String>(
+                                          value: document.id,
+                                          child: Text(document[DbData.COLUMN_NAME]),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: (){
+                                    Navigator.pushNamed(
+                                        context,
+                                        cRoutes.EVENT_BASE_REGISTER
+                                    );
+                                  },
+                              )
+                            ],
+                          ),
                         );
                       })
-            ],
-              ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
                   controller: _locationControler,
                   keyboardType: TextInputType.text,
-                  decoration: textFieldDefaultDecoration("Localização")),
+                  decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.localizacao)),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 20),
@@ -147,7 +158,7 @@ class _EventRegisterState extends State<EventRegister> {
                     Row(
                       children: [
                         Text(
-                          "Data do evento",
+                          AppLocalizations.of(context)!.dataDoEvento,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -155,7 +166,7 @@ class _EventRegisterState extends State<EventRegister> {
                     Row(
                       children: [
                         Text(
-                          "Esta é a data que o evento será realizado",
+                          AppLocalizations.of(context)!.essaEaDataQueOEventoSeraRealizado,
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -171,7 +182,7 @@ class _EventRegisterState extends State<EventRegister> {
                     controller: _eventStartDate,
                     inputFormatters: [maskFormatter],
                     keyboardType: TextInputType.number,
-                    decoration: textFieldDefaultDecoration("Início"),
+                    decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.inicio),
                   ),
                 )),
                 Expanded(
@@ -181,7 +192,7 @@ class _EventRegisterState extends State<EventRegister> {
                       controller: _eventEndDate,
                       inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
-                      decoration: textFieldDefaultDecoration("Fim")),
+                      decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.fim)),
                 )),
               ],
             ),
@@ -194,7 +205,7 @@ class _EventRegisterState extends State<EventRegister> {
                         controller: _obsEvent,
                         keyboardType: TextInputType.multiline,
                         maxLines: 5,
-                        decoration: textFieldDefaultDecoration("Observações")),
+                        decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.observacoes)),
                   ),
                 ),
               ],
@@ -208,12 +219,12 @@ class _EventRegisterState extends State<EventRegister> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
                 child: Text(
-                  "Registrar evento",
+                  AppLocalizations.of(context)!.registrarEvento,
                   style: (TextStyle(color: Colors.white, fontSize: 20)),
                 ),
                 onPressed: () {
                   Utils.showToast(
-                      "Sucesso ao registrar novo evento.", Colors.green);
+                      AppLocalizations.of(context)!.sucessoAoRegistrarEvento, Colors.green);
                   Navigator.pop(context);
                 },
               ),
@@ -230,13 +241,15 @@ class _EventRegisterState extends State<EventRegister> {
     });
   }
 
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> findAllEventsBase() async {
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>>
+      findAllEventsBase() async {
     List<eEventBase> loadedList = [];
     List<eEventBase> itemList = [];
 
-    Stream<QuerySnapshot<Map<String, dynamic>>> baseEvents = await FirebaseFirestore.instance
-                      .collection(DbData.TABLE_BASE_EVENT)
-                      .snapshots();
+    Stream<QuerySnapshot<Map<String, dynamic>>> baseEvents =
+        await FirebaseFirestore.instance
+            .collection(DbData.TABLE_BASE_EVENT)
+            .snapshots();
 
     return baseEvents;
   }
