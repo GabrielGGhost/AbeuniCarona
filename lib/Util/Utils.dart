@@ -126,4 +126,16 @@ class Utils{
 
     return formattedDate;
   }
+
+  //Retorna um valor booleano se a variável possui um valor.
+  static bool hasValue(String? value){
+    if(value == null){
+      return false;
+    } else if (value.length == 0){
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 }

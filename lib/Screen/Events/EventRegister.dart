@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
@@ -14,7 +13,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventRegister extends StatefulWidget {
-  eEvent? event;
+  DocumentSnapshot? event;
   EventRegister(this.event);
 
   @override
@@ -28,16 +27,18 @@ class _EventRegisterState extends State<EventRegister> {
 
   List<DropdownMenuItem<eEventBase>>? _dropdownMenuItems;
   final eventsBase = StreamController<QuerySnapshot>.broadcast();
+  DocumentSnapshot? event;
 
-  eEventBase? _selectedEventBase;
-  String? codBaseEvent;
+  String? _codBaseEvent;
 
   TextEditingController _locationControler = TextEditingController();
   TextEditingController _eventStartDate = TextEditingController();
   TextEditingController _eventEndDate = TextEditingController();
-  TextEditingController _registerStartDate = TextEditingController();
-  TextEditingController _registerEndDate = TextEditingController();
   TextEditingController _obsEvent = TextEditingController();
+
+  FocusNode? _signFocus;
+  FocusNode? _colorFocus;
+  FocusNode? _modelFocus;
 
   @override
   void initState() {
@@ -69,16 +70,14 @@ class _EventRegisterState extends State<EventRegister> {
 
   @override
   Widget build(BuildContext context) {
-    eEvent? event = widget.event;
+    event = widget.event;
 
     if (event != null) {
-      _locationControler.text = event.location;
-      _eventStartDate.text = event.dateEventStart;
-      _eventEndDate.text = event.dateEventEnd;
-      _registerStartDate.text = event.dateRegisterStart;
-      _registerEndDate.text = event.dateRegisterEnd;
-      _obsEvent.text = event.obsEvent;
-      //_selectedEventBase = _eventsBase[int.parse(event.codBaseEvent)];
+      _locationControler.text = event![DbData.COLUMN_LOCATION];
+      _eventStartDate.text = event![DbData.COLUMN_START_DATE];
+      _eventEndDate.text = event![DbData.COLUMN_END_DATE];
+      _obsEvent.text = event![DbData.COLUMN_OBS];
+      _codBaseEvent = event![DbData.COLUMN_COD_BASE_EVENT];
     }
 
     return Scaffold(
@@ -111,11 +110,11 @@ class _EventRegisterState extends State<EventRegister> {
                             Text(AppLocalizations.of(context)!.base + ":  "),
                             DropdownButtonHideUnderline(
                               child: DropdownButton(
-                                value: codBaseEvent,
+                                value: _codBaseEvent,
                                 isDense: true,
                                 onChanged: (value) {
                                   setState(() {
-                                    codBaseEvent = value as String;
+                                    _codBaseEvent = value as String;
                                   });
                                 },
                                 hint: Text(AppLocalizations.of(context)!
@@ -147,7 +146,8 @@ class _EventRegisterState extends State<EventRegister> {
                   controller: _locationControler,
                   keyboardType: TextInputType.text,
                   decoration: textFieldDefaultDecoration(
-                      AppLocalizations.of(context)!.localizacao + AppLocalizations.of(context)!.obr)),
+                      AppLocalizations.of(context)!.localizacao +
+                          AppLocalizations.of(context)!.obr)),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 20),
@@ -182,7 +182,8 @@ class _EventRegisterState extends State<EventRegister> {
                     inputFormatters: [maskFormatter],
                     keyboardType: TextInputType.number,
                     decoration: textFieldDefaultDecoration(
-                        AppLocalizations.of(context)!.inicio + AppLocalizations.of(context)!.obr),
+                        AppLocalizations.of(context)!.inicio +
+                            AppLocalizations.of(context)!.obr),
                   ),
                 )),
                 Expanded(
@@ -193,7 +194,8 @@ class _EventRegisterState extends State<EventRegister> {
                       inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
                       decoration: textFieldDefaultDecoration(
-                          AppLocalizations.of(context)!.fim + AppLocalizations.of(context)!.obr)),
+                          AppLocalizations.of(context)!.fim +
+                              AppLocalizations.of(context)!.obr)),
                 )),
               ],
             ),
@@ -225,10 +227,7 @@ class _EventRegisterState extends State<EventRegister> {
                   style: (TextStyle(color: Colors.white, fontSize: 20)),
                 ),
                 onPressed: () {
-                  Utils.showToast(
-                      AppLocalizations.of(context)!.sucessoAoRegistrarEvento,
-                      Colors.green);
-                  Navigator.pop(context);
+                  save();
                 },
               ),
             ),
@@ -238,22 +237,73 @@ class _EventRegisterState extends State<EventRegister> {
     );
   }
 
-  void _eventChanged(eEventBase? value) {
-    setState(() {
-      _selectedEventBase = value;
-    });
+  void save() {
+    eEvent e = new eEvent(null, _codBaseEvent, _locationControler.text,
+        _eventStartDate.text, _eventEndDate.text, _obsEvent.text, null);
+
+    if (event != null) {
+      try {
+        e.codEvent = event!.id;
+        e.registrationDate = event![DbData.COLUMN_REGISTRATION_DATE];
+        update(e);
+
+        Navigator.pop(context);
+        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado,
+            APP_SUCCESS_BACKGROUND);
+      } catch (e) {
+        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar,
+            APP_ERROR_BACKGROUND);
+      }
+    } else {
+      if (checkFields()) {
+        try {
+          e.registrationDate = DateTime.now().toString();
+          insert(e);
+          Navigator.pop(context);
+          Utils.showToast(
+              "Evento cadastrado com sucesso", APP_SUCCESS_BACKGROUND);
+        } catch (e) {
+          Utils.showToast(AppLocalizations.of(context)!.erroAoInserir,
+              APP_ERROR_BACKGROUND);
+        }
+      }
+    }
   }
 
-  Future<Stream<QuerySnapshot<Map<String, dynamic>>>>
-      findAllEventsBase() async {
-    List<eEventBase> loadedList = [];
-    List<eEventBase> itemList = [];
+  bool checkFields() {
+    if (!Utils.hasValue(_codBaseEvent)) {
+      Utils.showDialogBox("É necessário escolher um evento base!", context);
+      return false;
+    }
 
-    Stream<QuerySnapshot<Map<String, dynamic>>> baseEvents =
-        await FirebaseFirestore.instance
-            .collection(DbData.TABLE_BASE_EVENT)
-            .snapshots();
+    if (!Utils.hasValue(_locationControler.text)) {
+      Utils.showDialogBox(
+          "É necessário informar o local do evento!", context);
+      return false;
+    }
 
-    return baseEvents;
+    if (!Utils.hasValue(_eventStartDate.text)) {
+      Utils.showDialogBox(
+          "É necessário informar a data de início do evento!", context);
+      return false;
+    }
+
+    if (!Utils.hasValue(_eventEndDate.text)) {
+      Utils.showDialogBox(
+          "É necessário informar a data final do evento!", context);
+      return false;
+    }
+
+    return true;
+  }
+
+  void insert(eEvent e) {
+    db.collection(DbData.TABLE_EVENT)
+        .add(e.toMap());
+  }
+
+  void update(eEvent e) {
+
+
   }
 }
