@@ -85,7 +85,6 @@ class _EventBaseState extends State<EventBase> {
 
                                       DocumentSnapshot event =
                                           baseEvents[index];
-                                      int size = query.docs.length;
 
                                       return Dismissible(
                                         child: Padding(
