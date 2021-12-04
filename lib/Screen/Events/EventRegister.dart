@@ -25,7 +25,6 @@ class _EventRegisterState extends State<EventRegister> {
   var maskFormatter = new MaskTextInputFormatter(mask: '##/##/####');
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  List<DropdownMenuItem<eEventBase>>? _dropdownMenuItems;
   final eventsBase = StreamController<QuerySnapshot>.broadcast();
   DocumentSnapshot? event;
 
@@ -43,7 +42,6 @@ class _EventRegisterState extends State<EventRegister> {
   @override
   void initState() {
     _addListenerEventsBase();
-    //_dropdownMenuItems = buildDropdownMenuItems(_eventsBase);
     super.initState();
   }
 
@@ -97,12 +95,12 @@ class _EventRegisterState extends State<EventRegister> {
                         .collection(DbData.TABLE_BASE_EVENT)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData)
+                      if (!snapshot.hasData){
                         return Center(
                           child: Text(AppLocalizations.of(context)!
                               .erroAoCarregarEventosBase),
                         );
-
+                      }
                       return Container(
                         padding: EdgeInsets.only(bottom: 16.0),
                         child: Row(
