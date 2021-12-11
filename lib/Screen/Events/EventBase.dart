@@ -231,9 +231,9 @@ class _EventBaseState extends State<EventBase> {
       FirebaseFirestore db = FirebaseFirestore.instance;
       db.collection(DbData.TABLE_BASE_EVENT).doc(id).delete();
 
-      Utils.showToast("Deletado", APP_SUCCESS_BACKGROUND);
+      Utils.showToast(AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast("Falha ao deletar base de evento", APP_ERROR_BACKGROUND);
+      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarBadeDeEvento, APP_ERROR_BACKGROUND);
     }
   }
 }

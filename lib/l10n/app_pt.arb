@@ -56,6 +56,7 @@
     "eventoBaseCadastrado" : "Evento Base Cadastrado",
     "excessoTentativas" : "Excesso de tentativas. Tente novamente mais tarde",
 
+    "falhaAoDeletarBadeDeEvento" : "Falha ao deletar base de evento",
     "falhaAoDeletarVeiculo" : "Falha ao deletar veículo",
     "fim" : "Fim",
 
@@ -83,6 +84,7 @@
 
     "obr" : "*",
     "observacoes" : "Observações",
+    "oEventoPrecisaDeUmNome" : "o Evento Precisa de um Nome",
     "ok" : "Ok",
     "oVeiculoPrecisaDeUmaPlaca" : "O veículo precisa de uma placa!",
 

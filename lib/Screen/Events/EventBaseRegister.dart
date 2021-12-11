@@ -27,6 +27,14 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
   DocumentSnapshot? eventBase;
   bool _loeaded = false;
 
+  FocusNode? _nameEventFocus;
+
+  @override
+  void initState() {
+    _nameEventFocus = FocusNode();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     eventBase = widget.eventBase;
@@ -64,8 +72,9 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
                       controller: _eventNameController,
+                      focusNode: _nameEventFocus,
                       keyboardType: TextInputType.text,
-                      decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.nomeDoEvento)
+                      decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.nomeDoEvento + "*")
                   ),
               ),
               Padding(
@@ -150,16 +159,21 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
 
     if(eventBase != null){
 
+      if(checkFields()) return;
+
       update(base);
 
       Navigator.pop(context);
       Utils.showToast(AppLocalizations.of(context)!.eventoBaseAtualizaco, APP_SUCCESS_BACKGROUND);
     } else {
+
+      if(checkFields()) return;
+
       base.registerDate = DateTime.now().toString();
       insert(base);
 
       Navigator.pop(context);
-      Utils.showToast(AppLocalizations.of(context)!.eventoBaseCadastrado, APP_ERROR_BACKGROUND);
+      Utils.showToast(AppLocalizations.of(context)!.eventoBaseCadastrado, APP_SUCCESS_BACKGROUND);
     }
 
   }
@@ -177,5 +191,16 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
     db.collection(DbData.TABLE_BASE_EVENT)
         .doc(_id)
         .update(base.toMap());
+  }
+
+  bool checkFields() {
+
+    if(_eventNameController.text == ""){
+      Utils.showDialogBox(AppLocalizations.of(context)!.oEventoPrecisaDeUmNome, context);
+      _nameEventFocus!.requestFocus();
+      return true;
+    }
+
+    return false;
   }
 }
