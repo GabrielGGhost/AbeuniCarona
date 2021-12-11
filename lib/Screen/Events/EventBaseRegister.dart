@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class EventBaseRegister extends StatefulWidget {
 
@@ -26,11 +27,13 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
   TextEditingController _obsEventController = TextEditingController();
   DocumentSnapshot? eventBase;
   bool _loeaded = false;
+  String? _registration = "";
 
   FocusNode? _nameEventFocus;
 
   @override
   void initState() {
+    _registration = Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
     _nameEventFocus = FocusNode();
     super.initState();
   }
@@ -51,6 +54,8 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
       _registrationDate = eventBase![DbData.COLUMN_REGISTRATION_DATE];
 
       _loeaded = true;
+
+      _registration = Utils.getDateFromBD(eventBase![DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
     }
     if(eventBase != null){
       title = AppLocalizations.of(context)!.alteracaoDeEventoBase;
@@ -85,6 +90,27 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                     maxLines: 5,
                     decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.descricaoDoEvento)
                 ),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(
+                            context)!
+                            .registro,
+                        style: TextStyle(
+                            fontWeight:
+                            FontWeight.bold),
+                      ),
+                      Text(": "),
+                      Text(
+                        _registration!,
+                        style: TextStyle(
+                            color: APP_SUB_TEXT),
+                      )
+                    ],
+                  )
               ),
               Row(
                 children: [
