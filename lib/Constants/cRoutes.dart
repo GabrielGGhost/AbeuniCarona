@@ -17,5 +17,9 @@ class cRoutes {
   static const REGISTER_RIDE3 = "registerRide3";
   static const REGISTER_RIDE4 = "registerRide4";
   static const REGISTER_RIDE5 = "registerRide5";
+  static const REGISTER_USER = "registerUser";
+  static const REGISTER_USER_PICTURE = "registerUserPicture";
+  static const REGISTER_USER_PASSWORD = "registerUserPassword";
+  static const USER_MENU = "userMenu";
 
 }

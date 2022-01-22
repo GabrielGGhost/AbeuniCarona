@@ -8,6 +8,8 @@ import 'package:abeuni_carona/Screen/Events/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_1.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_2.dart';
+import 'package:abeuni_carona/Screen/Users/Register/RegisterUserPassword.dart';
+import 'package:abeuni_carona/Screen/Users/UserMenu.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,8 @@ import 'Screen/Permission/PermissionManager.dart';
 import 'Screen/RideRegister/RideRegister_3.dart';
 import 'Screen/RideRegister/RideRegister_4.dart';
 import 'Screen/RideRegister/RideRegister_5.dart';
+import 'Screen/Users/Register/RegisterUser.dart';
+import 'Screen/Users/Register/RegisterUserPicture.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
 import 'package:abeuni_carona/Screen/Events/EventBase.dart';
@@ -90,6 +94,22 @@ class RouteGenerator {
       case cRoutes.REGISTER_RIDE5:
         return MaterialPageRoute(
             builder: (_) => RideRegister_5()
+        );
+      case cRoutes.REGISTER_USER:
+        return MaterialPageRoute(
+            builder: (_) => RegisterUser()
+        );
+      case cRoutes.REGISTER_USER_PICTURE:
+        return MaterialPageRoute(
+            builder: (_) => RegisterUserPicture(args as eUser)
+        );
+      case cRoutes.REGISTER_USER_PASSWORD:
+        return MaterialPageRoute(
+            builder: (_) => RegisterUserPassword(args as eUser)
+        );
+      case cRoutes.USER_MENU:
+        return MaterialPageRoute(
+            builder: (_) => UserMenu()
         );
       default:
         _routeNotFound();

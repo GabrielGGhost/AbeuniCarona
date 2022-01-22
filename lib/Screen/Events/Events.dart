@@ -22,7 +22,7 @@ class Events extends StatefulWidget {
 class _EventsState extends State<Events> {
   final _controllerBaseEvents = StreamController<QuerySnapshot>.broadcast();
 
-  Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
+  Stream<QuerySnapshot>? _addListenerBorroweds() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     final events = db.collection(DbData.TABLE_EVENT).snapshots();
 

@@ -6,6 +6,7 @@ class DbData {
   static const TABLE_VEHICLE = "vehicle";
   static const TABLE_EVENT = "event";
   static const TABLE_BASE_EVENT = "base_event";
+  static const TABLE_USER = "user";
 
   static const COLUMN_SIGN = "sign";
   static const COLUMN_SEATS = "seats";
@@ -21,5 +22,13 @@ class DbData {
   static const COLUMN_START_DATE = "start_date";
   static const COLUMN_END_DATE = "end_date";
   static const COLUMN_COD_BASE_EVENT = "cod_base_event";
+  static const COLUMN_USERNAME = "username";
+  static const COLUMN_PHONE_NUMBER = "phone_number";
+  static const COLUMN_BIRTH_DATE = "birth_date";
+  static const COLUMN_CPF = "cpf";
+  static const COLUMN_NICKNAME = "nickname";
+  static const COLUMN_PICTURE_PATH = "picture_path";
+  static const COLUMN_USER_ID_REGISTER = "user_id_name";
+
 
 }

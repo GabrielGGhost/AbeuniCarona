@@ -6,6 +6,7 @@
     "aparelhosConectados" : "Aparelhos Conectados",
     "armazenamentoDados" : "Armazenamento e Dados",
     "aPlacaDeveConterOitoCaracteres" : "A placa deve conter 8 caracteres!",
+    "apelido" : "Apelido",
     "assentos" : "Assentos",
     "ativo" : "Ativo",
     "atualizar" : "Atualizar",
@@ -62,6 +63,7 @@
 
     "informeACorDoVeiculo" : "Informe a cor do veículo",
     "informeOModeloDoVeiculo" : "Informe o modelo do veículo!",
+    "informeONomeCompletoDoUsuario" : "informe o nome completo do usuario!",
     "inicio" : "Início",
 
     "localizacao" : "Localização",
@@ -76,6 +78,7 @@
     "naoInformado" : "Não Informado",
     "naoPossuiContaCadastrese" : "Não Possui Conta? Cadastre-se!",
     "nome" : "Nome",
+    "nomeCompleto": "Nome Completo",
     "nomeDoEvento" : "Nome do evento",
     "nomeNecessarioParaCadastro" : "O nome é necessário para o cadastro",
     "novaTransmissao" : "Nova Transmissão",
@@ -109,6 +112,7 @@
     "status": "Status",
     "sucessoAoRegistrarEvento" : "Sucesso ao registrar evento",
 
+    "telefone" : "Telefone",
     "temCertezaQueDesejaExcluirEstaBase" : "Tem cereza que deseja excluir esta base?",
     "temCertezaQueDesejaExcluirEsteVeiculo" : "Tem certeza que deseja excluir este veículo?",
     "temasPapelDeParedeHistoricoDeConversas" : "Temas, papel de parede, historico de conversas",

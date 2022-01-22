@@ -169,6 +169,23 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   subtitle: Text("Gerencie as permissões dos usuários."),
                   horizontalTitleGap: 1,
                 ),
+                ListTile(
+                  title: Text(
+                    "Usuários",
+                    style: TextStyle(
+                        fontSize: 15
+                    ),
+                  ),
+                  leading: Icon(Icons.electric_car),
+                  onTap: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.USER_MENU
+                    );
+                  },
+                  subtitle: Text("Programe uma carona."),
+                  horizontalTitleGap: 1,
+                ),
               ],
             )
         ),
