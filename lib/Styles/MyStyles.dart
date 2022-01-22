@@ -15,6 +15,7 @@ Color APP_CANCEL_BUTTON = Colors.black;
 Color APP_TEXT_FIELD_BACKGROUND = Colors.white;
 Color APP_CHECK_COLOR = Colors.white;
 
+double APP_TEXT_EDIT_RADIUS_BORDER = 16;
 // TEXT FIELDS
 
 /*
