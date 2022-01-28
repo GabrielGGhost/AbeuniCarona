@@ -138,4 +138,11 @@ class Utils{
     }
   }
 
+  static getColumn(String str, Map data){
+    return !isNull(data[str]) ? data[str] : "";
+  }
+
+  static bool isNull(String str){
+    return str == null || str == "";
+  }
 }

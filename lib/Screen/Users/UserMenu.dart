@@ -76,6 +76,12 @@ class _UserMenuState extends State<UserMenu> {
                 ListTile(
                   leading: Icon(Icons.check),
                   title: Text('Aprovar requisições'),
+                  onTap: (){
+                    Navigator.pushNamed(
+                        context,
+                        cRoutes.USER_REQUESTS
+                    );
+                  },
                 ),
               ],
             ),

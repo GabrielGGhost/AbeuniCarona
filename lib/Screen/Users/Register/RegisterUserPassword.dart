@@ -105,7 +105,7 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
         user!.password = _passwordController.text;
         insert(user);
         Utils.showToast("Usuário registrado", APP_SUCCESS_BACKGROUND);
-        Navigator.of(context).popUntil(ModalRoute.withName(cRoutes.INITIAL_ROUTE));
+
       }
     } catch (e) {
       Utils.showToast(
@@ -113,51 +113,73 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
     }
   }
 
-  void insert(eUser? user) {
+  void insert(eUser user) {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseStorage store = FirebaseStorage.instance;
+    String idRegisterUser = user.userIdRegister;
+    if (idRegisterUser != null && idRegisterUser.length > 0) {
+      auth
+          .createUserWithEmailAndPassword(
+              email: user.email, password: user.password)
+          .then((fireBaseUser) {
+        FirebaseFirestore db = FirebaseFirestore.instance;
+        db
+            .collection(DbData.TABLE_USER)
+            .doc(fireBaseUser.user!.uid)
+            .set(user.toMap());
+        Reference root = store.ref();
+        Reference file = root
+            .child(cImages.STORAGE_PATH)
+            .child("${fireBaseUser.user!.uid}." + cImages.TYPE_JPG);
 
-    auth
-        .createUserWithEmailAndPassword(
-            email: user!.email, password: user.password)
-        .then((fireBaseUser) {
-      FirebaseFirestore db = FirebaseFirestore.instance;
+        UploadTask task = file.putFile(File(user.file.path));
 
-      db
-          .collection(DbData.TABLE_USER)
-          .doc(fireBaseUser.user!.uid)
-          .set(user.toMap());
-
-      Reference root = store.ref();
-      Reference file = root
-          .child(cImages.STORAGE_PATH)
-          .child("${fireBaseUser.user!.uid}." + cImages.TYPE_JPG);
-
-      UploadTask task = file.putFile(File(user.file.path));
-
-      task.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-        switch (taskSnapshot.state) {
-          case TaskState.running:
-            break;
-          case TaskState.success:
-            getUrlImage(taskSnapshot, fireBaseUser);
-            break;
-        }
+        task.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+          switch (taskSnapshot.state) {
+            case TaskState.running:
+              break;
+            case TaskState.success:
+              getUrlImage(taskSnapshot, fireBaseUser.user!.uid, false);
+              break;
+          }
+        });
+      }).catchError((error) {
+        Utils.showAuthError(error.code, context);
       });
-    }).catchError((error) {
-      Utils.showAuthError(error.code, context);
-    });
+    } else {
+      db
+          .collection(DbData.TABLE_USER_REQUEST)
+          .add(user.toMap()).then((ref) {
+        Reference root = store.ref();
+        Reference file = root
+            .child(cImages.STORAGE_PATH)
+            .child("${ref.id}." + cImages.TYPE_JPG);
+
+        UploadTask task = file.putFile(File(user.file.path));
+
+        task.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+          switch (taskSnapshot.state) {
+            case TaskState.running:
+              break;
+            case TaskState.success:
+              getUrlImage(taskSnapshot, ref.id, true);
+              break;
+          }
+        });
+          });
+    }
   }
 
   Future getUrlImage(
-      TaskSnapshot taskSnapshot, UserCredential fireBaseUser) async {
+      TaskSnapshot taskSnapshot, userId, bool request) async {
     String url = await taskSnapshot.ref.getDownloadURL();
 
     FirebaseFirestore db = FirebaseFirestore.instance;
 
     Map<String, dynamic> data = {DbData.COLUMN_PICTURE_PATH: url};
 
-    db.collection(DbData.TABLE_USER).doc(fireBaseUser.user!.uid).update(data);
+    var table = request ?  DbData.TABLE_USER_REQUEST : DbData.TABLE_USER;
+    db.collection(table).doc(userId).update(data);
   }
 
   bool checkFields() {

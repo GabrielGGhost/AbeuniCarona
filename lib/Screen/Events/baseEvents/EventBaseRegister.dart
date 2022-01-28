@@ -4,6 +4,7 @@ import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ class EventBaseRegister extends StatefulWidget {
 
 class _EventBaseRegisterState extends State<EventBaseRegister> {
 
+  String? _idLoggedUser;
   String? _registrationDate = "";
   String? _id = "";
   bool? _active = true;
@@ -35,6 +37,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
   void initState() {
     _registration = Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
     _nameEventFocus = FocusNode();
+    _getUserData();
     super.initState();
   }
 
@@ -228,5 +231,14 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
     }
 
     return false;
+  }
+
+  void _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
+    if(usuarioLogado != null){
+      _idLoggedUser = usuarioLogado.uid;
+    }
   }
 }

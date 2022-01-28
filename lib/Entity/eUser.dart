@@ -1,5 +1,6 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/ePhone.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 
 class eUser {
@@ -14,12 +15,10 @@ class eUser {
   String? _picturePath;
   List<ePhone>? _phoneNumbers;
   String? _registrationDate;
-  String? _userIdRegister;
+  String _userIdRegister;
   XFile? _file;
 
   eUser.full(this._userName, this._email, this._phoneNumber, this._birthDate,  this._cpf, this._nickName, this._picturePath, this._registrationDate, this._userIdRegister);
-
-  eUser();
 
   static List<eUser> getUsers(){
     return <eUser> [
@@ -52,7 +51,7 @@ class eUser {
   String get cpf => _cpf!;
   List<ePhone> get phoneNumbers => _phoneNumbers!;
   String get registrationDate => _registrationDate!;
-  String get userIdRegister => _userIdRegister!;
+  String get userIdRegister => _userIdRegister;
   XFile get file => _file!;
   String get password => _password!;
 

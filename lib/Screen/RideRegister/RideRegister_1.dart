@@ -1,7 +1,7 @@
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
-import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
+import 'package:abeuni_carona/Screen/Events/Events/EventRegister.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';

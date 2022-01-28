@@ -21,5 +21,6 @@ class cRoutes {
   static const REGISTER_USER_PICTURE = "registerUserPicture";
   static const REGISTER_USER_PASSWORD = "registerUserPassword";
   static const USER_MENU = "userMenu";
+  static const USER_REQUESTS = "userRequests";
 
 }

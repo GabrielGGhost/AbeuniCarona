@@ -13,13 +13,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   FocusNode? _emailFocus;
   FocusNode? _passwordFocus;
-
 
   @override
   void initState() {
@@ -38,92 +36,119 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          "Abeuni Carona",
-        ),
-      ),
-      body: SingleChildScrollView(
+      body: Container(
         child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                focusNode: _emailFocus,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: "Email" + AppLocalizations.of(context)!.obr,
-                    filled: true,
-                    fillColor: APP_TEXT_FIELD_BACKGROUND,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(APP_TEXT_EDIT_RADIUS_BORDER))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: _passwordController,
-                focusNode: _passwordFocus,
-                obscureText: true,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: "Email" + AppLocalizations.of(context)!.obr,
-                    filled: true,
-                    fillColor: APP_TEXT_FIELD_BACKGROUND,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(APP_TEXT_EDIT_RADIUS_BORDER))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: ElevatedButton(
-                style: TextButton.styleFrom(
-                    backgroundColor: APP_BAR_BACKGROUND_COLOR,
-                    padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                child: Text(
-                  "Registrar",
-                  style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: TextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        focusNode: _emailFocus,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                            hintText: "Email" + AppLocalizations.of(context)!.obr,
+                            filled: true,
+                            fillColor: APP_TEXT_FIELD_BACKGROUND,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                    APP_TEXT_EDIT_RADIUS_BORDER))),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: TextField(
+                        controller: _passwordController,
+                        focusNode: _passwordFocus,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                            hintText: "Email" + AppLocalizations.of(context)!.obr,
+                            filled: true,
+                            fillColor: APP_TEXT_FIELD_BACKGROUND,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                    APP_TEXT_EDIT_RADIUS_BORDER))),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 12, right: 12),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                child: Text(
+                                  "Cadastrar-se",
+                                  style: TextStyle(
+                                      color: Colors.grey
+                                  ),
+                                ),
+                                onTap: (){
+                                  Navigator.pushNamed(context,
+                                      cRoutes.REGISTER_USER);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(20),
+                        child: ElevatedButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: APP_BAR_BACKGROUND_COLOR,
+                              padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30))),
+                          child: Text(
+                            "Registrar",
+                            style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
+                          ),
+                          onPressed: () {
+                            login();
+                          },
+                        )),
+                  ],
                 ),
-                onPressed: () {
-                  login();
-                },
-              ),
-            )
-          ],
-        ),
+              )
+            ]),
       ),
     );
   }
 
   void login() {
-
-    if(checkFields()){
+    if (checkFields()) {
       FirebaseAuth auth = FirebaseAuth.instance;
 
-      auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim()
-        ).then((value){
-          Navigator.pushReplacementNamed(context, cRoutes.INITIAL_ROUTE);
-        }).catchError((error){
-          Utils.showAuthError(error.code, context);
-        });
+      auth
+          .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim())
+          .then((value) {
+        Navigator.pushReplacementNamed(context, cRoutes.INITIAL_ROUTE);
+      }).catchError((error) {
+        Utils.showAuthError(error.code, context);
+      });
     }
   }
 
   bool checkFields() {
-
-    if(_emailController.text.trim().length == 0){
+    if (_emailController.text.trim().length == 0) {
       Utils.showToast("Informe o email do usuário");
       return false;
     }
 
-    if(_passwordController.text.trim().length == 0){
+    if (_passwordController.text.trim().length == 0) {
       Utils.showToast("Informe a senha do usuário");
       return false;
     }

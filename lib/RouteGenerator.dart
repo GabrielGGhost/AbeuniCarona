@@ -2,9 +2,9 @@ import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Screen/Configurations.dart';
-import 'package:abeuni_carona/Screen/Events/EventRegister.dart';
-import 'package:abeuni_carona/Screen/Events/Events.dart';
-import 'package:abeuni_carona/Screen/Events/EventBase.dart';
+import 'package:abeuni_carona/Screen/Events/Events/EventRegister.dart';
+import 'package:abeuni_carona/Screen/Events/Events/Events.dart';
+import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_1.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_2.dart';
@@ -15,7 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'Entity/eEvent.dart';
-import 'Screen/Events/EventBaseRegister.dart';
+import 'Screen/Events/baseEvents/EventBaseRegister.dart';
 import 'Screen/Login.dart';
 import 'Screen/Permission/PermissionManager.dart';
 import 'Screen/RideRegister/RideRegister_3.dart';
@@ -23,9 +23,10 @@ import 'Screen/RideRegister/RideRegister_4.dart';
 import 'Screen/RideRegister/RideRegister_5.dart';
 import 'Screen/Users/Register/RegisterUser.dart';
 import 'Screen/Users/Register/RegisterUserPicture.dart';
+import 'Screen/Users/userRequests/userRequests.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
-import 'package:abeuni_carona/Screen/Events/EventBase.dart';
+import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
 
 class RouteGenerator {
 
@@ -110,6 +111,10 @@ class RouteGenerator {
       case cRoutes.USER_MENU:
         return MaterialPageRoute(
             builder: (_) => UserMenu()
+        );
+      case cRoutes.USER_REQUESTS:
+        return MaterialPageRoute(
+            builder: (_) => userRequests()
         );
       default:
         _routeNotFound();
