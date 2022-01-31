@@ -145,4 +145,9 @@ class Utils{
   static bool isNull(String str){
     return str == null || str == "";
   }
+
+
+  static getSafeString(String string){
+    return string != null ? string : "";
+  }
 }

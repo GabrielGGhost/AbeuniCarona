@@ -15,6 +15,8 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cImages.dart';
+import 'package:crypt/crypt.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class RegisterUserPassword extends StatefulWidget {
   eUser? u;
@@ -147,6 +149,9 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
         Utils.showAuthError(error.code, context);
       });
     } else {
+
+      user.password = _passwordController.text;
+
       db
           .collection(DbData.TABLE_USER_REQUEST)
           .add(user.toMap()).then((ref) {

@@ -7,6 +7,7 @@ import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
@@ -14,6 +15,8 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cImages.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
+import 'package:crypt/crypt.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class userRequests extends StatefulWidget {
   @override
@@ -170,7 +173,7 @@ class _userRequestsState extends State<userRequests> {
                                                   actions: <Widget>[
                                                     TextButton(
                                                         onPressed: () {
-                                                          reprove(event);
+                                                          aprove(event);
                                                           Navigator.of(context)
                                                               .pop(true);
                                                         },
@@ -301,32 +304,44 @@ class _userRequestsState extends State<userRequests> {
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
       FirebaseStorage store = FirebaseStorage.instance;
-
+      Firebase fb = Firebase;
       eUser newUser = eUser.full(
           event[DbData.COLUMN_USERNAME],
-          event[event[DbData.COLUMN_EMAIL]],
-          event[event[DbData.COLUMN_PHONE_NUMBER]],
-          event[event[DbData.COLUMN_BIRTH_DATE]],
-          event[event[DbData.COLUMN_CPF]],
-          event[event[DbData.COLUMN_NICKNAME]],
-          event[event[DbData.COLUMN_PICTURE_PATH]],
+          event[DbData.COLUMN_EMAIL],
+          event[DbData.COLUMN_PHONE_NUMBER],
+          event[DbData.COLUMN_BIRTH_DATE],
+          event[DbData.COLUMN_CPF],
+          event[DbData.COLUMN_NICKNAME],
+          event[DbData.COLUMN_PICTURE_PATH],
           Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
           _idLoggedUser!);
 
-      auth
-          .createUserWithEmailAndPassword(
-              email: newUser.email, password: newUser.password)
-          .then((fireBaseUser) {
-        FirebaseFirestore db = FirebaseFirestore.instance;
-        db
-            .collection(DbData.TABLE_USER)
-            .doc(fireBaseUser.user!.uid)
-            .set(newUser.toMap());
+      var config = {"apiKey": "apiKey",
+        "authDomain": "projectId.firebaseapp.com",
+        "databaseURL": "https://databaseName.firebaseio.com"};
+      var secondaryApp = fb.initializeApp(config, "Secondary");
+
+      secondaryApp.auth().createUserWithEmailAndPassword(em, pwd).then(function(firebaseUser) {
+      secondaryApp.auth().signOut();
+      });
+
+      // auth
+      //     .createUserWithEmailAndPassword(
+      //         email: newUser.email, password: event[DbData.COLUMN_PASSWORD])
+      //     .then((fireBaseUser) {
+      //   FirebaseFirestore db = FirebaseFirestore.instance;
+      //   db
+      //       .collection(DbData.TABLE_USER)
+      //       .doc(fireBaseUser.user!.uid)
+      //       .set(newUser.toMap()).then((value){
+      //         deleteUserRequest(event);
+      //         Utils.showToast("Aprovado com sucesso", APP_SUCCESS_BACKGROUND);
+        }).catchError((error){
+          Utils.showAuthError(error.code, context);
+        });
       }).catchError((error) {
         Utils.showAuthError(error.code, context);
       });
-
-      deleteUserRequest(event);
     } catch (e) {
       Utils.showToast("Falha ao reprovar usuário.", APP_ERROR_BACKGROUND);
     }
@@ -335,6 +350,8 @@ class _userRequestsState extends State<userRequests> {
   void reprove(DocumentSnapshot event) async {
     try {
       deleteUserRequest(event);
+      deleteUserPictureRequest(event);
+      Utils.showToast("Reprovado com sucesso", APP_SUCCESS_BACKGROUND);
     } catch (e) {
       Utils.showToast("Falha ao reprovar usuário.", APP_ERROR_BACKGROUND);
     }
@@ -343,7 +360,6 @@ class _userRequestsState extends State<userRequests> {
   deleteUserRequest(DocumentSnapshot event) {
     FirebaseFirestore db = FirebaseFirestore.instance;
     db.collection(DbData.TABLE_USER_REQUEST).doc(event.id).delete();
-    Utils.showToast("Reprovado com sucesso", APP_SUCCESS_BACKGROUND);
   }
 
   void _getUserData() async {
@@ -353,5 +369,11 @@ class _userRequestsState extends State<userRequests> {
     if (usuarioLogado != null) {
       _idLoggedUser = usuarioLogado.uid;
     }
+  }
+
+  void deleteUserPictureRequest(DocumentSnapshot<Object?> event) {
+    Reference storeRef =
+    FirebaseStorage.instance.refFromURL(event[DbData.COLUMN_PICTURE_PATH]);
+    storeRef.delete();
   }
 }

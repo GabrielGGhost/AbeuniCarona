@@ -1,5 +1,6 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/ePhone.dart';
+import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,7 +12,7 @@ class eUser {
   String? _birthDate;
   String? _cpf;
   String? _nickName;
-  String? _password;
+  String _password = "";
   String? _picturePath;
   List<ePhone>? _phoneNumbers;
   String? _registrationDate;
@@ -31,14 +32,16 @@ class eUser {
 
   Map<String, dynamic> toMap(){
     return {
-      DbData.COLUMN_USERNAME : this.userName,
-      DbData.COLUMN_PHONE_NUMBER : this.phoneNumber,
-      DbData.COLUMN_BIRTH_DATE : this.birthDate,
-      DbData.COLUMN_CPF : this.cpf,
-      DbData.COLUMN_NICKNAME : this.nickName,
-      DbData.COLUMN_PICTURE_PATH : this.picturePath,
-      DbData.COLUMN_REGISTRATION_DATE : this.registrationDate,
-      DbData.COLUMN_USER_ID_REGISTER : this.userIdRegister
+      DbData.COLUMN_USERNAME : getSafeString(this.userName),
+      DbData.COLUMN_PHONE_NUMBER : getSafeString(this.phoneNumber),
+      DbData.COLUMN_BIRTH_DATE : getSafeString(this.birthDate),
+      DbData.COLUMN_CPF : getSafeString(this.cpf),
+      DbData.COLUMN_NICKNAME : getSafeString(this.nickName),
+      DbData.COLUMN_PICTURE_PATH : getSafeString(this.picturePath),
+      DbData.COLUMN_REGISTRATION_DATE : getSafeString(this.registrationDate),
+      DbData.COLUMN_USER_ID_REGISTER : getSafeString(this.userIdRegister),
+      DbData.COLUMN_PASSWORD : getSafeString(this.password),
+      DbData.COLUMN_EMAIL : getSafeString(this.email),
     };
   }
 
@@ -53,7 +56,7 @@ class eUser {
   String get registrationDate => _registrationDate!;
   String get userIdRegister => _userIdRegister;
   XFile get file => _file!;
-  String get password => _password!;
+  String get password => _password;
 
   set phoneNumber(String value) {
     _phoneNumber = value;
@@ -87,5 +90,9 @@ class eUser {
   }
   set email(String value){
     _email = value;
+  }
+
+  String getSafeString(string){
+    return Utils.getSafeString(string);
   }
 }

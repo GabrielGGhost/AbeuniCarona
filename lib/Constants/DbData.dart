@@ -31,6 +31,7 @@ class DbData {
   static const COLUMN_PICTURE_PATH = "picture_path";
   static const COLUMN_USER_ID_REGISTER = "user_id_register";
   static const COLUMN_EMAIL = "email";
+  static const COLUMN_PASSWORD = "password";
 
 
 }
