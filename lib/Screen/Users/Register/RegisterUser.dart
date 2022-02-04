@@ -250,7 +250,8 @@ class _RegisterUserState extends State<RegisterUser> {
         _nickNameController.text,
         "",
         _registration,
-        _idLoggedUser);
+        "0",
+        "0");
 
     if (checkFields()) {
       Navigator.pushNamed(context, cRoutes.REGISTER_USER_PICTURE, arguments: u);

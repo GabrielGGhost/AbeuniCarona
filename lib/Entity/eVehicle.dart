@@ -8,6 +8,10 @@ class eVehicle {
   String? _seats;
   String? _luggageSpaces;
   String? _registrationDate;
+  String? _idOwner;
+
+
+
 
   String get id => _id!;
   String get luggageSpaces => _luggageSpaces!;
@@ -16,16 +20,17 @@ class eVehicle {
   String get color => _color!;
   String get sign => _sign!;
   String get registrationDate => _registrationDate!;
+  String get idOwner => _idOwner!;
 
   eVehicle(this._id, this._sign, this._color, this._model, this._seats,
-      this._luggageSpaces, this._registrationDate);
+      this._luggageSpaces, this._registrationDate, this._idOwner);
 
   static List<eVehicle> getVehicles() {
     return <eVehicle>[
-      eVehicle("", "ABC-123", "COR A", "Modelo A", "4", "3", ""),
-      eVehicle("", "DEF-456", "COR B", "Modelo B", "6", "4", ""),
-      eVehicle("", "GHI-789", "COR C", "Modelo C", "4", "2", ""),
-      eVehicle("", "JKL-012", "COR D", "Modelo D", "2", "4", ""),
+      eVehicle("", "ABC-123", "COR A", "Modelo A", "4", "3", "", ""),
+      eVehicle("", "DEF-456", "COR B", "Modelo B", "6", "4", "", ""),
+      eVehicle("", "GHI-789", "COR C", "Modelo C", "4", "2", "", ""),
+      eVehicle("", "JKL-012", "COR D", "Modelo D", "2", "4", "", ""),
     ];
   }
 
@@ -36,7 +41,8 @@ class eVehicle {
       DbData.COLUMN_MODEL: this._model,
       DbData.COLUMN_SEATS: this._seats,
       DbData.COLUMN_LUGGAGE_SPACES: this._luggageSpaces,
-      DbData.COLUMN_REGISTRATION_DATE: this._registrationDate
+      DbData.COLUMN_REGISTRATION_DATE: this._registrationDate,
+      DbData.COLUMN_ID_OWNER : this._idOwner
     };
   }
 
@@ -66,5 +72,8 @@ class eVehicle {
 
   set registrationDate(String value) {
     _registrationDate = value;
+  }
+  set idOwner(String value) {
+    _idOwner = value;
   }
 }

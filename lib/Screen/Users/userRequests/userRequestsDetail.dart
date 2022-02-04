@@ -23,7 +23,7 @@ class _userRequestsState extends State<userRequests> {
   final _controllerUserRequests = StreamController<QuerySnapshot>.broadcast();
 
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
-    final baseEvents = db.collection(DbData.TABLE_USER_REQUEST).snapshots();
+    final baseEvents = db.collection(DbData.TABLE_USER).snapshots();
 
     baseEvents.listen((data) {
       _controllerUserRequests.add(data);
@@ -293,7 +293,7 @@ class _userRequestsState extends State<userRequests> {
   void reprove(DocumentSnapshot event) async {
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
-      db.collection(DbData.TABLE_USER_REQUEST).doc(event.id).delete();
+      db.collection(DbData.TABLE_USER).doc(event.id).delete();
       Reference storeRef = FirebaseStorage.instance.refFromURL(event[DbData.COLUMN_PICTURE_PATH]);
       storeRef.delete();
       Utils.showToast(

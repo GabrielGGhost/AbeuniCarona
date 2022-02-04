@@ -9,6 +9,7 @@ import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_1.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_2.dart';
 import 'package:abeuni_carona/Screen/Users/Register/RegisterUserPassword.dart';
+import 'package:abeuni_carona/Screen/Users/Register/SendEmailNewUser.dart';
 import 'package:abeuni_carona/Screen/Users/UserMenu.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -115,6 +116,10 @@ class RouteGenerator {
       case cRoutes.USER_REQUESTS:
         return MaterialPageRoute(
             builder: (_) => userRequests()
+        );
+      case cRoutes.SEND_EMAIL_NEW_USER:
+        return MaterialPageRoute(
+            builder: (_) => SendEmailNewUser()
         );
       default:
         _routeNotFound();

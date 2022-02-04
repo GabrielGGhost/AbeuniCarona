@@ -1,4 +1,6 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -53,7 +55,8 @@ class _LoginState extends State<Login> {
                         focusNode: _emailFocus,
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                            hintText: "Email" + AppLocalizations.of(context)!.obr,
+                            hintText:
+                                "Email" + AppLocalizations.of(context)!.obr,
                             filled: true,
                             fillColor: APP_TEXT_FIELD_BACKGROUND,
                             border: OutlineInputBorder(
@@ -69,7 +72,8 @@ class _LoginState extends State<Login> {
                         obscureText: true,
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                            hintText: "Email" + AppLocalizations.of(context)!.obr,
+                            hintText:
+                                "Senha" + AppLocalizations.of(context)!.obr,
                             filled: true,
                             fillColor: APP_TEXT_FIELD_BACKGROUND,
                             border: OutlineInputBorder(
@@ -87,19 +91,16 @@ class _LoginState extends State<Login> {
                               GestureDetector(
                                 child: Text(
                                   "Cadastrar-se",
-                                  style: TextStyle(
-                                      color: Colors.grey
-                                  ),
+                                  style: TextStyle(color: Colors.grey),
                                 ),
-                                onTap: (){
-                                  Navigator.pushNamed(context,
-                                      cRoutes.REGISTER_USER);
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, cRoutes.REGISTER_USER);
                                 },
                               ),
                             ],
                           ),
                         ),
-
                       ],
                     ),
                     Padding(
@@ -112,7 +113,8 @@ class _LoginState extends State<Login> {
                                   borderRadius: BorderRadius.circular(30))),
                           child: Text(
                             "Registrar",
-                            style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
+                            style: (TextStyle(
+                                color: APP_WHITE_FONT, fontSize: 20)),
                           ),
                           onPressed: () {
                             login();
@@ -134,8 +136,28 @@ class _LoginState extends State<Login> {
           .signInWithEmailAndPassword(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim())
-          .then((value) {
-        Navigator.pushReplacementNamed(context, cRoutes.INITIAL_ROUTE);
+          .then((value) async {
+        User user = auth.currentUser!;
+        FirebaseFirestore.instance
+            .collection(DbData.TABLE_USER)
+            .doc(user.uid)
+            .get()
+            .then((value) => {
+                  if (value[DbData.COLUMN_APPROVED] == "0")
+                    {
+                      Utils.showToast(
+                          "O usuário ainda não foi aprovado por um administrador")
+                    }
+                  else
+                    {
+                      Navigator.pushReplacementNamed(
+                          context, cRoutes.INITIAL_ROUTE)
+                    }
+                })
+            .catchError((error) {
+          Utils.showToast(
+              "Erro ao acessar o sistema");
+        });
       }).catchError((error) {
         Utils.showAuthError(error.code, context);
       });

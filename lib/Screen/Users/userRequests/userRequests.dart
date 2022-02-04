@@ -15,7 +15,6 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cImages.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
-import 'package:crypt/crypt.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class userRequests extends StatefulWidget {
@@ -30,7 +29,7 @@ class _userRequestsState extends State<userRequests> {
 
   String? _idLoggedUser;
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
-    final baseEvents = db.collection(DbData.TABLE_USER_REQUEST).snapshots();
+    final baseEvents = db.collection(DbData.TABLE_USER).snapshots();
 
     baseEvents.listen((data) {
       _controllerUserRequests.add(data);
@@ -304,7 +303,6 @@ class _userRequestsState extends State<userRequests> {
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
       FirebaseStorage store = FirebaseStorage.instance;
-      Firebase fb = Firebase;
       eUser newUser = eUser.full(
           event[DbData.COLUMN_USERNAME],
           event[DbData.COLUMN_EMAIL],
@@ -314,28 +312,20 @@ class _userRequestsState extends State<userRequests> {
           event[DbData.COLUMN_NICKNAME],
           event[DbData.COLUMN_PICTURE_PATH],
           Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
-          _idLoggedUser!);
+          "0",
+          "0");
 
-      var config = {"apiKey": "apiKey",
-        "authDomain": "projectId.firebaseapp.com",
-        "databaseURL": "https://databaseName.firebaseio.com"};
-      var secondaryApp = fb.initializeApp(config, "Secondary");
-
-      secondaryApp.auth().createUserWithEmailAndPassword(em, pwd).then(function(firebaseUser) {
-      secondaryApp.auth().signOut();
-      });
-
-      // auth
-      //     .createUserWithEmailAndPassword(
-      //         email: newUser.email, password: event[DbData.COLUMN_PASSWORD])
-      //     .then((fireBaseUser) {
-      //   FirebaseFirestore db = FirebaseFirestore.instance;
-      //   db
-      //       .collection(DbData.TABLE_USER)
-      //       .doc(fireBaseUser.user!.uid)
-      //       .set(newUser.toMap()).then((value){
-      //         deleteUserRequest(event);
-      //         Utils.showToast("Aprovado com sucesso", APP_SUCCESS_BACKGROUND);
+      auth
+          .createUserWithEmailAndPassword(
+              email: newUser.email, password: event[DbData.COLUMN_PASSWORD])
+          .then((fireBaseUser) {
+        FirebaseFirestore db = FirebaseFirestore.instance;
+        db
+            .collection(DbData.TABLE_USER)
+            .doc(fireBaseUser.user!.uid)
+            .set(newUser.toMap()).then((value){
+              deleteUserRequest(event);
+              Utils.showToast("Aprovado com sucesso", APP_SUCCESS_BACKGROUND);
         }).catchError((error){
           Utils.showAuthError(error.code, context);
         });
@@ -359,7 +349,7 @@ class _userRequestsState extends State<userRequests> {
 
   deleteUserRequest(DocumentSnapshot event) {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    db.collection(DbData.TABLE_USER_REQUEST).doc(event.id).delete();
+    db.collection(DbData.TABLE_USER).doc(event.id).delete();
   }
 
   void _getUserData() async {

@@ -3,6 +3,7 @@ import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   FocusNode? _colorFocus;
   FocusNode? _modelFocus;
 
+  String? _idLoggedUser;
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     _signFocus = FocusNode();
     _colorFocus = FocusNode();
     _modelFocus = FocusNode();
+    _getUserData();
     super.initState();
   }
 
@@ -230,7 +233,8 @@ class _VehicleRegisterState extends State<VehicleRegister> {
                           _modelControler.text,
                           _seatsControler.text,
                           _luggageControler.text,
-                          null);
+                          Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+                          _idLoggedUser);
 
     if(vehicle != null){
 
@@ -305,5 +309,14 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     }
 
     return true;
+  }
+
+  void _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
+    if (usuarioLogado != null) {
+      _idLoggedUser = usuarioLogado.uid;
+    }
   }
 }

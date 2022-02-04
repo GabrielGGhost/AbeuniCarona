@@ -12,14 +12,30 @@ class eUser {
   String? _birthDate;
   String? _cpf;
   String? _nickName;
-  String _password = "";
   String? _picturePath;
   List<ePhone>? _phoneNumbers;
   String? _registrationDate;
-  String _userIdRegister;
   XFile? _file;
+  String? _approved;
+  String? _role;
+  String? _idUserApprover;
 
-  eUser.full(this._userName, this._email, this._phoneNumber, this._birthDate,  this._cpf, this._nickName, this._picturePath, this._registrationDate, this._userIdRegister);
+
+
+  set idUserApprover(String value) {
+    _idUserApprover = value;
+  }
+
+  set role(String value) {
+    _role = value;
+  }
+
+
+  set approved(String value) {
+    _approved = value;
+  }
+
+  eUser.full(this._userName, this._email, this._phoneNumber, this._birthDate,  this._cpf, this._nickName, this._picturePath, this._registrationDate, this._role, this._approved);
 
   static List<eUser> getUsers(){
     return <eUser> [
@@ -39,9 +55,10 @@ class eUser {
       DbData.COLUMN_NICKNAME : getSafeString(this.nickName),
       DbData.COLUMN_PICTURE_PATH : getSafeString(this.picturePath),
       DbData.COLUMN_REGISTRATION_DATE : getSafeString(this.registrationDate),
-      DbData.COLUMN_USER_ID_REGISTER : getSafeString(this.userIdRegister),
-      DbData.COLUMN_PASSWORD : getSafeString(this.password),
       DbData.COLUMN_EMAIL : getSafeString(this.email),
+      DbData.COLUMN_APPROVED : getSafeString(this.approved),
+      DbData.COLUMN_ROLE : getSafeString(this.role),
+
     };
   }
 
@@ -54,9 +71,10 @@ class eUser {
   String get cpf => _cpf!;
   List<ePhone> get phoneNumbers => _phoneNumbers!;
   String get registrationDate => _registrationDate!;
-  String get userIdRegister => _userIdRegister;
   XFile get file => _file!;
-  String get password => _password;
+  String get role => _role!;
+  String get approved => _approved!;
+  String get idUserApprover => _idUserApprover!;
 
   set phoneNumber(String value) {
     _phoneNumber = value;
@@ -79,14 +97,8 @@ class eUser {
   set registrationDate(String value) {
     _registrationDate = value;
   }
-  set userIdRegister(String value) {
-    _userIdRegister = value;
-  }
   set file(XFile value) {
     _file = value;
-  }
-  set password(String value) {
-    _password = value;
   }
   set email(String value){
     _email = value;

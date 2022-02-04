@@ -22,5 +22,6 @@ class cRoutes {
   static const REGISTER_USER_PASSWORD = "registerUserPassword";
   static const USER_MENU = "userMenu";
   static const USER_REQUESTS = "userRequests";
+  static const SEND_EMAIL_NEW_USER = "SendEmailNewUser";
 
 }

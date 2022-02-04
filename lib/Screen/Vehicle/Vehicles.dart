@@ -5,6 +5,7 @@ import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,14 +25,21 @@ class _VechiclesState extends State<Vechicles> {
 
   bool _myVehiclesOpened = false;
   bool _borrowedVehiclesOpened = false;
-
+  String? _idLoggedUser;
   final _controllerBorrowedVehicles =
       StreamController<QuerySnapshot>.broadcast();
   final _controllerMyVehicles = StreamController<QuerySnapshot>.broadcast();
 
-  Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
+  Future<Stream<QuerySnapshot<Object?>>?> _addListenerBorrowedVehicles() async {
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
     final borrowedCars = db.collection(DbData.TABLE_VEHICLE).snapshots();
-    final myCars = db.collection(DbData.TABLE_VEHICLE).snapshots();
+    final myCars = db
+        .collection(DbData.TABLE_VEHICLE)
+        .where(DbData.COLUMN_ID_OWNER, isEqualTo:  usuarioLogado!.uid)
+        .snapshots();
 
     myCars.listen((data) {
       _controllerMyVehicles.add(data);
@@ -43,6 +51,7 @@ class _VechiclesState extends State<Vechicles> {
 
   @override
   void initState() {
+    _getUserData();
     _addListenerBorrowedVehicles();
     super.initState();
     //_getUserLoggedData();
@@ -145,7 +154,8 @@ class _VechiclesState extends State<Vechicles> {
                                                         vehicle[
                                                             DbData.COLUMN_SIGN],
                                                         style: TextStyle(
-                                                            color: APP_HINT_TEXT_FIELD,
+                                                            color:
+                                                                APP_HINT_TEXT_FIELD,
                                                             fontSize: 16),
                                                       ),
                                                     ],
@@ -172,7 +182,8 @@ class _VechiclesState extends State<Vechicles> {
                                                                     .of(context)!
                                                                 .naoInformado,
                                                         style: TextStyle(
-                                                            color: APP_HINT_TEXT_FIELD),
+                                                            color:
+                                                                APP_HINT_TEXT_FIELD),
                                                       )
                                                     ],
                                                   ),
@@ -198,7 +209,8 @@ class _VechiclesState extends State<Vechicles> {
                                                                     .of(context)!
                                                                 .naoInformado,
                                                         style: TextStyle(
-                                                            color: APP_HINT_TEXT_FIELD),
+                                                            color:
+                                                                APP_HINT_TEXT_FIELD),
                                                       )
                                                     ],
                                                   ),
@@ -206,18 +218,23 @@ class _VechiclesState extends State<Vechicles> {
                                                     children: [
                                                       Text(
                                                         AppLocalizations.of(
-                                                            context)!
+                                                                context)!
                                                             .registro,
                                                         style: TextStyle(
                                                             fontWeight:
-                                                            FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                       Text(": "),
                                                       Text(
-                                                        Utils.getDateFromBD(vehicle[DbData
-                                                            .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+                                                        Utils.getDateFromBD(
+                                                            vehicle[DbData
+                                                                .COLUMN_REGISTRATION_DATE],
+                                                            cDate
+                                                                .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
                                                         style: TextStyle(
-                                                            color: APP_HINT_TEXT_FIELD),
+                                                            color:
+                                                                APP_HINT_TEXT_FIELD),
                                                       )
                                                     ],
                                                   )
@@ -265,7 +282,8 @@ class _VechiclesState extends State<Vechicles> {
                                                                   context)!
                                                               .cancelar,
                                                           style: TextStyle(
-                                                            color: APP_CANCEL_BUTTON,
+                                                            color:
+                                                                APP_CANCEL_BUTTON,
                                                           ),
                                                         ),
                                                       )),
@@ -383,7 +401,8 @@ class _VechiclesState extends State<Vechicles> {
                                                   Text(
                                                     vehicle[DbData.COLUMN_SIGN],
                                                     style: TextStyle(
-                                                        color: APP_HINT_TEXT_FIELD,
+                                                        color:
+                                                            APP_HINT_TEXT_FIELD,
                                                         fontSize: 16),
                                                   ),
                                                 ],
@@ -409,7 +428,8 @@ class _VechiclesState extends State<Vechicles> {
                                                                 context)!
                                                             .naoInformado,
                                                     style: TextStyle(
-                                                        color: APP_HINT_TEXT_FIELD),
+                                                        color:
+                                                            APP_HINT_TEXT_FIELD),
                                                   )
                                                 ],
                                               ),
@@ -434,7 +454,8 @@ class _VechiclesState extends State<Vechicles> {
                                                                 context)!
                                                             .naoInformado,
                                                     style: TextStyle(
-                                                        color: APP_HINT_TEXT_FIELD),
+                                                        color:
+                                                            APP_HINT_TEXT_FIELD),
                                                   )
                                                 ],
                                               ),
@@ -442,18 +463,22 @@ class _VechiclesState extends State<Vechicles> {
                                                 children: [
                                                   Text(
                                                     AppLocalizations.of(
-                                                        context)!
+                                                            context)!
                                                         .registro,
                                                     style: TextStyle(
                                                         fontWeight:
-                                                        FontWeight.bold),
+                                                            FontWeight.bold),
                                                   ),
                                                   Text(": "),
                                                   Text(
-                                                    Utils.getDateFromBD(vehicle[DbData
-                                                        .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+                                                    Utils.getDateFromBD(
+                                                        vehicle[DbData
+                                                            .COLUMN_REGISTRATION_DATE],
+                                                        cDate
+                                                            .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
                                                     style: TextStyle(
-                                                        color: APP_HINT_TEXT_FIELD),
+                                                        color:
+                                                            APP_HINT_TEXT_FIELD),
                                                   )
                                                 ],
                                               )
@@ -500,7 +525,8 @@ class _VechiclesState extends State<Vechicles> {
                                                               context)!
                                                           .cancelar,
                                                       style: TextStyle(
-                                                        color: APP_CANCEL_BUTTON,
+                                                        color:
+                                                            APP_CANCEL_BUTTON,
                                                       ),
                                                     ),
                                                   )),
@@ -585,7 +611,8 @@ class _VechiclesState extends State<Vechicles> {
           data[DbData.COLUMN_MODEL],
           data[DbData.COLUMN_SEATS],
           data[DbData.COLUMN_LUGGAGE_SPACES],
-          data[DbData.COLUMN_REGISTRATION_DATE]);
+          data[DbData.COLUMN_REGISTRATION_DATE],
+          "");
       myVehicles.add(vehicle);
     }
 
@@ -597,9 +624,15 @@ class _VechiclesState extends State<Vechicles> {
       FirebaseFirestore db = FirebaseFirestore.instance;
       db.collection(DbData.TABLE_VEHICLE).doc(id).delete();
 
-      Utils.showToast(AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
+      Utils.showToast(
+          AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarVeiculo, APP_ERROR_BACKGROUND);
+      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarVeiculo,
+          APP_ERROR_BACKGROUND);
     }
+  }
+
+  void _getUserData() async {
+
   }
 }
