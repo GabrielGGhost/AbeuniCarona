@@ -145,6 +145,7 @@ class _LoginState extends State<Login> {
             .then((value) => {
                   if (value[DbData.COLUMN_APPROVED] == "0")
                     {
+                      auth.signOut(),
                       Utils.showToast(
                           "O usuário ainda não foi aprovado por um administrador")
                     }
