@@ -25,6 +25,7 @@ import 'Screen/RideRegister/RideRegister_5.dart';
 import 'Screen/Users/Register/RegisterUser.dart';
 import 'Screen/Users/Register/RegisterUserPicture.dart';
 import 'Screen/Users/userRequests/userRequests.dart';
+import 'Screen/Users/userRequests/userRequestsDetail.dart';
 import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
 import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
@@ -120,6 +121,10 @@ class RouteGenerator {
       case cRoutes.SEND_EMAIL_NEW_USER:
         return MaterialPageRoute(
             builder: (_) => SendEmailNewUser()
+        );
+      case cRoutes.USER_REQUEST_DETAIL:
+        return MaterialPageRoute(
+            builder: (_) => userRequestDetail(args as DocumentSnapshot)
         );
       default:
         _routeNotFound();

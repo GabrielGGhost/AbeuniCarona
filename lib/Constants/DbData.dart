@@ -28,12 +28,13 @@ class DbData {
   static const COLUMN_CPF = "cpf";
   static const COLUMN_NICKNAME = "nickname";
   static const COLUMN_PICTURE_PATH = "picture_path";
-  static const COLUMN_USER_ID_REGISTER = "user_id_register";
   static const COLUMN_EMAIL = "email";
   static const COLUMN_PASSWORD = "password";
   static const COLUMN_ID_OWNER = "id_owner";
   static const COLUMN_ROLE = "role";
   static const COLUMN_APPROVED = "approved";
-
+  static const COLUMN_USER_ID_APPROVER = "user_id_approver";
+  static const COLUMN_USER_APPROVAL_DATE = "user_approval_date";
+  static const COLUMN_DEPARTMENT = "department";
 
 }

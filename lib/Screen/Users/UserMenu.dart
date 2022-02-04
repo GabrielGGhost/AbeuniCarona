@@ -46,7 +46,7 @@ class _UserMenuState extends State<UserMenu> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Imagem"),
+        title: Text("Usuários"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -61,16 +61,6 @@ class _UserMenuState extends State<UserMenu> {
                   leading: Icon(Icons.supervised_user_circle),
                   title: Text('Visualizar usuários'),
                   onTap: (){
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text('Registrar novo usuário'),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.REGISTER_USER
-                    );
                   },
                 ),
                 ListTile(

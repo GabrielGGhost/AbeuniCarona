@@ -112,7 +112,7 @@ class _LoginState extends State<Login> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30))),
                           child: Text(
-                            "Registrar",
+                            "Acessar",
                             style: (TextStyle(
                                 color: APP_WHITE_FONT, fontSize: 20)),
                           ),
@@ -143,12 +143,15 @@ class _LoginState extends State<Login> {
             .doc(user.uid)
             .get()
             .then((value) => {
-                  if (value[DbData.COLUMN_APPROVED] == "0")
+                  if (value[DbData.COLUMN_APPROVED] == "0" && value[DbData.COLUMN_ROLE] == "0")
                     {
                       auth.signOut(),
                       Utils.showToast(
                           "O usuário ainda não foi aprovado por um administrador")
-                    }
+                    } else if (value[DbData.COLUMN_APPROVED] == "2" && value[DbData.COLUMN_ROLE] == "0"){
+                    Utils.showToast(
+                        "O usuário foi reprovado por um administrador.")
+                  }
                   else
                     {
                       Navigator.pushReplacementNamed(

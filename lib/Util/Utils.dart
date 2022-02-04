@@ -150,4 +150,73 @@ class Utils{
   static getSafeString(String string){
     return string != null ? string : "";
   }
+
+  static String getDateTimeUntilNow(dateTime) {
+
+    int dia = int.parse(dateTime.toString().substring(0, 2));
+    int mes = int.parse(dateTime.toString().substring(3, 5));
+    int ano = int.parse(dateTime.toString().substring(6, 10));
+    int hora = int.parse(dateTime.toString().substring(13, 15));
+    int minuto = int.parse(dateTime.toString().substring(16, 18));
+
+    final registerDate = DateTime(ano, mes, dia, hora, minuto );
+    final dateNow = DateTime.now();
+    int  diffence = dateNow.difference(registerDate).inSeconds;
+
+    int seconds = 0;
+    int minutes = 0;
+    int hours = 0;
+    int days = 0;
+    int months = 0;
+    int years = 0;
+
+    int aux = 0;
+
+    seconds = diffence % 60;
+    minutes = (diffence / 60).floor();
+    hours = (diffence / 3600).floor();
+    days = (diffence / 86400).floor();
+    months = (diffence / 2592000).floor();
+    years = (diffence / 31557600).floor();
+
+    if(years > 0){
+      if(years == 1){
+        return "1 ano";
+      } else {
+        return years.toString() + " anos atrás";
+      }
+    } else if (months > 0) {
+      if(months == 1){
+        return "1 mês";
+      } else {
+        return months.toString() + " meses atrás";
+      }
+    } else if (days > 0) {
+      if(days == 1){
+        return "1 dia";
+      } else {
+        return days.toString() + " dias atrás";
+      }
+    }  else if (hours > 0) {
+      if(hours == 1){
+        return "1 hora";
+      } else {
+        return hours.toString() + " horas atrás";
+      }
+    } else if (minutes > 0) {
+      if(minutes == 1){
+        return "1 minuto";
+      } else {
+        return minutes.toString() + " minutos atrás";
+      }
+    } else if (seconds > 0) {
+      if(seconds == 1){
+        return "1 segundo";
+      } else {
+        return seconds.toString() + " segundos atrás";
+      }
+    }
+
+    return "Não foi possível calcular a data";
+  }
 }

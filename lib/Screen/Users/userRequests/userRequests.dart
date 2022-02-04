@@ -29,7 +29,11 @@ class _userRequestsState extends State<userRequests> {
 
   String? _idLoggedUser;
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
-    final baseEvents = db.collection(DbData.TABLE_USER).snapshots();
+    final baseEvents = db
+        .collection(DbData.TABLE_USER)
+        .where(DbData.COLUMN_ROLE, isEqualTo: "0")
+        .where(DbData.COLUMN_APPROVED, isEqualTo: "0")
+        .snapshots();
 
     baseEvents.listen((data) {
       _controllerUserRequests.add(data);
@@ -99,63 +103,72 @@ class _userRequestsState extends State<userRequests> {
                                         child: Padding(
                                           padding: EdgeInsets.only(bottom: 15),
                                           child: Card(
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 15, horizontal: 10),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      children: [
-                                                        Text(
-                                                          "Há 5 horas atrás",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 12),
-                                                        ),
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 10),
-                                                            child: CircleAvatar(
-                                                                backgroundColor:
-                                                                    Colors.grey,
-                                                                maxRadius: 35,
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                        event[DbData
-                                                                            .COLUMN_PICTURE_PATH]))),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 10),
-                                                          child: Text(
-                                                            event[DbData
-                                                                .COLUMN_USERNAME],
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 10),
-                                                          child: Text(
-                                                            "Ver detalhes",
+                                            child: GestureDetector(
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                    horizontal: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            "Há " + getDateTimeUntilNow(event[DbData.COLUMN_REGISTRATION_DATE]) + " atrás",
                                                             style: TextStyle(
                                                                 color:
                                                                     Colors.grey,
                                                                 fontSize: 12),
                                                           ),
-                                                        )
-                                                      ],
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 10),
+                                                              child: CircleAvatar(
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .grey,
+                                                                  maxRadius: 35,
+                                                                  backgroundImage:
+                                                                      NetworkImage(
+                                                                          event[
+                                                                              DbData.COLUMN_PICTURE_PATH]))),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 10),
+                                                            child: Text(
+                                                              event[DbData
+                                                                  .COLUMN_USERNAME],
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 10),
+                                                            child: Text(
+                                                              "Ver detalhes",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 12),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
+                                              onTap: () {
+                                                Navigator.pushNamed(context,
+                                                    cRoutes.USER_REQUEST_DETAIL,
+                                                    arguments: event);
+                                              },
                                             ),
                                           ),
                                         ),
@@ -172,7 +185,7 @@ class _userRequestsState extends State<userRequests> {
                                                   actions: <Widget>[
                                                     TextButton(
                                                         onPressed: () {
-                                                          aprove(event);
+                                                          approve(event);
                                                           Navigator.of(context)
                                                               .pop(true);
                                                         },
@@ -286,23 +299,11 @@ class _userRequestsState extends State<userRequests> {
                       })
                 ],
               ))),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, cRoutes.REGISTER_USER);
-        },
-        backgroundColor: APP_BAR_BACKGROUND_COLOR,
-        child: Icon(
-          Icons.add,
-          color: APP_WHITE_FONT,
-        ),
-      ),
     );
   }
 
-  void aprove(DocumentSnapshot event) async {
+  void approve(DocumentSnapshot event) async {
     try {
-      FirebaseAuth auth = FirebaseAuth.instance;
-      FirebaseStorage store = FirebaseStorage.instance;
       eUser newUser = eUser.full(
           event[DbData.COLUMN_USERNAME],
           event[DbData.COLUMN_EMAIL],
@@ -310,46 +311,61 @@ class _userRequestsState extends State<userRequests> {
           event[DbData.COLUMN_BIRTH_DATE],
           event[DbData.COLUMN_CPF],
           event[DbData.COLUMN_NICKNAME],
+          event[DbData.COLUMN_DEPARTMENT],
           event[DbData.COLUMN_PICTURE_PATH],
-          Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+          event[DbData.COLUMN_REGISTRATION_DATE],
           "0",
-          "0");
+          "1",
+          _idLoggedUser,
+          Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM));
 
-      auth
-          .createUserWithEmailAndPassword(
-              email: newUser.email, password: event[DbData.COLUMN_PASSWORD])
-          .then((fireBaseUser) {
-        FirebaseFirestore db = FirebaseFirestore.instance;
-        db
-            .collection(DbData.TABLE_USER)
-            .doc(fireBaseUser.user!.uid)
-            .set(newUser.toMap()).then((value){
-              deleteUserRequest(event);
-              Utils.showToast("Aprovado com sucesso", APP_SUCCESS_BACKGROUND);
-        }).catchError((error){
-          Utils.showAuthError(error.code, context);
-        });
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      db
+          .collection(DbData.TABLE_USER)
+          .doc(event.id)
+          .set(newUser.toMap())
+          .then((value) {
+        Utils.showToast("Aprovado com sucesso", APP_SUCCESS_BACKGROUND);
       }).catchError((error) {
         Utils.showAuthError(error.code, context);
       });
     } catch (e) {
-      Utils.showToast("Falha ao reprovar usuário.", APP_ERROR_BACKGROUND);
+      print(e);
+      Utils.showToast("Falha ao aprovar usuário.", APP_ERROR_BACKGROUND);
     }
   }
 
   void reprove(DocumentSnapshot event) async {
     try {
-      deleteUserRequest(event);
-      deleteUserPictureRequest(event);
-      Utils.showToast("Reprovado com sucesso", APP_SUCCESS_BACKGROUND);
+      eUser newUser = eUser.full(
+          event[DbData.COLUMN_USERNAME],
+          event[DbData.COLUMN_EMAIL],
+          event[DbData.COLUMN_PHONE_NUMBER],
+          event[DbData.COLUMN_BIRTH_DATE],
+          event[DbData.COLUMN_CPF],
+          event[DbData.COLUMN_NICKNAME],
+          event[DbData.COLUMN_DEPARTMENT],
+          event[DbData.COLUMN_PICTURE_PATH],
+          event[DbData.COLUMN_REGISTRATION_DATE],
+          "0",
+          "2",
+          _idLoggedUser,
+          Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM));
+
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      db
+          .collection(DbData.TABLE_USER)
+          .doc(event.id)
+          .set(newUser.toMap())
+          .then((value) {
+        Utils.showToast("Reprovado com sucesso", APP_SUCCESS_BACKGROUND);
+      }).catchError((error) {
+        Utils.showAuthError(error.code, context);
+      });
     } catch (e) {
+      print(e);
       Utils.showToast("Falha ao reprovar usuário.", APP_ERROR_BACKGROUND);
     }
-  }
-
-  deleteUserRequest(DocumentSnapshot event) {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    db.collection(DbData.TABLE_USER).doc(event.id).delete();
   }
 
   void _getUserData() async {
@@ -363,7 +379,11 @@ class _userRequestsState extends State<userRequests> {
 
   void deleteUserPictureRequest(DocumentSnapshot<Object?> event) {
     Reference storeRef =
-    FirebaseStorage.instance.refFromURL(event[DbData.COLUMN_PICTURE_PATH]);
+        FirebaseStorage.instance.refFromURL(event[DbData.COLUMN_PICTURE_PATH]);
     storeRef.delete();
+  }
+
+  String getDateTimeUntilNow(dateTime) {
+    return Utils.getDateTimeUntilNow(dateTime);
   }
 }

@@ -31,7 +31,7 @@ class _RegisterUserState extends State<RegisterUser> {
   TextEditingController _birthDateController = TextEditingController();
   TextEditingController _cpfController = TextEditingController();
   TextEditingController _nickNameController = TextEditingController();
-  TextEditingController _departamentoController = TextEditingController();
+  TextEditingController _departmentController = TextEditingController();
   TextEditingController _picturePathControler = TextEditingController();
 
   FocusNode? _emailFocus;
@@ -40,7 +40,7 @@ class _RegisterUserState extends State<RegisterUser> {
   FocusNode? _birthDateFocus;
   FocusNode? _cpfFocus;
   FocusNode? _nickNameFocus;
-  FocusNode? _departamentoFocus;
+  FocusNode? _departmentFocus;
 
   var timeFormat = new MaskTextInputFormatter(mask: 'HH:mm');
   var dateFormat = new MaskTextInputFormatter(mask: 'dd/MM/yyyy');
@@ -56,7 +56,7 @@ class _RegisterUserState extends State<RegisterUser> {
     _phoneNumberFocus = FocusNode();
     _birthDateFocus = FocusNode();
     _nickNameFocus = FocusNode();
-    _departamentoFocus = FocusNode();
+    _departmentFocus = FocusNode();
     _getUserData();
     super.initState();
   }
@@ -69,7 +69,7 @@ class _RegisterUserState extends State<RegisterUser> {
     _phoneNumberFocus!.dispose();
     _birthDateFocus!.dispose();
     _nickNameFocus!.dispose();
-    _departamentoFocus!.dispose();
+    _departmentFocus!.dispose();
     super.dispose();
   }
 
@@ -189,9 +189,9 @@ class _RegisterUserState extends State<RegisterUser> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: TextField(
-                controller: _departamentoController,
+                controller: _departmentController,
                 keyboardType: TextInputType.text,
-                focusNode: _departamentoFocus,
+                focusNode: _departmentFocus,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     filled: true,
@@ -248,10 +248,13 @@ class _RegisterUserState extends State<RegisterUser> {
         _birthDateController.text,
         _cpfController.text,
         _nickNameController.text,
+        _departmentController.text,
         "",
         _registration,
         "0",
-        "0");
+        "0",
+        "",
+        "");
 
     if (checkFields()) {
       Navigator.pushNamed(context, cRoutes.REGISTER_USER_PICTURE, arguments: u);
@@ -304,9 +307,9 @@ class _RegisterUserState extends State<RegisterUser> {
       return false;
     }
 
-    if (!hasValue(_departamentoController.text.trim())) {
+    if (!hasValue(_departmentController.text.trim())) {
       Utils.showDialogBox("Informe o departamento do usuário.", context);
-      _departamentoFocus!.requestFocus();
+      _departmentFocus!.requestFocus();
       return false;
     }
 

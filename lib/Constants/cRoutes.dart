@@ -23,5 +23,6 @@ class cRoutes {
   static const USER_MENU = "userMenu";
   static const USER_REQUESTS = "userRequests";
   static const SEND_EMAIL_NEW_USER = "SendEmailNewUser";
+  static const USER_REQUEST_DETAIL = "userRequestDetail";
 
 }
