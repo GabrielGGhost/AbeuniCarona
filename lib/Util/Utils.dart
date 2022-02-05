@@ -169,6 +169,7 @@ class Utils{
     int days = 0;
     int months = 0;
     int years = 0;
+    int semanas = 0;
 
     int aux = 0;
 
