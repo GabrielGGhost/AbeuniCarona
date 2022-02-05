@@ -64,6 +64,7 @@
     "informeACorDoVeiculo" : "Informe a cor do veículo",
     "informeOModeloDoVeiculo" : "Informe o modelo do veículo!",
     "informeONomeCompletoDoUsuario" : "informe o nome completo do usuario!",
+    "informeOCpfDoUsuario" : "Informe o cpf do usuário.",
     "inicio" : "Início",
 
     "localizacao" : "Localização",
