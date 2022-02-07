@@ -302,7 +302,7 @@ class _RegisterUserState extends State<RegisterUser> {
     }
 
     if (!hasValue(_cpfController.text.trim())) {
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeOCpfDoUsuario;, context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.informeOCpfDoUsuario, context);
       _cpfFocus!.requestFocus();
       return false;
     }

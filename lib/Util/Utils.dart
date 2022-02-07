@@ -169,14 +169,13 @@ class Utils{
     int days = 0;
     int months = 0;
     int years = 0;
-    int semanas = 0;
-
-    int aux = 0;
-
+    int weeks = 0;
+    
     seconds = diffence % 60;
     minutes = (diffence / 60).floor();
     hours = (diffence / 3600).floor();
     days = (diffence / 86400).floor();
+    weeks = (days / 86400).floor();
     months = (diffence / 2592000).floor();
     years = (diffence / 31557600).floor();
 
@@ -192,7 +191,13 @@ class Utils{
       } else {
         return months.toString() + " meses atrás";
       }
-    } else if (days > 0) {
+    } else if (weeks > 0) {
+      if(weeks == 1){
+        return "1 seamana";
+      } else {
+        return days.toString() + " semanas atrás";
+      }
+    }  else if (days > 0) {
       if(days == 1){
         return "1 dia";
       } else {
