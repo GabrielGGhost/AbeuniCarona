@@ -82,203 +82,138 @@ class _EventsState extends State<Events> {
 
                                       DocumentSnapshot event = events[index];
 
-                                      String codBaseEvent =
-                                          event[DbData.COLUMN_COD_BASE_EVENT];
-
-                                      return FutureBuilder<QuerySnapshot>(
-                                          future: FirebaseFirestore.instance
-                                              .collection(
-                                                  DbData.TABLE_BASE_EVENT)
-                                              .get(),
-                                          builder: (_, snap) {
-                                            switch (snap.connectionState) {
-                                              case ConnectionState.none:
-                                              case ConnectionState.waiting:
-                                                return Container();
-                                              case ConnectionState.active:
-                                              case ConnectionState.done:
-                                                final List<DocumentSnapshot>
-                                                    docs = snap.data!.docs;
-                                                if (docs.length > 0) {
-                                                  return ListView.builder(
-                                                      shrinkWrap: true,
-                                                      scrollDirection:
-                                                          Axis.vertical,
-                                                      itemCount: docs.length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        switch (snapshot
-                                                            .connectionState) {
-                                                          case ConnectionState
-                                                              .none:
-                                                          case ConnectionState
-                                                              .waiting:
-                                                            return Center(
-                                                              child: Column(
-                                                                children: [
-                                                                  CircularProgressIndicator()
-                                                                ],
-                                                              ),
-                                                            );
-                                                          case ConnectionState
-                                                              .active:
-                                                            String aux =
-                                                                docs[index].id;
-
-                                                            if (aux ==
-                                                                codBaseEvent) {
-                                                              return Dismissible(
-                                                                child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          bottom:
-                                                                              15),
-                                                                  child: Card(
-                                                                    child: Padding(
-                                                                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                                                                        child: Column(
-                                                                          children: [
-                                                                            Row(
-                                                                              children: [
-                                                                                Text(
-                                                                                  docs[index][DbData.COLUMN_NAME],
-                                                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            Padding(
-                                                                              padding: EdgeInsets.only(top: 5),
-                                                                              child: Row(
-                                                                                children: [
-                                                                                  Text(
-                                                                                    "Local: ",
-                                                                                    style: TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Text(" - "),
-                                                                                  Text(
-                                                                                    event[DbData.COLUMN_LOCATION],
-                                                                                    style: TextStyle(color: Colors.grey, fontSize: 11),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            Row(
-                                                                              children: [
-                                                                                Spacer(),
-                                                                                Text(
-                                                                                  event[DbData.COLUMN_START_DATE],
-                                                                                  style: TextStyle(color: Colors.grey, fontSize: 11),
-                                                                                ),
-                                                                                Text(" - "),
-                                                                                Text(
-                                                                                  event[DbData.COLUMN_END_DATE],
-                                                                                  style: TextStyle(color: Colors.grey, fontSize: 11),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ],
-                                                                        )),
-                                                                  ),
-                                                                ),
-                                                                confirmDismiss:
-                                                                    (d) async {
-                                                                  if (d ==
-                                                                      DismissDirection
-                                                                          .startToEnd) {
-                                                                    Navigator.pushNamed(
-                                                                        context,
-                                                                        cRoutes
-                                                                            .EVENT_REGISTER,
-                                                                        arguments:
-                                                                            event);
-                                                                    return false;
-                                                                  } else {
-                                                                    return await showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                              context) {
-                                                                        return AlertDialog(
-                                                                          title:
-                                                                              Text("Confirmar exclusão"),
-                                                                          content:
-                                                                              Text("Tem certeza que deseja cancelar este carro?"),
-                                                                          actions: <
-                                                                              Widget>[
-                                                                            TextButton(
-                                                                                onPressed: () => Navigator.of(context).pop(true),
-                                                                                child: Text("Tenho certeza")),
-                                                                            TextButton(
-                                                                                onPressed: () => Navigator.of(context).pop(false),
-                                                                                child: Padding(
-                                                                                  padding: EdgeInsets.all(5),
-                                                                                  child: Text(
-                                                                                    "Cancelar",
-                                                                                    style: TextStyle(
-                                                                                      color: Colors.black,
-                                                                                    ),
-                                                                                  ),
-                                                                                )),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  }
-                                                                },
-                                                                key: Key(
-                                                                    event.id),
-                                                                background:
-                                                                    Container(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  child: Icon(
-                                                                      Icons
-                                                                          .edit),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              15),
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          bottom:
-                                                                              20),
-                                                                ),
-                                                                secondaryBackground:
-                                                                    Container(
-                                                                  color: Colors
-                                                                      .redAccent,
-                                                                  child: Icon(Icons
-                                                                      .delete),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerRight,
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              15),
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          bottom:
-                                                                              20),
-                                                                ),
-                                                              );
-                                                            } else {
-                                                              return Container();
-                                                            }
-
-                                                          default:
-                                                            return Container();
-                                                        }
-                                                      });
-                                                } else {
-                                                  return Container();
-                                                }
-                                            }
-                                          });
+                                      return Dismissible(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(bottom: 15),
+                                          child: Card(
+                                            child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                    horizontal: 10),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          event[DbData.COLUMN_EVENT_DESC_BASE_EVENT],
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 18),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            "Local: ",
+                                                            style: TextStyle(
+                                                                fontSize: 12),
+                                                          ),
+                                                          Text(" - "),
+                                                          Text(
+                                                            event[DbData
+                                                                .COLUMN_LOCATION],
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 11),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Spacer(),
+                                                        Text(
+                                                          event[DbData
+                                                              .COLUMN_START_DATE],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 11),
+                                                        ),
+                                                        Text(" - "),
+                                                        Text(
+                                                          event[DbData
+                                                              .COLUMN_END_DATE],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 11),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
+                                        confirmDismiss: (d) async {
+                                          if (d ==
+                                              DismissDirection.startToEnd) {
+                                            Navigator.pushNamed(
+                                                context, cRoutes.EVENT_REGISTER,
+                                                arguments: event);
+                                            return false;
+                                          } else {
+                                            return await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      "Confirmar exclusão"),
+                                                  content: Text(
+                                                      "Tem certeza que deseja cancelar este carro?"),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(true),
+                                                        child: Text(
+                                                            "Tenho certeza")),
+                                                    TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(false),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(5),
+                                                          child: Text(
+                                                            "Cancelar",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                        )),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+                                        },
+                                        key: Key(event.id),
+                                        background: Container(
+                                          color: Colors.green,
+                                          child: Icon(Icons.edit),
+                                          alignment: Alignment.centerLeft,
+                                          padding: EdgeInsets.only(left: 15),
+                                          margin: EdgeInsets.only(bottom: 20),
+                                        ),
+                                        secondaryBackground: Container(
+                                          color: Colors.redAccent,
+                                          child: Icon(Icons.delete),
+                                          alignment: Alignment.centerRight,
+                                          padding: EdgeInsets.only(right: 15),
+                                          margin: EdgeInsets.only(bottom: 20),
+                                        ),
+                                      );
                                     });
                               } else {
                                 return Center(

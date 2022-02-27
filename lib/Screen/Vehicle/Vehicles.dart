@@ -61,7 +61,7 @@ class _VechiclesState extends State<Vechicles> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.meusVeiculos),
+        title: Text("Veiculos"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(

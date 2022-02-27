@@ -22,6 +22,7 @@ class DbData {
   static const COLUMN_START_DATE = "start_date";
   static const COLUMN_END_DATE = "end_date";
   static const COLUMN_COD_BASE_EVENT = "cod_base_event";
+  static const COLUMN_EVENT_DESC_BASE_EVENT = "event_desc_base_event";
   static const COLUMN_USERNAME = "username";
   static const COLUMN_PHONE_NUMBER = "phone_number";
   static const COLUMN_BIRTH_DATE = "birth_date";

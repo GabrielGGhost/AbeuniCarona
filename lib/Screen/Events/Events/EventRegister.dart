@@ -28,7 +28,8 @@ class _EventRegisterState extends State<EventRegister> {
   final eventsBase = StreamController<QuerySnapshot>.broadcast();
   DocumentSnapshot? event;
 
-  String? _codBaseEvent;
+  String? _descBaseEvent;
+  String? _descBaseEventAtual;
 
   TextEditingController _locationControler = TextEditingController();
   TextEditingController _eventStartDate = TextEditingController();
@@ -41,29 +42,7 @@ class _EventRegisterState extends State<EventRegister> {
 
   @override
   void initState() {
-    _addListenerEventsBase();
     super.initState();
-  }
-
-  Stream<QuerySnapshot>? _addListenerEventsBase() {
-    final stream = db.collection(DbData.TABLE_BASE_EVENT).snapshots();
-
-    stream.listen((data) {
-      eventsBase.add(data);
-    });
-  }
-
-  List<DropdownMenuItem<eEventBase>>? buildDropdownMenuItems(List events) {
-    List<DropdownMenuItem<eEventBase>>? items = [];
-    for (eEventBase event in events) {
-      items.add(
-        DropdownMenuItem(
-          value: event,
-          child: Text(event.eventName),
-        ),
-      );
-    }
-    return items;
   }
 
   @override
@@ -75,7 +54,7 @@ class _EventRegisterState extends State<EventRegister> {
       _eventStartDate.text = event![DbData.COLUMN_START_DATE];
       _eventEndDate.text = event![DbData.COLUMN_END_DATE];
       _obsEvent.text = event![DbData.COLUMN_OBS];
-      _codBaseEvent = event![DbData.COLUMN_COD_BASE_EVENT];
+      _descBaseEventAtual = event![DbData.COLUMN_EVENT_DESC_BASE_EVENT];
     }
 
     return Scaffold(
@@ -108,11 +87,11 @@ class _EventRegisterState extends State<EventRegister> {
                             Text(AppLocalizations.of(context)!.base + ":  "),
                             DropdownButtonHideUnderline(
                               child: DropdownButton(
-                                value: _codBaseEvent,
+                                value: _descBaseEvent != null ?  _descBaseEvent :_descBaseEventAtual,
                                 isDense: true,
                                 onChanged: (value) {
                                   setState(() {
-                                    _codBaseEvent = value as String;
+                                    _descBaseEvent = value as String;
                                   });
                                 },
                                 hint: Text(AppLocalizations.of(context)!
@@ -120,7 +99,7 @@ class _EventRegisterState extends State<EventRegister> {
                                 items: snapshot.data!.docs
                                     .map((DocumentSnapshot document) {
                                   return DropdownMenuItem<String>(
-                                    value: document.id,
+                                    value: document[DbData.COLUMN_NAME],
                                     child: Text(document[DbData.COLUMN_NAME]),
                                   );
                                 }).toList(),
@@ -236,7 +215,7 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void save() {
-    eEvent e = new eEvent(null, _codBaseEvent, _locationControler.text,
+    eEvent e = new eEvent(null, _descBaseEvent, _locationControler.text,
         _eventStartDate.text, _eventEndDate.text, _obsEvent.text, null);
 
     if (event != null) {
@@ -269,7 +248,7 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   bool checkFields() {
-    if (!Utils.hasValue(_codBaseEvent)) {
+    if (!Utils.hasValue(_descBaseEvent)) {
       Utils.showDialogBox("É necessário escolher um evento base!", context);
       return false;
     }
@@ -302,6 +281,8 @@ class _EventRegisterState extends State<EventRegister> {
 
   void update(eEvent e) {
 
-
+    db.collection(DbData.TABLE_EVENT)
+        .doc(e.codEvent)
+        .update(e.toMap());
   }
 }
