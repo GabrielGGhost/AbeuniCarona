@@ -37,5 +37,6 @@ class DbData {
   static const COLUMN_USER_ID_APPROVER = "user_id_approver";
   static const COLUMN_USER_APPROVAL_DATE = "user_approval_date";
   static const COLUMN_DEPARTMENT = "department";
+  static const COLUMN_DONE = "done";
 
 }

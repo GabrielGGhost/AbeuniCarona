@@ -6,6 +6,7 @@ import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
@@ -40,6 +41,9 @@ class _EventRegisterState extends State<EventRegister> {
   FocusNode? _colorFocus;
   FocusNode? _modelFocus;
 
+  bool loaded = false;
+  bool _done = false;
+
   @override
   void initState() {
     super.initState();
@@ -49,12 +53,16 @@ class _EventRegisterState extends State<EventRegister> {
   Widget build(BuildContext context) {
     event = widget.event;
 
-    if (event != null) {
+    if (event != null && loaded == false) {
       _locationControler.text = event![DbData.COLUMN_LOCATION];
       _eventStartDate.text = event![DbData.COLUMN_START_DATE];
       _eventEndDate.text = event![DbData.COLUMN_END_DATE];
       _obsEvent.text = event![DbData.COLUMN_OBS];
       _descBaseEventAtual = event![DbData.COLUMN_EVENT_DESC_BASE_EVENT];
+
+      _done = event![DbData.COLUMN_DONE] != null && event![DbData.COLUMN_DONE] != false ? true : false;
+
+      loaded = true;
     }
 
     return Scaffold(
@@ -74,7 +82,7 @@ class _EventRegisterState extends State<EventRegister> {
                         .collection(DbData.TABLE_BASE_EVENT)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData){
+                      if (!snapshot.hasData) {
                         return Center(
                           child: Text(AppLocalizations.of(context)!
                               .erroAoCarregarEventosBase),
@@ -87,7 +95,9 @@ class _EventRegisterState extends State<EventRegister> {
                             Text(AppLocalizations.of(context)!.base + ":  "),
                             DropdownButtonHideUnderline(
                               child: DropdownButton(
-                                value: _descBaseEvent != null ?  _descBaseEvent :_descBaseEventAtual,
+                                value: _descBaseEvent != null
+                                    ? _descBaseEvent
+                                    : _descBaseEventAtual,
                                 isDense: true,
                                 onChanged: (value) {
                                   setState(() {
@@ -191,6 +201,41 @@ class _EventRegisterState extends State<EventRegister> {
                 ),
               ],
             ),
+            Visibility(
+              child: Padding(
+                padding: EdgeInsets.all(0),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      checkColor: APP_CHECK_COLOR,
+                      value: _done,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _done = !_done;
+                        });
+                        saveStatus();
+                      },
+                    ),
+                    RichText(
+                      text: TextSpan(
+                          text: AppLocalizations.of(context)!.ativo,
+                          style: TextStyle(
+                              color: _done ? APP_MAIN_TEXT : APP_SUB_TEXT
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              setState(() {
+                                _done = !_done;
+                              });
+                              saveStatus();
+                            }
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              visible: event != null,
+            ),
             Padding(
               padding: EdgeInsets.all(20),
               child: ElevatedButton(
@@ -215,18 +260,23 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void save() {
+    _descBaseEvent =
+        _descBaseEventAtual != null && _descBaseEventAtual!.length > 0
+            ? _descBaseEventAtual
+            : _descBaseEvent;
+
     eEvent e = new eEvent(null, _descBaseEvent, _locationControler.text,
-        _eventStartDate.text, _eventEndDate.text, _obsEvent.text, null);
+        _eventStartDate.text, _eventEndDate.text, _obsEvent.text, null, _done);
 
     if (event != null) {
       try {
         e.codEvent = event!.id;
+        e.done = _done;
         e.registrationDate = event![DbData.COLUMN_REGISTRATION_DATE];
         update(e);
 
         Navigator.pop(context);
-        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado,
-            APP_SUCCESS_BACKGROUND);
+        Utils.showToast("Evento Atualizado", APP_SUCCESS_BACKGROUND);
       } catch (e) {
         Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar,
             APP_ERROR_BACKGROUND);
@@ -254,8 +304,7 @@ class _EventRegisterState extends State<EventRegister> {
     }
 
     if (!Utils.hasValue(_locationControler.text)) {
-      Utils.showDialogBox(
-          "É necessário informar o local do evento!", context);
+      Utils.showDialogBox("É necessário informar o local do evento!", context);
       return false;
     }
 
@@ -275,14 +324,29 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void insert(eEvent e) {
-    db.collection(DbData.TABLE_EVENT)
-        .add(e.toMap());
+    db.collection(DbData.TABLE_EVENT).add(e.toMap());
   }
 
   void update(eEvent e) {
+    db.collection(DbData.TABLE_EVENT).doc(e.codEvent).update(e.toMap());
+  }
 
-    db.collection(DbData.TABLE_EVENT)
-        .doc(e.codEvent)
-        .update(e.toMap());
+  void updateStatus(String codEvent, bool done) {
+    db.collection(DbData.TABLE_EVENT).doc(codEvent).update({
+      "done" : done
+    });
+  }
+
+  void saveStatus() {
+    if (event != null) {
+      try {
+        updateStatus(event!.id, _done);
+
+        Utils.showToast("Status Atualizado", APP_SUCCESS_BACKGROUND);
+      } catch (e) {
+        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar,
+            APP_ERROR_BACKGROUND);
+      }
+    }
   }
 }

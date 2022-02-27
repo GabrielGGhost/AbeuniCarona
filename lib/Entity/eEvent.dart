@@ -9,6 +9,7 @@ class eEvent {
   String? _dateEventEnd;
   String? _obsEvent;
   String? _registrationDate;
+  bool? _done;
 
   Map<String, dynamic> toMap() {
     return {
@@ -17,7 +18,8 @@ class eEvent {
       DbData.COLUMN_START_DATE: this._dateEventStart,
       DbData.COLUMN_END_DATE: this._dateEventEnd,
       DbData.COLUMN_OBS: this._obsEvent,
-      DbData.COLUMN_REGISTRATION_DATE: this._registrationDate
+      DbData.COLUMN_REGISTRATION_DATE: this._registrationDate,
+      DbData.COLUMN_DONE: this._done,
     };
   }
 
@@ -28,7 +30,8 @@ class eEvent {
       this._dateEventStart,
       this._dateEventEnd,
       this._obsEvent,
-      this._registrationDate);
+      this._registrationDate,
+      this._done);
 
   String get codEvent => _codEvent!;
   String get location => _location!;
@@ -37,6 +40,7 @@ class eEvent {
   String get dateEventStart => _dateEventStart!;
   String get registrationDate => _registrationDate!;
   String get descBaseEvent => _descBaseEvent!;
+  bool get done => _done!;
 
   set codEvent(String value) {
     _codEvent = value;
@@ -58,5 +62,8 @@ class eEvent {
   }
   set descBaseEvent(String value) {
     _descBaseEvent = value;
+  }
+  set done(bool value) {
+    _done = value;
   }
 }
