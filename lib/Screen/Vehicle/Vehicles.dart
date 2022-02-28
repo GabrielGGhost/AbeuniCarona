@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
-import 'package:abeuni_carona/Constants/cStyle.dart';
-import 'package:abeuni_carona/Styles/MyStyles.dart';
 
 class Vechicles extends StatefulWidget {
   const Vechicles({Key? key}) : super(key: key);
@@ -31,14 +29,13 @@ class _VechiclesState extends State<Vechicles> {
   final _controllerMyVehicles = StreamController<QuerySnapshot>.broadcast();
 
   Future<Stream<QuerySnapshot<Object?>>?> _addListenerBorrowedVehicles() async {
-
     FirebaseAuth auth = FirebaseAuth.instance;
     User? usuarioLogado = await auth.currentUser;
 
     final borrowedCars = db.collection(DbData.TABLE_VEHICLE).snapshots();
     final myCars = db
         .collection(DbData.TABLE_VEHICLE)
-        .where(DbData.COLUMN_ID_OWNER, isEqualTo:  usuarioLogado!.uid)
+        .where(DbData.COLUMN_ID_OWNER, isEqualTo: usuarioLogado!.uid)
         .snapshots();
 
     myCars.listen((data) {
@@ -69,29 +66,6 @@ class _VechiclesState extends State<Vechicles> {
         padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() => _myVehiclesOpened = !_myVehiclesOpened);
-              },
-              child: Card(
-                color: APP_CARD_BACKGROUND,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.veiculosProprios,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Spacer(),
-                      _myVehiclesOpened
-                          ? Icon(Icons.arrow_drop_up_rounded)
-                          : Icon(Icons.arrow_drop_down),
-                    ],
-                  ),
-                ),
-              ),
-            ),
             StreamBuilder(
                 stream: _controllerMyVehicles.stream,
                 builder: (_, snapshot) {
@@ -118,25 +92,277 @@ class _VechiclesState extends State<Vechicles> {
                         );
                       } else {
                         return Padding(
-                            padding: EdgeInsets.only(left: 10, right: 20),
-                            child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: query.docs.length,
-                                itemBuilder: (_, index) {
-                                  List<DocumentSnapshot> vechicles =
-                                      query.docs.toList();
+                            padding: EdgeInsets.only(top: 0),
+                            child: ExpansionTile(
+                                title: Text(AppLocalizations.of(context)!
+                                    .veiculosProprios),
+                                subtitle: Text(
+                                    "Esses são os veículos cadastrados por você",
+                                  style: TextStyle(
+                                    color: Colors.grey
+                                  ),
+                                ),
+                                children: [
+                                  ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: query.docs.length,
+                                      itemBuilder: (_, index) {
+                                        List<DocumentSnapshot> vechicles =
+                                            query.docs.toList();
 
-                                  DocumentSnapshot vehicle = vechicles[index];
-                                  return Visibility(
-                                    child: Dismissible(
+                                        DocumentSnapshot vehicle =
+                                            vechicles[index];
+                                        return Dismissible(
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 10),
+                                            child: Card(
+                                              child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 15,
+                                                      horizontal: 10),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            vehicle[DbData
+                                                                .COLUMN_MODEL],
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 18),
+                                                          ),
+                                                          Text(" - "),
+                                                          Text(
+                                                            vehicle[DbData
+                                                                .COLUMN_SIGN],
+                                                            style: TextStyle(
+                                                                color:
+                                                                    APP_HINT_TEXT_FIELD,
+                                                                fontSize: 16),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .assentos,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(": "),
+                                                          Text(
+                                                            vehicle[DbData
+                                                                        .COLUMN_SEATS] !=
+                                                                    ""
+                                                                ? vehicle[DbData
+                                                                    .COLUMN_SEATS]
+                                                                : AppLocalizations.of(
+                                                                        context)!
+                                                                    .naoInformado,
+                                                            style: TextStyle(
+                                                                color:
+                                                                    APP_HINT_TEXT_FIELD),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .malas,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(": "),
+                                                          Text(
+                                                            vehicle[DbData
+                                                                        .COLUMN_LUGGAGE_SPACES] !=
+                                                                    ""
+                                                                ? vehicle[DbData
+                                                                    .COLUMN_LUGGAGE_SPACES]
+                                                                : AppLocalizations.of(
+                                                                        context)!
+                                                                    .naoInformado,
+                                                            style: TextStyle(
+                                                                color:
+                                                                    APP_HINT_TEXT_FIELD),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .registro,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(": "),
+                                                          Text(
+                                                            Utils.getDateFromBD(
+                                                                vehicle[DbData
+                                                                    .COLUMN_REGISTRATION_DATE],
+                                                                cDate
+                                                                    .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+                                                            style: TextStyle(
+                                                                color:
+                                                                    APP_HINT_TEXT_FIELD),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  )),
+                                            ),
+                                          ),
+                                          confirmDismiss: (d) async {
+                                            if (d ==
+                                                DismissDirection.startToEnd) {
+                                              Navigator.pushNamed(context,
+                                                  cRoutes.VEHICLES_REGISTER,
+                                                  arguments: vehicle);
+                                              return false;
+                                            } else {
+                                              return await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .confirmarExclusao),
+                                                    content: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .temCertezaQueDesejaExcluirEsteVeiculo),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            delete(vehicle.id);
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(true);
+                                                          },
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .tenhoCerteza)),
+                                                      TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(false),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .cancelar,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    APP_CANCEL_BUTTON,
+                                                              ),
+                                                            ),
+                                                          )),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                          key: Key(vehicle[DbData.COLUMN_SIGN]),
+                                          background: Container(
+                                            color: APP_EDIT_DISMISS,
+                                            child: Icon(Icons.edit),
+                                            alignment: Alignment.centerLeft,
+                                            padding: EdgeInsets.only(left: 15),
+                                            margin: EdgeInsets.only(bottom: 20),
+                                          ),
+                                          secondaryBackground: Container(
+                                            color: APP_REMOVE_DISMISS,
+                                            child: Icon(Icons.delete),
+                                            alignment: Alignment.centerRight,
+                                            padding: EdgeInsets.only(right: 15),
+                                            margin: EdgeInsets.only(bottom: 20),
+                                          ),
+                                        );
+                                      })
+                                ]));
+                      }
+                  }
+                }),
+            StreamBuilder(
+                stream: _controllerBorrowedVehicles.stream,
+                builder: (_, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                      return Center(
+                        child: Column(
+                          children: [CircularProgressIndicator()],
+                        ),
+                      );
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      QuerySnapshot query = snapshot.data as QuerySnapshot;
+
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              Text(AppLocalizations.of(context)!
+                                  .erroAoCarregarDados)
+                            ],
+                          ),
+                        );
+                      } else {
+                        return ExpansionTile(
+                            title: Text(AppLocalizations.of(context)!
+                                .veiculosEmprestados),
+                            subtitle: Text(
+                              "Esses são os veículos que você emprestou",
+                              style: TextStyle(
+                                  color: Colors.grey
+                              ),
+                            ),
+                            children: [
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: query.docs.length,
+                                  itemBuilder: (_, index) {
+                                    List<DocumentSnapshot> vechicles =
+                                        query.docs.toList();
+
+                                    DocumentSnapshot vehicle = vechicles[index];
+                                    return Dismissible(
                                       child: Padding(
-                                        padding: EdgeInsets.only(bottom: 10),
+                                        padding: EdgeInsets.only(bottom: 15),
                                         child: Card(
                                           child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 15, horizontal: 10),
+                                              padding: EdgeInsets.only(
+                                                  left: 10,
+                                                  top: 10,
+                                                  bottom: 10,
+                                                  right: 50),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -308,253 +534,9 @@ class _VechiclesState extends State<Vechicles> {
                                         padding: EdgeInsets.only(right: 15),
                                         margin: EdgeInsets.only(bottom: 20),
                                       ),
-                                    ),
-                                    visible: _myVehiclesOpened,
-                                  );
-                                }));
-                      }
-                  }
-                }),
-            GestureDetector(
-              onTap: () {
-                setState(
-                    () => _borrowedVehiclesOpened = !_borrowedVehiclesOpened);
-              },
-              child: Card(
-                color: APP_CARD_BACKGROUND,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.veiculosEmprestados,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Spacer(),
-                      _borrowedVehiclesOpened
-                          ? Icon(Icons.arrow_drop_up_rounded)
-                          : Icon(Icons.arrow_drop_down),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            StreamBuilder(
-                stream: _controllerBorrowedVehicles.stream,
-                builder: (_, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: Column(
-                          children: [CircularProgressIndicator()],
-                        ),
-                      );
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                      QuerySnapshot query = snapshot.data as QuerySnapshot;
-
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Column(
-                            children: [
-                              Text(AppLocalizations.of(context)!
-                                  .erroAoCarregarDados)
-                            ],
-                          ),
-                        );
-                      } else {
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemCount: query.docs.length,
-                            itemBuilder: (_, index) {
-                              List<DocumentSnapshot> vechicles =
-                                  query.docs.toList();
-
-                              DocumentSnapshot vehicle = vechicles[index];
-                              return Visibility(
-                                child: Dismissible(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: 15),
-                                    child: Card(
-                                      child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10,
-                                              top: 10,
-                                              bottom: 10,
-                                              right: 50),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    vehicle[
-                                                        DbData.COLUMN_MODEL],
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                  Text(" - "),
-                                                  Text(
-                                                    vehicle[DbData.COLUMN_SIGN],
-                                                    style: TextStyle(
-                                                        color:
-                                                            APP_HINT_TEXT_FIELD,
-                                                        fontSize: 16),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .assentos,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(": "),
-                                                  Text(
-                                                    vehicle[DbData
-                                                                .COLUMN_SEATS] !=
-                                                            ""
-                                                        ? vehicle[
-                                                            DbData.COLUMN_SEATS]
-                                                        : AppLocalizations.of(
-                                                                context)!
-                                                            .naoInformado,
-                                                    style: TextStyle(
-                                                        color:
-                                                            APP_HINT_TEXT_FIELD),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .malas,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(": "),
-                                                  Text(
-                                                    vehicle[DbData
-                                                                .COLUMN_LUGGAGE_SPACES] !=
-                                                            ""
-                                                        ? vehicle[DbData
-                                                            .COLUMN_LUGGAGE_SPACES]
-                                                        : AppLocalizations.of(
-                                                                context)!
-                                                            .naoInformado,
-                                                    style: TextStyle(
-                                                        color:
-                                                            APP_HINT_TEXT_FIELD),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .registro,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(": "),
-                                                  Text(
-                                                    Utils.getDateFromBD(
-                                                        vehicle[DbData
-                                                            .COLUMN_REGISTRATION_DATE],
-                                                        cDate
-                                                            .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
-                                                    style: TextStyle(
-                                                        color:
-                                                            APP_HINT_TEXT_FIELD),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  ),
-                                  confirmDismiss: (d) async {
-                                    if (d == DismissDirection.startToEnd) {
-                                      Navigator.pushNamed(
-                                          context, cRoutes.VEHICLES_REGISTER,
-                                          arguments: vehicle);
-                                      return false;
-                                    } else {
-                                      return await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text(
-                                                AppLocalizations.of(context)!
-                                                    .confirmarExclusao),
-                                            content: Text(AppLocalizations.of(
-                                                    context)!
-                                                .temCertezaQueDesejaExcluirEsteVeiculo),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                  onPressed: () {
-                                                    delete(vehicle.id);
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                  },
-                                                  child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .tenhoCerteza)),
-                                              TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(false),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(5),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .cancelar,
-                                                      style: TextStyle(
-                                                        color:
-                                                            APP_CANCEL_BUTTON,
-                                                      ),
-                                                    ),
-                                                  )),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
-                                  key: Key(vehicle[DbData.COLUMN_SIGN]),
-                                  background: Container(
-                                    color: APP_EDIT_DISMISS,
-                                    child: Icon(Icons.edit),
-                                    alignment: Alignment.centerLeft,
-                                    padding: EdgeInsets.only(left: 15),
-                                    margin: EdgeInsets.only(bottom: 20),
-                                  ),
-                                  secondaryBackground: Container(
-                                    color: APP_REMOVE_DISMISS,
-                                    child: Icon(Icons.delete),
-                                    alignment: Alignment.centerRight,
-                                    padding: EdgeInsets.only(right: 15),
-                                    margin: EdgeInsets.only(bottom: 20),
-                                  ),
-                                ),
-                                visible: _borrowedVehiclesOpened,
-                              );
-                            });
+                                    );
+                                  })
+                            ]);
                       }
                   }
                 }),
@@ -632,7 +614,5 @@ class _VechiclesState extends State<Vechicles> {
     }
   }
 
-  void _getUserData() async {
-
-  }
+  void _getUserData() async {}
 }

@@ -9,6 +9,7 @@ class eVehicle {
   String? _luggageSpaces;
   String? _registrationDate;
   String? _idOwner;
+  bool? _active;
 
 
 
@@ -21,6 +22,7 @@ class eVehicle {
   String get sign => _sign!;
   String get registrationDate => _registrationDate!;
   String get idOwner => _idOwner!;
+  bool get active => _active!;
 
   eVehicle(this._id, this._sign, this._color, this._model, this._seats,
       this._luggageSpaces, this._registrationDate, this._idOwner);
@@ -42,7 +44,8 @@ class eVehicle {
       DbData.COLUMN_SEATS: this._seats,
       DbData.COLUMN_LUGGAGE_SPACES: this._luggageSpaces,
       DbData.COLUMN_REGISTRATION_DATE: this._registrationDate,
-      DbData.COLUMN_ID_OWNER : this._idOwner
+      DbData.COLUMN_ID_OWNER: this._idOwner,
+      DbData.COLUMN_ACTIVE : this._active
     };
   }
 
@@ -73,7 +76,11 @@ class eVehicle {
   set registrationDate(String value) {
     _registrationDate = value;
   }
+
   set idOwner(String value) {
     _idOwner = value;
+  }
+  set active(bool value) {
+    _active = value;
   }
 }

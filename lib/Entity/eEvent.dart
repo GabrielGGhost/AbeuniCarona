@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class eEvent {
 
@@ -22,6 +23,19 @@ class eEvent {
       DbData.COLUMN_DONE: this._done,
     };
   }
+
+  documentToEvent(DocumentSnapshot<Object?> event) {
+      this._descBaseEvent = event[DbData.COLUMN_EVENT_DESC_BASE_EVENT];
+      this._location = event[DbData.COLUMN_LOCATION ];
+      this._dateEventStart = event[DbData.COLUMN_START_DATE];
+      this._dateEventEnd = event[DbData.COLUMN_END_DATE];
+      this._obsEvent = event[DbData.COLUMN_OBS];
+      this._registrationDate = event[DbData.COLUMN_REGISTRATION_DATE];
+      this._done = event[DbData.COLUMN_DONE];
+
+  }
+
+  eEvent.empty();
 
   eEvent(
       this._codEvent,

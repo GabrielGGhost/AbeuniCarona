@@ -1,19 +1,25 @@
+import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
+
+import 'RideRegister_1.dart';
 
 class RideRegister_2 extends StatefulWidget {
-  const RideRegister_2({Key? key}) : super(key: key);
-
+  eRide ride;
+  RideRegister_2(this.ride);
   @override
   _RideRegister_2State createState() => _RideRegister_2State();
 }
 
 class _RideRegister_2State extends State<RideRegister_2> {
-
   List<eVehicle> _myVehicles = eVehicle.getVehicles();
   List<eVehicle> _myBorrowedVehicles = eVehicle.getVehicles();
   bool _myVehiclesOpened = false;
@@ -27,244 +33,194 @@ class _RideRegister_2State extends State<RideRegister_2> {
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: _myVehicles != null && _myVehicles.length > 0 ||
-          _myBorrowedVehicles != null && _myBorrowedVehicles.length > 0
-          ?
-      SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
-            child: Column(
-              children: [
-                _myVehicles != null && _myVehicles.length > 0 ?
-                GestureDetector(
-                  onTap: (){
-                    setState(() => _myVehiclesOpened = !_myVehiclesOpened);
-                  },
-                  child:Card(
-                    color: Colors.white,
-                    child:  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Veículos próprios",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          Spacer(),
-                          _myVehiclesOpened ? Icon(Icons.arrow_drop_up_rounded) : Icon(Icons.arrow_drop_down),
-                        ],
-                      ),
-                    ),
-                  ),
-                ) : Container(),
-                _myVehiclesOpened ?
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _myVehicles.length,
-                    itemBuilder: (_, index){
-                      eVehicle vehicle = _myVehicles[index];
-                      return Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: GestureDetector(
-                            onTap: (){
-                              Navigator.pushNamed(
-                                context,
-                                cRoutes.REGISTER_RIDE3
-                              );
-                            },
-                            child: Card(
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 15,horizontal: 10),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            vehicle.model,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18
-                                            ),
-                                          ),
-                                          Text(" - "),
-                                          Text(
-                                            vehicle.sign,
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 16
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Assentos",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                          Text(": "),
-                                          Text(
-                                            vehicle.seats,
-                                            style: TextStyle(
-                                                color: Colors.grey
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Malas",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                          Text(": "),
-                                          Text(
-                                            vehicle.luggageSpaces,
-                                            style: TextStyle(
-                                                color: Colors.grey
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  )
+              _myBorrowedVehicles != null && _myBorrowedVehicles.length > 0
+          ? SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Column(
+                children: [
+                  StreamBuilder(
+                      stream: db
+                          .collection(DbData.TABLE_VEHICLE)
+                          .where(DbData.COLUMN_ACTIVE, isEqualTo: true)
+                          .snapshots(),
+                      builder: (_, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          case ConnectionState.waiting:
+                            return Center(
+                              child: Column(
+                                children: [CircularProgressIndicator()],
                               ),
-                            ),
-                          )
-                      );
-                    }
-                ) : Container(),
-                _myBorrowedVehicles != null && _myBorrowedVehicles.length > 0 ?
-                GestureDetector(
-                  onTap: (){
-                    setState(() => _borrowedVehiclesOpened = !_borrowedVehiclesOpened);
-                  },
-                  child:Card(
-                    color: Colors.white,
-                    child:  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Veículos emprestados",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          Spacer(),
-                          _borrowedVehiclesOpened ? Icon(Icons.arrow_drop_up_rounded) : Icon(Icons.arrow_drop_down),
-                        ],
-                      ),
-                    ),
-                  ),
-                ): Container(),
-                _borrowedVehiclesOpened ?
-                ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: _myBorrowedVehicles.length,
-                    itemBuilder: (_, index){
+                            );
+                          case ConnectionState.active:
+                          case ConnectionState.done:
+                            QuerySnapshot query =
+                                snapshot.data as QuerySnapshot;
 
-                      eVehicle vehicle = _myBorrowedVehicles[index];
-
-                      return Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: GestureDetector(
-                            onTap: (){
-                              Navigator.pushNamed(
-                                context,
-                                cRoutes.REGISTER_RIDE3
-                              );
-                            },
-                            child: Card(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+                            if (snapshot.hasError) {
+                              return Center(
                                 child: Column(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          vehicle.model,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18
-                                          ),
-                                        ),
-                                        Text(" - "),
-                                        Text(
-                                          vehicle.sign,
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 16
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Assentos",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        Text(": "),
-                                        Text(
-                                          vehicle.seats,
-                                          style: TextStyle(
-                                              color: Colors.grey
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Malas",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        Text(": "),
-                                        Text(
-                                          vehicle.luggageSpaces,
-                                          style: TextStyle(
-                                              color: Colors.grey
-                                          ),
-                                        )
-                                      ],
-                                    )
+                                    Text(AppLocalizations.of(context)!
+                                        .erroAoCarregarDados)
                                   ],
-                                )
-                            ),
-                          ),
-                        )
-                      );
-                    }
-                ) : Container(),
-              ],
-            ),
-          )
-      ) : Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Não há veículos\ncadastrados ou disponíveis!\nRegistre um para programar\numa carona ",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
+                                ),
+                              );
+                            } else {
+                              return Padding(
+                                padding: EdgeInsets.only(left: 10, right: 20),
+                                child: ExpansionTile(
+                                  title: Text(AppLocalizations.of(context)!
+                                      .veiculosProprios),
+                                  children: [
+                                    ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: query.docs.length,
+                                        itemBuilder: (_, index) {
+                                          List<DocumentSnapshot> vechicles =
+                                              query.docs.toList();
+
+                                          DocumentSnapshot vehicle =
+                                              vechicles[index];
+                                          return Card(
+                                            child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                    horizontal: 10),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          vehicle[DbData
+                                                              .COLUMN_MODEL],
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 18),
+                                                        ),
+                                                        Text(" - "),
+                                                        Text(
+                                                          vehicle[DbData
+                                                              .COLUMN_SIGN],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  APP_HINT_TEXT_FIELD,
+                                                              fontSize: 16),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .assentos,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(": "),
+                                                        Text(
+                                                          vehicle[DbData
+                                                                      .COLUMN_SEATS] !=
+                                                                  ""
+                                                              ? vehicle[DbData
+                                                                  .COLUMN_SEATS]
+                                                              : AppLocalizations
+                                                                      .of(context)!
+                                                                  .naoInformado,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  APP_HINT_TEXT_FIELD),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .malas,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(": "),
+                                                        Text(
+                                                          vehicle[DbData
+                                                                      .COLUMN_LUGGAGE_SPACES] !=
+                                                                  ""
+                                                              ? vehicle[DbData
+                                                                  .COLUMN_LUGGAGE_SPACES]
+                                                              : AppLocalizations
+                                                                      .of(context)!
+                                                                  .naoInformado,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  APP_HINT_TEXT_FIELD),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .registro,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(": "),
+                                                        Text(
+                                                          Utils.getDateFromBD(
+                                                              vehicle[DbData
+                                                                  .COLUMN_REGISTRATION_DATE],
+                                                              cDate
+                                                                  .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  APP_HINT_TEXT_FIELD),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                )),
+                                          );
+                                        })
+                                  ],
+                                ),
+                              );
+                            }
+                        }
+                      })
+                ],
               ),
-            ],
-          )
-      ),
+            ))
+          : Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Não há veículos\ncadastrados ou disponíveis!\nRegistre um para programar\numa carona ",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            )),
     );
   }
 }

@@ -18,6 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'Entity/eEvent.dart';
+import 'Entity/eRide.dart';
 import 'Screen/Events/baseEvents/EventBaseRegister.dart';
 import 'Screen/Login.dart';
 import 'Screen/Permission/PermissionManager.dart';
@@ -86,7 +87,7 @@ class RouteGenerator {
         );
       case cRoutes.REGISTER_RIDE2:
         return MaterialPageRoute(
-            builder: (_) => RideRegister_2()
+            builder: (_) => RideRegister_2(args as eRide)
         );
       case cRoutes.REGISTER_RIDE3:
         return MaterialPageRoute(
