@@ -36,6 +36,7 @@ class _VechiclesState extends State<Vechicles> {
     final myCars = db
         .collection(DbData.TABLE_VEHICLE)
         .where(DbData.COLUMN_ID_OWNER, isEqualTo: usuarioLogado!.uid)
+        .where(DbData.COLUMN_ACTIVE, isEqualTo: true)
         .snapshots();
 
     myCars.listen((data) {
@@ -572,30 +573,6 @@ class _VechiclesState extends State<Vechicles> {
         ],
       ),
     );
-  }
-
-  static Future<List<eVehicle>?> _findAllMyVehicles() async {
-    List<eVehicle> myVehicles = [];
-
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection(DbData.TABLE_VEHICLE).get();
-
-    for (DocumentSnapshot item in querySnapshot.docs) {
-      var data = item.data() as Map;
-
-      eVehicle vehicle = eVehicle(
-          item.id,
-          data[DbData.COLUMN_SIGN],
-          data[DbData.COLUMN_COLOR],
-          data[DbData.COLUMN_MODEL],
-          data[DbData.COLUMN_SEATS],
-          data[DbData.COLUMN_LUGGAGE_SPACES],
-          data[DbData.COLUMN_REGISTRATION_DATE],
-          "");
-      myVehicles.add(vehicle);
-    }
-
-    return myVehicles;
   }
 
   void delete(String id) {

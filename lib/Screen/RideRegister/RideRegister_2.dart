@@ -20,8 +20,6 @@ class RideRegister_2 extends StatefulWidget {
 }
 
 class _RideRegister_2State extends State<RideRegister_2> {
-  List<eVehicle> _myVehicles = eVehicle.getVehicles();
-  List<eVehicle> _myBorrowedVehicles = eVehicle.getVehicles();
   bool _myVehiclesOpened = false;
   bool _borrowedVehiclesOpened = false;
 
@@ -32,8 +30,7 @@ class _RideRegister_2State extends State<RideRegister_2> {
         title: Text("Cadastro de evento"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
-      body: _myVehicles != null && _myVehicles.length > 0 ||
-              _myBorrowedVehicles != null && _myBorrowedVehicles.length > 0
+      body: true
           ? SingleChildScrollView(
               physics: NeverScrollableScrollPhysics(),
               child: Padding(

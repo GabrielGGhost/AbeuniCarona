@@ -23,6 +23,8 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   bool? myCar = false;
+  bool? _active = true;
+  bool? _loaded = false;
   double? radiusBorder = 16;
   DocumentSnapshot? vehicle;
   String? _registration = "";
@@ -51,33 +53,34 @@ class _VehicleRegisterState extends State<VehicleRegister> {
 
   @override
   void dispose() {
-
     _signFocus!.dispose();
     _colorFocus!.dispose();
     _modelFocus!.dispose();
     super.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     vehicle = widget.vehicle;
-
-    if(vehicle != null){
-      _registration = Utils.getDateFromBD(vehicle![DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
-    }
-
     String? title = AppLocalizations.of(context)!.registroDeVeiculo;
-    String? textButton = AppLocalizations.of(context)!.registrarVeiculo;;
-    if(vehicle != null){
+    String? textButton = AppLocalizations.of(context)!.registrarVeiculo;
+    if (vehicle != null) {
+      _registration = Utils.getDateFromBD(
+          vehicle![DbData.COLUMN_REGISTRATION_DATE],
+          cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
       title = AppLocalizations.of(context)!.alteracaoDeVeiculo;
       textButton = AppLocalizations.of(context)!.atualizar;
+    }
+
+    if (vehicle != null && !_loaded!) {
       _signControler.text = vehicle![DbData.COLUMN_SIGN];
       _colorControler.text = vehicle![DbData.COLUMN_COLOR];
       _modelControler.text = vehicle![DbData.COLUMN_MODEL];
       _seatsControler.text = vehicle![DbData.COLUMN_SEATS];
       _luggageControler.text = vehicle![DbData.COLUMN_LUGGAGE_SPACES];
+      _active = vehicle![DbData.COLUMN_ACTIVE];
+
+      _loaded = true;
     }
 
     return Scaffold(
@@ -86,224 +89,231 @@ class _VehicleRegisterState extends State<VehicleRegister> {
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextField(
-                  controller: _signControler,
-                  autofocus: true,
-                  focusNode: _signFocus,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.placa + AppLocalizations.of(context)!.obr,
-                      filled: true,
-                      fillColor: APP_TEXT_FIELD_BACKGROUND,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(radiusBorder!)
-                      )
-                  ),
-                ),
+          child: Padding(
+        padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: TextField(
+                controller: _signControler,
+                autofocus: true,
+                focusNode: _signFocus,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: AppLocalizations.of(context)!.placa +
+                        AppLocalizations.of(context)!.obr,
+                    filled: true,
+                    fillColor: APP_TEXT_FIELD_BACKGROUND,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(radiusBorder!))),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextField(
-                  controller: _colorControler,
-                  keyboardType: TextInputType.text,
-                  focusNode: _colorFocus,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.cor + AppLocalizations.of(context)!.obr,
-                      filled: true,
-                      fillColor: APP_TEXT_FIELD_BACKGROUND,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(radiusBorder!)
-                      )
-                  ),
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: TextField(
+                controller: _colorControler,
+                keyboardType: TextInputType.text,
+                focusNode: _colorFocus,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: AppLocalizations.of(context)!.cor +
+                        AppLocalizations.of(context)!.obr,
+                    filled: true,
+                    fillColor: APP_TEXT_FIELD_BACKGROUND,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(radiusBorder!))),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextField(
-                  controller: _modelControler,
-                  keyboardType: TextInputType.text,
-                  focusNode: _modelFocus,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.modelo + AppLocalizations.of(context)!.obr,
-                      filled: true,
-                      fillColor: APP_TEXT_FIELD_BACKGROUND,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(radiusBorder!)
-                      )
-                  ),
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: TextField(
+                controller: _modelControler,
+                keyboardType: TextInputType.text,
+                focusNode: _modelFocus,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: AppLocalizations.of(context)!.modelo +
+                        AppLocalizations.of(context)!.obr,
+                    filled: true,
+                    fillColor: APP_TEXT_FIELD_BACKGROUND,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(radiusBorder!))),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextField(
-                  controller: _seatsControler,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.vagas,
-                      filled: true,
-                      fillColor: APP_TEXT_FIELD_BACKGROUND,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(radiusBorder!)
-                      )
-                  ),
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: TextField(
+                controller: _seatsControler,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: AppLocalizations.of(context)!.vagas,
+                    filled: true,
+                    fillColor: APP_TEXT_FIELD_BACKGROUND,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(radiusBorder!))),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextField(
-                  controller: _luggageControler,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      hintText: AppLocalizations.of(context)!.espacoParaMalas,
-                      filled: true,
-                      fillColor: APP_TEXT_FIELD_BACKGROUND,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(radiusBorder!)
-                      )
-                  ),
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: TextField(
+                controller: _luggageControler,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                    hintText: AppLocalizations.of(context)!.espacoParaMalas,
+                    filled: true,
+                    fillColor: APP_TEXT_FIELD_BACKGROUND,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(radiusBorder!))),
               ),
-              Padding(
+            ),
+            Row(
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          checkColor: APP_CHECK_COLOR,
+                          value: _active,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _active = !_active!;
+                            });
+                          },
+                        ),
+                        RichText(
+                          text: TextSpan(
+                              text: AppLocalizations.of(context)!.ativo,
+                              style: TextStyle(
+                                  color:
+                                      _active! ? APP_MAIN_TEXT : APP_SUB_TEXT),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  setState(() {
+                                    _active = !_active!;
+                                  });
+                                }),
+                        )
+                      ],
+                    )),
+              ],
+            ),
+            Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: Row(
                   children: [
                     Text(
-                      AppLocalizations.of(
-                          context)!
-                          .registro,
-                      style: TextStyle(
-                          fontWeight:
-                          FontWeight.bold),
+                      AppLocalizations.of(context)!.registro,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(": "),
                     Text(
-                        _registration!,
-                      style: TextStyle(
-                          color: APP_SUB_TEXT),
+                      _registration!,
+                      style: TextStyle(color: APP_SUB_TEXT),
                     )
                   ],
-                )
+                )),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: ElevatedButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: APP_BAR_BACKGROUND_COLOR,
+                    padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30))),
+                child: Text(
+                  textButton,
+                  style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
+                ),
+                onPressed: () {
+                  saveVehicle();
+                },
               ),
-              Padding(
-                  padding: EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: APP_BAR_BACKGROUND_COLOR,
-                        padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)
-                        )
-                    ),
-                    child: Text(
-                      textButton,
-                      style: (
-                          TextStyle(
-                              color: APP_WHITE_FONT, fontSize: 20
-                          )
-                      ),
-                    ),
-                    onPressed: (){
-
-                      saveVehicle();
-                    },
-                  ),
-              )
-            ],
-          ),
-        )
-      ),
+            )
+          ],
+        ),
+      )),
     );
   }
 
   void saveVehicle() {
-    eVehicle v = eVehicle(null,
-                          _signControler.text,
-                          _colorControler.text,
-                          _modelControler.text,
-                          _seatsControler.text,
-                          _luggageControler.text,
-                          Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
-                          _idLoggedUser);
+    eVehicle v = eVehicle(
+        null,
+        _signControler.text,
+        _colorControler.text,
+        _modelControler.text,
+        _seatsControler.text,
+        _luggageControler.text,
+        Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+        _idLoggedUser,
+        _active);
 
-    if(vehicle != null){
-
-      try{
+    if (vehicle != null) {
+      try {
         v.id = vehicle!.id;
         v.registrationDate = vehicle![DbData.COLUMN_REGISTRATION_DATE];
         update(v);
 
         Navigator.pop(context);
-        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado, APP_SUCCESS_BACKGROUND);
-      } catch (e){
-        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar, APP_ERROR_BACKGROUND);
+        Utils.showToast(AppLocalizations.of(context)!.veiculoAtualizado,
+            APP_SUCCESS_BACKGROUND);
+      } catch (e) {
+        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar,
+            APP_ERROR_BACKGROUND);
       }
-
     } else {
-      try{
-        if(checkFields()){
+      try {
+        if (checkFields()) {
           v.registrationDate = DateTime.now().toString();
           insert(v);
           Navigator.pop(context);
-          Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado, APP_SUCCESS_BACKGROUND);
+          Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado,
+              APP_SUCCESS_BACKGROUND);
         }
-      } catch (e){
-        Utils.showToast(AppLocalizations.of(context)!.erroAoInserir, APP_ERROR_BACKGROUND);
+      } catch (e) {
+        Utils.showToast(
+            AppLocalizations.of(context)!.erroAoInserir, APP_ERROR_BACKGROUND);
       }
-
     }
-
   }
 
-  void update(vehicle){
-
-    db.collection(DbData.TABLE_VEHICLE)
-        .doc(vehicle.id)
-        .update(vehicle.toMap());
-
+  void update(vehicle) {
+    db.collection(DbData.TABLE_VEHICLE).doc(vehicle.id).update(vehicle.toMap());
   }
 
   void insert(eVehicle vehicle) {
-
-    db.collection(DbData.TABLE_VEHICLE)
-        .add(vehicle.toMap());
+    db.collection(DbData.TABLE_VEHICLE).add(vehicle.toMap());
   }
 
   bool checkFields() {
-
-    if(_signControler.text.length == 0){
-
-      Utils.showDialogBox(AppLocalizations.of(context)!.oVeiculoPrecisaDeUmaPlaca, context);
+    if (_signControler.text.length == 0) {
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.oVeiculoPrecisaDeUmaPlaca, context);
       _signFocus!.requestFocus();
       return false;
     }
-    if(_signControler.text.length > 8 || _signControler.text.length < 8){
-
-      Utils.showDialogBox(AppLocalizations.of(context)!.aPlacaDeveConterOitoCaracteres, context);
+    if (_signControler.text.length > 8 || _signControler.text.length < 8) {
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.aPlacaDeveConterOitoCaracteres,
+          context);
       _signFocus!.requestFocus();
       return false;
     }
 
-    if(_colorControler.text.length == 0){
-
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeACorDoVeiculo, context);
+    if (_colorControler.text.length == 0) {
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeACorDoVeiculo, context);
       _colorFocus!.requestFocus();
       return false;
     }
 
-    if(_modelControler.text.length == 0){
-
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeOModeloDoVeiculo, context);
+    if (_modelControler.text.length == 0) {
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeOModeloDoVeiculo, context);
       _modelFocus!.requestFocus();
       return false;
     }
