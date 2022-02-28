@@ -97,11 +97,10 @@ class _VechiclesState extends State<Vechicles> {
                                 title: Text(AppLocalizations.of(context)!
                                     .veiculosProprios),
                                 subtitle: Text(
-                                    "Esses são os veículos cadastrados por você",
-                                  style: TextStyle(
-                                    color: Colors.grey
-                                  ),
+                                  "Esses são os veículos cadastrados por você",
+                                  style: TextStyle(color: Colors.grey),
                                 ),
+                                textColor: APP_BAR_BACKGROUND_COLOR,
                                 children: [
                                   ListView.builder(
                                       physics:
@@ -117,8 +116,7 @@ class _VechiclesState extends State<Vechicles> {
                                             vechicles[index];
                                         return Dismissible(
                                           child: Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 10),
+                                            padding: EdgeInsets.only(bottom: 0),
                                             child: Card(
                                               child: Padding(
                                                   padding: EdgeInsets.symmetric(
@@ -338,10 +336,9 @@ class _VechiclesState extends State<Vechicles> {
                                 .veiculosEmprestados),
                             subtitle: Text(
                               "Esses são os veículos que você emprestou",
-                              style: TextStyle(
-                                  color: Colors.grey
-                              ),
+                              style: TextStyle(color: Colors.grey),
                             ),
+                            textColor: APP_BAR_BACKGROUND_COLOR,
                             children: [
                               ListView.builder(
                                   shrinkWrap: true,
@@ -355,7 +352,7 @@ class _VechiclesState extends State<Vechicles> {
                                     DocumentSnapshot vehicle = vechicles[index];
                                     return Dismissible(
                                       child: Padding(
-                                        padding: EdgeInsets.only(bottom: 15),
+                                        padding: EdgeInsets.only(bottom: 0),
                                         child: Card(
                                           child: Padding(
                                               padding: EdgeInsets.only(
