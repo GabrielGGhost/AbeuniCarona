@@ -92,7 +92,7 @@ class _EventBaseState extends State<EventBase> {
                                           child: Card(
                                             child: Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                    vertical: 15,
+                                                    vertical: 5,
                                                     horizontal: 10),
                                                 child: Column(
                                                   children: [

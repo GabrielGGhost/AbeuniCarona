@@ -1,5 +1,7 @@
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Entity/eRide.dart';
+import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +9,27 @@ import 'package:flutter/material.dart';
 import 'RideRegister_4.dart';
 
 class RideRegister_3 extends StatefulWidget {
-  const RideRegister_3({Key? key}) : super(key: key);
+  eRide ride;
+  RideRegister_3(this.ride);
 
   @override
   _RideRegister_3State createState() => _RideRegister_3State();
 }
 
 class _RideRegister_3State extends State<RideRegister_3> {
+
+  TextEditingController _seatsController = TextEditingController();
+  TextEditingController _luggageSpacesController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
+    eRide? ride = widget.ride;
+    eVehicle? vehicle = ride.vehicle;
+
+    _seatsController.text = vehicle!.seats;
+    _luggageSpacesController.text = vehicle.luggageSpaces;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Cadastro de eventos"),
@@ -38,7 +52,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
                           ),
                       ),
                       Text(
-                          "XXX-2154",
+                        vehicle.sign,
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 18
@@ -60,7 +74,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
                         ),
                       ),
                       Text(
-                        "Azul",
+                        vehicle.color,
                         style: TextStyle(
                             color: Colors.grey,
                             fontSize: 18
@@ -82,7 +96,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
                         ),
                       ),
                       Text(
-                        "Carrinho top",
+                        vehicle.model,
                         style: TextStyle(
                             color: Colors.grey,
                             fontSize: 18
@@ -95,7 +109,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
-                    controller: null,
+                    controller: _seatsController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -112,7 +126,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: TextField(
-                    controller: null,
+                    controller: _luggageSpacesController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -136,10 +150,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
             padding: EdgeInsets.zero,
             child:FloatingActionButton(
               onPressed: (){
-                Navigator.pushNamed(
-                    context,
-                    cRoutes.REGISTER_RIDE4
-                );
+                nextStep(vehicle, ride);
               },
               backgroundColor: APP_BAR_BACKGROUND_COLOR,
               child: Icon(
@@ -152,5 +163,20 @@ class _RideRegister_3State extends State<RideRegister_3> {
         ],
       ),
     );
+  }
+
+  void nextStep(eVehicle vehicle, eRide ride) {
+
+    vehicle.seats = _seatsController.text;
+    vehicle.luggageSpaces = _luggageSpacesController.text;
+
+    ride.vehicle = vehicle;
+
+    Navigator.pushNamed(
+        context,
+        cRoutes.REGISTER_RIDE4,
+        arguments: ride
+    );
+
   }
 }

@@ -24,7 +24,7 @@ class eEvent {
     };
   }
 
-  documentToEvent(DocumentSnapshot<Object?> event) {
+  documentToEntity(DocumentSnapshot<Object?> event) {
       this._descBaseEvent = event[DbData.COLUMN_EVENT_DESC_BASE_EVENT];
       this._location = event[DbData.COLUMN_LOCATION ];
       this._dateEventStart = event[DbData.COLUMN_START_DATE];

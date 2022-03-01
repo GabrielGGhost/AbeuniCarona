@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class eVehicle {
   String? _id;
@@ -24,6 +25,8 @@ class eVehicle {
   String get idOwner => _idOwner!;
   bool get active => _active!;
 
+  eVehicle.empty(){}
+
   eVehicle(this._id, this._sign, this._color, this._model, this._seats,
       this._luggageSpaces, this._registrationDate, this._idOwner, this._active);
 
@@ -38,6 +41,17 @@ class eVehicle {
       DbData.COLUMN_ID_OWNER: this._idOwner,
       DbData.COLUMN_ACTIVE : this._active
     };
+  }
+
+  void documentToEntity(DocumentSnapshot vehicle) {
+    this._sign = vehicle[DbData.COLUMN_SIGN];
+    this._color = vehicle[DbData.COLUMN_COLOR];
+    this._model = vehicle[DbData.COLUMN_MODEL];
+    this._seats = vehicle[DbData.COLUMN_SEATS];
+    this._luggageSpaces = vehicle[DbData.COLUMN_LUGGAGE_SPACES];
+    this._registrationDate = vehicle[DbData.COLUMN_REGISTRATION_DATE];
+    this._idOwner = vehicle[DbData.COLUMN_ID_OWNER];
+    this._active = vehicle[DbData.COLUMN_ACTIVE];
   }
 
   set id(String value) {

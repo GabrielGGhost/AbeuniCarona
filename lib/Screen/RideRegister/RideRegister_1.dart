@@ -111,7 +111,7 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                               events[index];
 
                                           return GestureDetector(
-                                              child: Card(
+                                            child: Card(
                                               child: Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 15,
@@ -125,15 +125,16 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                                 .COLUMN_EVENT_DESC_BASE_EVENT],
                                                             style: TextStyle(
                                                                 fontWeight:
-                                                                FontWeight
-                                                                    .bold,
+                                                                    FontWeight
+                                                                        .bold,
                                                                 fontSize: 18),
                                                           ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets.only(
-                                                            top: 5),
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 5),
                                                         child: Row(
                                                           children: [
                                                             Text(
@@ -146,8 +147,8 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                               event[DbData
                                                                   .COLUMN_LOCATION],
                                                               style: TextStyle(
-                                                                  color:
-                                                                  Colors.grey,
+                                                                  color: Colors
+                                                                      .grey,
                                                                   fontSize: 11),
                                                             ),
                                                           ],
@@ -161,7 +162,7 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                                 .COLUMN_START_DATE],
                                                             style: TextStyle(
                                                                 color:
-                                                                Colors.grey,
+                                                                    Colors.grey,
                                                                 fontSize: 11),
                                                           ),
                                                           Text(" - "),
@@ -170,15 +171,15 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                                 .COLUMN_END_DATE],
                                                             style: TextStyle(
                                                                 color:
-                                                                Colors.grey,
+                                                                    Colors.grey,
                                                                 fontSize: 11),
                                                           ),
                                                         ],
                                                       ),
                                                     ],
                                                   )),
-                                          ),
-                                            onTap: (){
+                                            ),
+                                            onTap: () {
                                               nextStep(event);
                                             },
                                           );
@@ -211,16 +212,11 @@ class _RideRegister_1State extends State<RideRegister_1> {
 
   void nextStep(DocumentSnapshot<Object?> event) {
     eEvent choosenEvent = eEvent.empty();
-    choosenEvent.documentToEvent(event);
+    choosenEvent.documentToEntity(event);
 
     eRide ride = eRide();
     ride.event = choosenEvent;
 
-    Navigator.pushNamed(
-        context,
-        cRoutes.REGISTER_RIDE2,
-        arguments: ride
-    );
-
+    Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2, arguments: ride);
   }
 }

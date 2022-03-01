@@ -91,7 +91,7 @@ class RouteGenerator {
         );
       case cRoutes.REGISTER_RIDE3:
         return MaterialPageRoute(
-            builder: (_) => RideRegister_3()
+            builder: (_) => RideRegister_3(args as eRide)
         );
       case cRoutes.REGISTER_RIDE4:
         return MaterialPageRoute(
