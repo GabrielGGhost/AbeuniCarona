@@ -62,9 +62,14 @@
     "fim" : "Fim",
 
     "informeACorDoVeiculo" : "Informe a cor do veículo",
+    "informeADataDeNascimentoDoUsuario" : "Informe a data de nascimento do usuário.",
+    "informeOApelidoDoUsuario" : "Informe o apelido do usuário",
+    "informeOCpfDoUsuario" : "Informe o cpf do usuário.",
+    "informeOEmailDoUsuario" : "Informe o email do usuário",
+    "informeODepartamentoDoUsuario" : "Informe o departamento do usuário.",
     "informeOModeloDoVeiculo" : "Informe o modelo do veículo!",
     "informeONomeCompletoDoUsuario" : "informe o nome completo do usuario!",
-    "informeOCpfDoUsuario" : "Informe o cpf do usuário.",
+    "informeOTelefoneDoUsuario" : "Informe o telefone do usuário",
     "inicio" : "Início",
 
     "localizacao" : "Localização",

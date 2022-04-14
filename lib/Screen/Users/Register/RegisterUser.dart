@@ -278,25 +278,27 @@ class _RegisterUserState extends State<RegisterUser> {
     }
 
     if (!hasValue(_emailControler.text.trim())) {
-      Utils.showDialogBox("Informe o email do usuári.", context);
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeOEmailDoUsuario, context);
       _emailFocus!.requestFocus();
       return false;
     }
 
     if (!hasValue(_nickNameController.text.trim())) {
-      Utils.showDialogBox("Informe o apelido do usuário", context);
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeOApelidoDoUsuario, context);
       _nickNameFocus!.requestFocus();
       return false;
     }
 
     if (!hasValue(_phoneNumberController.text.trim())) {
-      Utils.showDialogBox("Informe o telefone do usuário", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.informeOTelefoneDoUsuario, context);
       _phoneNumberFocus!.requestFocus();
       return false;
     }
 
     if (!hasValue(_birthDateController.text.trim())) {
-      Utils.showDialogBox("Informe a data de nascimento do usuário.", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.informeADataDeNascimentoDoUsuario, context);
       _birthDateFocus!.requestFocus();
       return false;
     }
@@ -308,7 +310,7 @@ class _RegisterUserState extends State<RegisterUser> {
     }
 
     if (!hasValue(_departmentController.text.trim())) {
-      Utils.showDialogBox("Informe o departamento do usuário.", context);
+      Utils.showDialogBox(AppLocalizations.of(context)!.informeODepartamentoDoUsuario, context);
       _departmentFocus!.requestFocus();
       return false;
     }
@@ -326,7 +328,7 @@ class _RegisterUserState extends State<RegisterUser> {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? usuarioLogado = await auth.currentUser;
 
-    if(usuarioLogado != null){
+    if (usuarioLogado != null) {
       _idLoggedUser = usuarioLogado.uid;
     }
   }
