@@ -27,7 +27,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
     eRide? ride = widget.ride;
     eVehicle? vehicle = ride.vehicle;
 
-    _seatsController.text = vehicle!.seats;
+    _seatsController.text = vehicle.seats;
     _luggageSpacesController.text = vehicle.luggageSpaces;
 
     return Scaffold(
