@@ -1,48 +1,43 @@
 import 'dart:async';
 
 import 'package:abeuni_carona/Constants/DbData.dart';
-import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:abeuni_carona/Constants/cImages.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class userRequests extends StatefulWidget {
+class usersList extends StatefulWidget {
   @override
-  _userRequestsState createState() => _userRequestsState();
+  _usersListState createState() => _usersListState();
 }
 
-class _userRequestsState extends State<userRequests> {
+class _usersListState extends State<usersList> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   double? radiusBorder = 16;
-  final _controllerUserRequests = StreamController<QuerySnapshot>.broadcast();
+  final _controllerUsersList = StreamController<QuerySnapshot>.broadcast();
 
   String? _idLoggedUser;
-  Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
-    final baseEvents = db
+  Stream<QuerySnapshot>? _addListenerUsersList() {
+    final usersList = db
         .collection(DbData.TABLE_USER)
-        .where(DbData.COLUMN_ROLE, isEqualTo: "0")
-        .where(DbData.COLUMN_APPROVED, isEqualTo: "0")
+        .where(DbData.COLUMN_APPROVED, isEqualTo: "1")
         .snapshots();
 
-    baseEvents.listen((data) {
-      _controllerUserRequests.add(data);
+    usersList.listen((data) {
+      _controllerUsersList.add(data);
     });
   }
 
   @override
   void initState() {
-    _addListenerBorrowedVehicles();
+    _addListenerUsersList();
     _getUserData();
     super.initState();
   }
@@ -51,7 +46,7 @@ class _userRequestsState extends State<userRequests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Requisições de cadastro"),
+        title: Text("Lista de cadastros"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(
@@ -60,7 +55,7 @@ class _userRequestsState extends State<userRequests> {
               child: Column(
                 children: [
                   StreamBuilder(
-                      stream: _controllerUserRequests.stream,
+                      stream: _controllerUsersList.stream,
                       builder: (_, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
@@ -99,179 +94,76 @@ class _userRequestsState extends State<userRequests> {
                                       DocumentSnapshot event =
                                           baseEvents[index];
 
-                                      return Dismissible(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(bottom: 15),
-                                          child: Card(
-                                            child: GestureDetector(
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 15,
-                                                    horizontal: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Column(
-                                                        children: [
-                                                          Text(
-                                                            "Há " + getDateTimeUntilNow(event[DbData.COLUMN_REGISTRATION_DATE]) + " atrás",
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 15),
+                                        child: Card(
+                                          child: GestureDetector(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 15,
+                                                  horizontal: 10),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          "Há " + getDateTimeUntilNow(event[DbData.COLUMN_REGISTRATION_DATE]) + " atrás",
+                                                          style: TextStyle(
+                                                              color:
+                                                              Colors.grey,
+                                                              fontSize: 12),
+                                                        ),
+                                                        Padding(
+                                                            padding: EdgeInsets
+                                                                .only(
+                                                                top: 10),
+                                                            child: CircleAvatar(
+                                                                backgroundColor:
+                                                                Colors
+                                                                    .grey,
+                                                                maxRadius: 35,
+                                                                backgroundImage:
+                                                                NetworkImage(
+                                                                    event[
+                                                                    DbData.COLUMN_PICTURE_PATH]))),
+                                                        Padding(
+                                                          padding:
+                                                          EdgeInsets.only(
+                                                              top: 10),
+                                                          child: Text(
+                                                            event[DbData
+                                                                .COLUMN_USERNAME],
                                                             style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                          EdgeInsets.only(
+                                                              top: 10),
+                                                          child: Text(
+                                                            "Ver detalhes",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey,
                                                                 fontSize: 12),
                                                           ),
-                                                          Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      top: 10),
-                                                              child: CircleAvatar(
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .grey,
-                                                                  maxRadius: 35,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                          event[
-                                                                              DbData.COLUMN_PICTURE_PATH]))),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 10),
-                                                            child: Text(
-                                                              event[DbData
-                                                                  .COLUMN_USERNAME],
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 10),
-                                                            child: Text(
-                                                              "Ver detalhes",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 12),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
+                                                        )
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                              onTap: () {
-                                                Navigator.pushNamed(context,
-                                                    cRoutes.USER_REQUEST_DETAIL,
-                                                    arguments: event);
-                                              },
                                             ),
+                                            onTap: () {
+                                              Navigator.pushNamed(context,
+                                                  cRoutes.USER_PERFIL,
+                                                  arguments: event);
+                                            },
                                           ),
-                                        ),
-                                        confirmDismiss: (d) async {
-                                          if (d ==
-                                              DismissDirection.startToEnd) {
-                                            return await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text("Confirmar"),
-                                                  content: Text(
-                                                      "Tem certeza que deseja aprovar esta requisição sem ver os detalhes?"),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          approve(event);
-                                                          Navigator.of(context)
-                                                              .pop(true);
-                                                        },
-                                                        child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .tenhoCerteza)),
-                                                    TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(false),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .cancelar,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  APP_MAIN_TEXT,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          } else {
-                                            return await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text("Confirmar"),
-                                                  content: Text(
-                                                      "Tem certeza que deseja reprovar esta requisição?"),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          reprove(event);
-                                                          Navigator.of(context)
-                                                              .pop(true);
-                                                        },
-                                                        child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .tenhoCerteza)),
-                                                    TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(false),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .cancelar,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  APP_MAIN_TEXT,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          }
-                                        },
-                                        key: Key(event.id),
-                                        background: Container(
-                                          color: APP_EDIT_DISMISS,
-                                          child: Icon(Icons.check),
-                                          alignment: Alignment.centerLeft,
-                                          padding: EdgeInsets.only(left: 15),
-                                          margin: EdgeInsets.only(bottom: 20),
-                                        ),
-                                        secondaryBackground: Container(
-                                          color: APP_REMOVE_DISMISS,
-                                          child: Icon(Icons.close),
-                                          alignment: Alignment.centerRight,
-                                          padding: EdgeInsets.only(right: 15),
-                                          margin: EdgeInsets.only(bottom: 20),
                                         ),
                                       );
                                     });
@@ -283,7 +175,7 @@ class _userRequestsState extends State<userRequests> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "Não há requisições de cadastro para serem aprovadas",
+                                        "Ainda não há usuários cadastrados!",
                                         style: TextStyle(
                                           color: APP_SUB_TEXT,
                                           fontSize: 20,

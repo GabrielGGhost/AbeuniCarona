@@ -8,9 +8,11 @@ import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_1.dart';
 import 'package:abeuni_carona/Screen/RideRegister/RideRegister_2.dart';
+import 'package:abeuni_carona/Screen/Users/Perfil/userPerfil.dart';
 import 'package:abeuni_carona/Screen/Users/Register/RegisterUserPassword.dart';
 import 'package:abeuni_carona/Screen/Users/Register/SendEmailNewUser.dart';
 import 'package:abeuni_carona/Screen/Users/UserMenu.dart';
+import 'package:abeuni_carona/Screen/Users/UsersList.dart';
 import 'package:abeuni_carona/Screen/Vehicle/Vehicles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -125,6 +127,14 @@ class RouteGenerator {
       case cRoutes.USER_REQUEST_DETAIL:
         return MaterialPageRoute(
             builder: (_) => userRequestDetail(args as DocumentSnapshot)
+        );
+      case cRoutes.USERS_LIST:
+        return MaterialPageRoute(
+            builder: (_) => usersList()
+        );
+      case cRoutes.USER_PERFIL:
+        return MaterialPageRoute(
+            builder: (_) => userPerfil(args as DocumentSnapshot)
         );
       default:
         _routeNotFound();
