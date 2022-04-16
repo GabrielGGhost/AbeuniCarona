@@ -2,10 +2,12 @@ import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
+import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +24,14 @@ class RideRegister_5 extends StatefulWidget {
 class _RideRegister_5State extends State<RideRegister_5> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  String? _idLoggedUser;
+  eUser? user = eUser.empty();
+
+  @override
+  void initState() {
+    _getUserData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +320,12 @@ class _RideRegister_5State extends State<RideRegister_5> {
   }
 
   void save(eRide ride) {
+
+    ride.registerDate = Utils.getDateTimeNow()!;
+    ride.driverId = _idLoggedUser!;
+    ride.driverName = user!.nickName + " [ " + user!.userName + "]";
     insert(ride);
+
     Utils.showToast("Cadastrado com sucesso!", APP_SUCCESS_BACKGROUND);
     int count = 0;
     Navigator.of(context).popUntil((_) => count++ >= 5);
@@ -318,5 +333,20 @@ class _RideRegister_5State extends State<RideRegister_5> {
 
   void insert(eRide ride) {
     db.collection(DbData.TABLE_RIDE).add(ride.toMap());
+  }
+
+  void _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
+    if (usuarioLogado != null) {
+      _idLoggedUser = usuarioLogado.uid;
+
+      DocumentSnapshot<Map<String, dynamic>> docUser = await db.collection(DbData.TABLE_USER)
+          .doc(_idLoggedUser)
+          .get();
+
+      user!.docToUser(docUser);
+    }
   }
 }

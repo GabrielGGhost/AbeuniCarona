@@ -21,6 +21,8 @@ class eUser {
   String? _userApprovalDate;
   String? _department;
 
+  eUser.empty();
+
   eUser.full(
       this._userName,
       this._email,
@@ -123,6 +125,10 @@ class eUser {
     _idUserApprover = value;
   }
 
+  set nickName(String value) {
+    _nickName = value;
+  }
+
   set role(String value) {
     _role = value;
   }
@@ -137,5 +143,22 @@ class eUser {
 
   String getSafeString(string) {
     return Utils.getSafeString(string);
+  }
+
+  void docToUser(DocumentSnapshot<Map<String, dynamic>> docUser) {
+    this.userName = docUser[DbData.COLUMN_USERNAME];
+    this.phoneNumber = docUser[DbData.COLUMN_PHONE_NUMBER];
+    this.birthDate = docUser[DbData.COLUMN_BIRTH_DATE];
+    this.cpf = docUser[DbData.COLUMN_CPF];
+    this.nickName = docUser[DbData.COLUMN_NICKNAME];
+    this.picturePath = docUser[DbData.COLUMN_PICTURE_PATH];
+    this.registrationDate = docUser[DbData.COLUMN_REGISTRATION_DATE];
+    this.email = docUser[DbData.COLUMN_EMAIL];
+    this.approved = docUser[DbData.COLUMN_APPROVED];
+    this.role = docUser[DbData.COLUMN_ROLE];
+    this.idUserApprover = docUser[DbData.COLUMN_USER_ID_APPROVER];
+    this.userApprovalDate = docUser[DbData.COLUMN_USER_APPROVAL_DATE];
+    this._department = docUser[DbData.COLUMN_DEPARTMENT];
+
   }
 }

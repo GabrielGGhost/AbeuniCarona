@@ -109,7 +109,16 @@ class Utils {
     return formattedDate;
   }
 
-  static String? getDateTimeNow(String format) {
+  /*
+  * Recebe: Um parâmetro do formato de data desejado, caso nulo, usa o formato dd/MM/yyyy
+  * Retorna: Uma data no formato recebido ou no formato padrão
+  * */
+  static String? getDateTimeNow([String? format]) {
+
+    if(format == null){
+      format = cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM;
+    }
+
     DateTime dateTime = DateTime.now();
     String formattedDate = DateFormat(format).format(dateTime);
 

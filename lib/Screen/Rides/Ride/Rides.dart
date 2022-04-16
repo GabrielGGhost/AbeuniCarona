@@ -151,7 +151,23 @@ class _RidesState extends State<Rides> {
                                                               FontWeight.bold,
                                                           color: APP_SUB_TEXT),
                                                     ),
-                                              Divider()
+                                              Row(
+                                                children: [
+                                                  Text("Motorista: "),
+                                                  Text(
+                                                    ride[DbData
+                                                        .COLUMN_DRIVER_NAME],
+                                                    style: TextStyle(
+                                                        color: APP_SUB_TEXT),
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text("Registrado há : " + Utils.getDateTimeUntilNow(ride[DbData.COLUMN_REGISTRATION_DATE]))
+                                                ],
+                                              ),
+                                              Divider(),
                                             ],
                                           ),
                                         ),
@@ -265,12 +281,12 @@ class _RidesState extends State<Rides> {
   void delete(String id) {
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
-      db.collection(DbData.TABLE_BASE_EVENT).doc(id).delete();
+      db.collection(DbData.TABLE_RIDE).doc(id).delete();
 
       Utils.showToast(
           AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarBadeDeEvento,
+      Utils.showToast("Falha ao deletar carona!",
           APP_ERROR_BACKGROUND);
     }
   }

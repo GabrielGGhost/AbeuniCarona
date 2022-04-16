@@ -47,5 +47,7 @@ class DbData {
   static const COLUMN_RETURN_TIME = "return_time";
   static const COLUMN_EVENT = "event";
   static const COLUMN_VEHICLE = "vehicle";
+  static const COLUMN_DRIVER_ID = "driverId";
+  static const COLUMN_DRIVER_NAME = "driverName";
 
 }
