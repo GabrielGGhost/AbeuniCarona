@@ -1,8 +1,11 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
+import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +20,9 @@ class RideRegister_5 extends StatefulWidget {
 }
 
 class _RideRegister_5State extends State<RideRegister_5> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+
   @override
   Widget build(BuildContext context) {
     eRide ride = widget.ride;
@@ -275,6 +281,23 @@ class _RideRegister_5State extends State<RideRegister_5> {
                           )
                         ],
                       ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(20),
+                      child: ElevatedButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: APP_BAR_BACKGROUND_COLOR,
+                            padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                        child: Text(
+                          "Registrar Carona",
+                          style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
+                        ),
+                        onPressed: () {
+                          save(ride);
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -283,24 +306,17 @@ class _RideRegister_5State extends State<RideRegister_5> {
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: EdgeInsets.zero,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, cRoutes.REGISTER_RIDE4);
-              },
-              backgroundColor: APP_BAR_BACKGROUND_COLOR,
-              child: Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
+  }
+
+  void save(eRide ride) {
+    insert(ride);
+    Utils.showToast("Cadastrado com sucesso!", APP_SUCCESS_BACKGROUND);
+    int count = 0;
+    Navigator.of(context).popUntil((_) => count++ >= 5);
+  }
+
+  void insert(eRide ride) {
+    db.collection(DbData.TABLE_RIDE).add(ride.toMap());
   }
 }

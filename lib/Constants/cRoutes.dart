@@ -26,5 +26,6 @@ class cRoutes {
   static const USER_REQUEST_DETAIL = "userRequestDetail";
   static const USERS_LIST = "usersList";
   static const USER_PERFIL = "userPerfil";
+  static const RIDES = "rides";
 
 }
