@@ -69,12 +69,14 @@ class _RideRegister_4State extends State<RideRegister_4> {
     eRide? ride = widget.ride;
     edit = widget.edit;
 
-    _departureAddressController.text = ride.departureAddress;
-    _departureDateController.text = ride.departureDate;
-    _departureTimeController.text = ride.departureTime;
-    _returnAddressController.text = ride.returnAddress;
-    _returnDateController.text = ride.returnDate;
-    _returnTimeController.text = ride.returnTime;
+    if(edit){
+      _departureAddressController.text = ride.departureAddress;
+      _departureDateController.text = ride.departureDate;
+      _departureTimeController.text = ride.departureTime;
+      _returnAddressController.text = ride.returnAddress;
+      _returnDateController.text = ride.returnDate;
+      _returnTimeController.text = ride.returnTime;
+    }
 
     return Scaffold(
       appBar: AppBar(
