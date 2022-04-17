@@ -4,6 +4,7 @@ import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
+import 'package:abeuni_carona/Screen/Rides/RideRegister/RideRegister_2.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +27,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
 
   String? _idLoggedUser;
   eUser? user = eUser.empty();
-
+  eRide ride = eRide();
   @override
   void initState() {
     _getUserData();
@@ -35,7 +36,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
 
   @override
   Widget build(BuildContext context) {
-    eRide ride = widget.ride;
+    ride = widget.ride;
     return Scaffold(
       appBar: AppBar(
         title: Text("Resumo da Carona"),
@@ -106,6 +107,32 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                           color: Colors.grey, fontSize: 15)),
                                   Spacer(),
                                 ]),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      child: Text(
+                                        "Alterar",
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                      onTap: () => {_updateVehicle(context)},
+                                    ),
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Espaços",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      )
+                                    ]),
                                 Row(children: [
                                   Text("Assentos: ",
                                       style: TextStyle(
@@ -114,64 +141,37 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                   Text(ride.vehicle.seats,
                                       style: TextStyle(
                                           color: Colors.grey, fontSize: 15)),
+                                  Spacer(),
+                                  Row(children: [
+                                    Text("Bagagens: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15)),
+                                    Text(ride.vehicle.luggageSpaces,
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 15)),
+                                  ]),
                                 ]),
-                                Row(children: [
-                                  Text("Bagagens: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.vehicle.luggageSpaces,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                ])
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Evento Base",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                )
-                              ]),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                Row(children: [
-                                  Text("Tipo: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.event.descBaseEvent,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                ]),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      child: Text(
+                                        "Alterar",
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                      onTap: () =>
+                                          {_updateVehicleNumbers(context)},
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15),
-                child: Column(
-                  children: [
-                    Card(
-                      child: Column(
-                        children: [
+                          Divider(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -182,19 +182,91 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                       fontSize: 20),
                                 )
                               ]),
+                          Row(children: [
+                            Text("Tipo: ",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
+                            Text(ride.event.descBaseEvent,
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 15)),
+                          ]),
+                          Row(children: [
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  // Note: Styles for TextSpans must be explicitly defined.
+                                  // Child text spans will inherit styles from parent
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.black,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'Localização: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(
+                                        text: ride.event.location,
+                                        style: TextStyle(color: APP_SUB_TEXT)),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ]),
+                          Row(children: [
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  // Note: Styles for TextSpans must be explicitly defined.
+                                  // Child text spans will inherit styles from parent
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.black,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(text: 'Obs.: '),
+                                    TextSpan(
+                                        text: ride.event.obsEvent,
+                                        style: TextStyle(color: APP_SUB_TEXT)),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ]),
+                          Row(children: [
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  // Note: Styles for TextSpans must be explicitly defined.
+                                  // Child text spans will inherit styles from parent
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.black,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: ride.event.dateEventStart + " - " + ride.event.dateEventEnd,
+                                        style: TextStyle(color: APP_SUB_TEXT)),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ]),
+                          Divider(),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Carona",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                )
+                              ]),
                           Padding(
                             padding: EdgeInsets.all(10),
                             child: Column(
                               children: [
-                                Row(children: [
-                                  Text("Tipo: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.event.descBaseEvent,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                ]),
                                 Padding(
                                   padding: EdgeInsets.only(top: 10),
                                   child: Row(children: [
@@ -209,14 +281,30 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                   child: Column(
                                     children: [
                                       Row(children: [
-                                        Text("Local de partida: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15)),
-                                        Text(ride.departureAddress,
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15)),
+                                        Expanded(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              // Note: Styles for TextSpans must be explicitly defined.
+                                              // Child text spans will inherit styles from parent
+                                              style: const TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.black,
+                                              ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text:
+                                                        'Local de partida: : ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                TextSpan(
+                                                    text: ride.departureAddress,
+                                                    style: TextStyle(
+                                                        color: APP_SUB_TEXT)),
+                                              ],
+                                            ),
+                                          ),
+                                        )
                                       ]),
                                       Row(children: [
                                         Text("Data/Horário: ",
@@ -285,33 +373,51 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                           style: TextStyle(
                                               color: Colors.grey,
                                               fontWeight: FontWeight.bold),
-                                        ))
+                                        )),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      child: Text(
+                                        "Alterar",
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                      onTap: () => {_updateEvent(context)},
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: ElevatedButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                        padding:
+                                            EdgeInsets.fromLTRB(28, 16, 28, 16),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30))),
+                                    child: Text(
+                                      "Registrar Carona",
+                                      style: (TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                    ),
+                                    onPressed: () {
+                                      save(ride);
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                           )
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: ElevatedButton(
-                        style: TextButton.styleFrom(
-                            backgroundColor: APP_BAR_BACKGROUND_COLOR,
-                            padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30))),
-                        child: Text(
-                          "Registrar Carona",
-                          style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
-                        ),
-                        onPressed: () {
-                          save(ride);
-                        },
-                      ),
                     )
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -320,7 +426,6 @@ class _RideRegister_5State extends State<RideRegister_5> {
   }
 
   void save(eRide ride) {
-
     ride.registerDate = Utils.getDateTimeNow()!;
     ride.driverId = _idLoggedUser!;
     ride.driverName = user!.nickName + " [ " + user!.userName + "]";
@@ -342,11 +447,37 @@ class _RideRegister_5State extends State<RideRegister_5> {
     if (usuarioLogado != null) {
       _idLoggedUser = usuarioLogado.uid;
 
-      DocumentSnapshot<Map<String, dynamic>> docUser = await db.collection(DbData.TABLE_USER)
-          .doc(_idLoggedUser)
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> docUser =
+          await db.collection(DbData.TABLE_USER).doc(_idLoggedUser).get();
 
       user!.docToUser(docUser);
     }
+  }
+
+  _updateVehicle(BuildContext context) async {
+    eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2,
+        arguments: {'ride': ride, 'edit': true}) as eRide;
+
+    setState(() {
+      ride = result;
+    });
+  }
+
+  _updateVehicleNumbers(BuildContext context) async {
+    eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE3,
+        arguments: {'ride': ride, 'edit': true}) as eRide;
+
+    setState(() {
+      ride = result;
+    });
+  }
+
+  _updateEvent(BuildContext context) async {
+    eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE4,
+        arguments: {'ride': ride, 'edit': true}) as eRide;
+
+    setState(() {
+      ride = result;
+    });
   }
 }

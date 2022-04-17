@@ -9,7 +9,8 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 
 class RideRegister_4 extends StatefulWidget {
   eRide ride;
-  RideRegister_4(this.ride);
+  bool edit;
+  RideRegister_4(this.ride, this.edit);
 
   @override
   _RideRegister_4State createState() => _RideRegister_4State();
@@ -18,6 +19,8 @@ class RideRegister_4 extends StatefulWidget {
 class _RideRegister_4State extends State<RideRegister_4> {
   var timeFormat = new MaskTextInputFormatter(mask: '##:##');
   var dateFormat = new MaskTextInputFormatter(mask: '##/##/####');
+
+  bool edit = false;
 
   TextEditingController _departureAddressController = TextEditingController();
   TextEditingController _returnAddressController = TextEditingController();
@@ -64,6 +67,15 @@ class _RideRegister_4State extends State<RideRegister_4> {
   @override
   Widget build(BuildContext context) {
     eRide? ride = widget.ride;
+    edit = widget.edit;
+
+    _departureAddressController.text = ride.departureAddress;
+    _departureDateController.text = ride.departureDate;
+    _departureTimeController.text = ride.departureTime;
+    _returnAddressController.text = ride.returnAddress;
+    _returnDateController.text = ride.returnDate;
+    _returnTimeController.text = ride.returnTime;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Cadastro de Carona"),
@@ -86,7 +98,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
-                            text: "Rua tal das tal, 5814 - Sorocaba SP",
+                            text: ride.event.location,
                             style: TextStyle(color: Colors.grey))
                       ]),
                 ),
@@ -295,62 +307,58 @@ class _RideRegister_4State extends State<RideRegister_4> {
     ride.returnTime = _returnTimeController.text;
 
     if (checkFields()) {
-      Navigator.pushNamed(
-          context,
-          cRoutes.REGISTER_RIDE5,
-          arguments: ride
-      );
+      if (edit) {
+        Navigator.pop(context, ride);
+      } else {
+        Navigator.pushNamed(context, cRoutes.REGISTER_RIDE5, arguments: ride);
+      }
     }
   }
 
   bool checkFields() {
-
-    if(_departureAddressController.text.isEmpty) {
+    if (_departureAddressController.text.isEmpty) {
       showDialogBox("Informe a localização de partida!");
       _departureAddressFocus!.requestFocus();
       return false;
     }
 
-    if(_departureAddressController.text.isEmpty){
+    if (_departureAddressController.text.isEmpty) {
       showDialogBox("Informe a localização de partida!");
       _departureAddressFocus!.requestFocus();
       return false;
     }
 
-    if(_departureDateController.text.isEmpty){
+    if (_departureDateController.text.isEmpty) {
       showDialogBox("Informe a data de partida!");
       _departureDateFocus!.requestFocus();
       return false;
     }
 
-    if(!Utils.isDateValid(_departureDateController.text)){
+    if (!Utils.isDateValid(_departureDateController.text)) {
       showDialogBox("Data de partida inválida!");
       _departureDateFocus!.requestFocus();
       return false;
     }
 
-    if(_departureTimeController.text.isEmpty){
+    if (_departureTimeController.text.isEmpty) {
       showDialogBox("Informe o horário de partida!");
       _departureTimeFocus!.requestFocus();
       return false;
     }
 
-    if(_returnAddressController.text.isNotEmpty){
-      if(!Utils.isDateValid(_returnDateController.text)){
+    if (_returnAddressController.text.isNotEmpty) {
+      if (!Utils.isDateValid(_returnDateController.text)) {
         showDialogBox("Data de retorno inválida!");
         _returnDateFocus!.requestFocus();
         return false;
       }
 
-      if(_returnTimeController.text.isEmpty){
+      if (_returnTimeController.text.isEmpty) {
         showDialogBox("Informe o horário de retorno!");
         _returnTimeFocus!.requestFocus();
         return false;
       }
     }
-
-
-
     return true;
   }
 
@@ -359,16 +367,16 @@ class _RideRegister_4State extends State<RideRegister_4> {
   }
 
   void _changeReturnLabels() {
-      if(_returnAddressController.text.isEmpty){
-        setState(() {
-          lblDateReturn = "Data de retorno";
-          lblTimeReturn = "Horário de retorno";
-        });
-      } else {
-        setState(() {
-          lblDateReturn = "Data de retorno*";
-          lblTimeReturn = "Horário de retorno*";
-        });
-      }
+    if (_returnAddressController.text.isEmpty) {
+      setState(() {
+        lblDateReturn = "Data de retorno";
+        lblTimeReturn = "Horário de retorno";
+      });
+    } else {
+      setState(() {
+        lblDateReturn = "Data de retorno*";
+        lblTimeReturn = "Horário de retorno*";
+      });
+    }
   }
 }

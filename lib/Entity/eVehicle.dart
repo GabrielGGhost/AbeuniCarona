@@ -43,7 +43,7 @@ class eVehicle {
     };
   }
 
-  void documentToEntity(DocumentSnapshot vehicle) {
+  void docToEntity(vehicle) {
     this._sign = vehicle[DbData.COLUMN_SIGN];
     this._color = vehicle[DbData.COLUMN_COLOR];
     this._model = vehicle[DbData.COLUMN_MODEL];

@@ -212,7 +212,7 @@ class _RideRegister_1State extends State<RideRegister_1> {
 
   void nextStep(DocumentSnapshot<Object?> event) {
     eEvent choosenEvent = eEvent.empty();
-    choosenEvent.documentToEntity(event);
+    choosenEvent.docToEntity(event);
 
     eRide ride = eRide();
     ride.event = choosenEvent;

@@ -13,7 +13,8 @@ import 'RideRegister_1.dart';
 
 class RideRegister_2 extends StatefulWidget {
   eRide ride;
-  RideRegister_2(this.ride);
+  bool edit;
+  RideRegister_2(this.ride, this.edit);
   @override
   _RideRegister_2State createState() => _RideRegister_2State();
 }
@@ -25,7 +26,7 @@ class _RideRegister_2State extends State<RideRegister_2> {
   @override
   Widget build(BuildContext context) {
     eRide ride = widget.ride;
-
+    bool edit = widget.edit;
     return Scaffold(
       appBar: AppBar(
         title: Text("Cadastro de evento"),
@@ -87,7 +88,7 @@ class _RideRegister_2State extends State<RideRegister_2> {
                                                 vechicles[index];
                                             return GestureDetector(
                                               onTap: () {
-                                                nextStep(vehicle, ride);
+                                                nextStep(vehicle, ride, edit);
                                               },
                                               child: Card(
                                                 child: Padding(
@@ -228,12 +229,15 @@ class _RideRegister_2State extends State<RideRegister_2> {
     );
   }
 
-  void nextStep(DocumentSnapshot vehicle, eRide ride) {
+  void nextStep(DocumentSnapshot vehicle, eRide ride, bool edit) {
     eVehicle? v = eVehicle.empty();
-    v.documentToEntity(vehicle);
+    v.docToEntity(vehicle);
 
     ride.vehicle = v;
 
-    Navigator.pushNamed(context, cRoutes.REGISTER_RIDE3, arguments: ride);
+    edit ?
+      Navigator.pop(context, {'ride' : ride, 'edit': true})
+    :
+      Navigator.pushNamed(context, cRoutes.REGISTER_RIDE3, arguments: {'ride' : ride, 'edit' : false});
   }
 }

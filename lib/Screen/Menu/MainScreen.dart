@@ -1,4 +1,6 @@
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Screen/Menu/MyRides.dart';
+import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:flutter/material.dart';
 
@@ -213,36 +215,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Você não possui\ncaronas para realizar",
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)
-                        )
-                    ),
-                    child: Text(
-                      "Registrar uma nova carona",
-                      style: (
-                          TextStyle(
-                              color: Colors.white, fontSize: 20
-                          )
-                      ),
-                    ),
-                    onPressed: (){
-                    },
-                  ),
-                )
+                Rides()
               ],
             )
           )

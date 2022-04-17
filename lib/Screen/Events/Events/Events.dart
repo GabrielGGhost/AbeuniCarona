@@ -76,6 +76,7 @@ class _EventsState extends State<Events> {
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
                                     itemCount: query.docs.length,
+                                    physics: NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       List<DocumentSnapshot> events =
                                           query.docs.toList();

@@ -1,5 +1,6 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'eEvent.dart';
 
@@ -37,11 +38,27 @@ class eRide {
       DbData.COLUMN_DEPARTURE_TIME: this.departureTime,
       DbData.COLUMN_RETURN_TIME: this.returnTime,
       DbData.COLUMN_REGISTRATION_DATE: this.registerDate,
-      DbData.COLUMN_DRIVER_ID : this.driverId,
-      DbData.COLUMN_DRIVER_NAME : this.driverName,
+      DbData.COLUMN_DRIVER_ID: this.driverId,
+      DbData.COLUMN_DRIVER_NAME: this.driverName,
       DbData.COLUMN_EVENT: this.event.toMap(),
       DbData.COLUMN_VEHICLE: this.vehicle.toMap()
     };
+  }
+
+  void docToRide(DocumentSnapshot<Object?> ride) {
+    this.departureAddress = ride[DbData.COLUMN_DEPARTURE_ADDRESS];
+    this.returnAddress = ride[DbData.COLUMN_RETURN_ADDRESS];
+    this.departureDate = ride[DbData.COLUMN_DEPARTURE_DATE];
+    this.returnDate = ride[DbData.COLUMN_RETURN_DATE];
+    this.departureTime = ride[DbData.COLUMN_DEPARTURE_TIME];
+    this.returnTime = ride[DbData.COLUMN_RETURN_TIME];
+    this.registerDate = ride[DbData.COLUMN_REGISTRATION_DATE];
+    this.driverId = ride[DbData.COLUMN_DRIVER_ID];
+    this.driverName = ride[DbData.COLUMN_DRIVER_NAME];
+    this.vehicle = eVehicle.empty();
+    this.vehicle.docToEntity(ride[DbData.COLUMN_VEHICLE]);
+    this.event = eEvent.empty();
+    this.event.docToEntity(ride[DbData.COLUMN_EVENT]);
   }
 
   set departureAddress(String value) {

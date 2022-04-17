@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
+import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
@@ -20,6 +22,8 @@ class _RidesState extends State<Rides> {
   double? radiusBorder = 16;
   final _controllerBaseEvents = StreamController<QuerySnapshot>.broadcast();
 
+  String? _idLoggedUser;
+
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
     final baseEvents = db.collection(DbData.TABLE_RIDE).snapshots();
 
@@ -31,6 +35,7 @@ class _RidesState extends State<Rides> {
   @override
   void initState() {
     _addListenerBorrowedVehicles();
+    _getUserData();
     super.initState();
   }
 
@@ -85,6 +90,14 @@ class _RidesState extends State<Rides> {
 
                                       DocumentSnapshot ride = rides[index];
 
+                                      bool edit =
+                                          ride[DbData.COLUMN_DRIVER_ID] !=
+                                                  null &&
+                                              ride[DbData.COLUMN_DRIVER_ID] !=
+                                                  "" &&
+                                              ride[DbData.COLUMN_DRIVER_ID] ==
+                                                  _idLoggedUser;
+
                                       return Dismissible(
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
@@ -107,13 +120,30 @@ class _RidesState extends State<Rides> {
                                               ),
                                               Row(
                                                 children: [
-                                                  Text("Local de Partida: "),
-                                                  Text(
-                                                    ride[DbData
-                                                        .COLUMN_DEPARTURE_ADDRESS],
-                                                    style: TextStyle(
-                                                        color: APP_SUB_TEXT),
+                                                  Expanded(
+                                                      child: RichText(
+                                                        text: TextSpan(
+                                                          // Note: Styles for TextSpans must be explicitly defined.
+                                                          // Child text spans will inherit styles from parent
+                                                          style: const TextStyle(
+                                                            fontSize: 14.0,
+                                                            color: Colors.black,
+                                                          ),
+                                                          children: <TextSpan>[
+                                                            TextSpan(text: 'Localização: '),
+                                                            TextSpan(
+                                                                text: ride[
+                                                                DbData
+                                                                    .COLUMN_EVENT][DbData
+                                                                    .COLUMN_LOCATION] ,
+                                                                style: TextStyle(
+                                                                  color: APP_SUB_TEXT
+                                                                )),
+                                                          ],
+                                                        ),
+                                                      )
                                                   )
+                                                  ,
                                                 ],
                                               ),
                                               Row(
@@ -164,7 +194,10 @@ class _RidesState extends State<Rides> {
                                               ),
                                               Row(
                                                 children: [
-                                                  Text("Registrado há : " + Utils.getDateTimeUntilNow(ride[DbData.COLUMN_REGISTRATION_DATE]))
+                                                  Text("Registrado há : " +
+                                                      Utils.getDateTimeUntilNow(
+                                                          ride[DbData
+                                                              .COLUMN_REGISTRATION_DATE]))
                                                 ],
                                               ),
                                               Divider(),
@@ -172,11 +205,13 @@ class _RidesState extends State<Rides> {
                                           ),
                                         ),
                                         confirmDismiss: (d) async {
+                                          eRide r = eRide();
+                                          r.docToRide(ride);
                                           if (d ==
                                               DismissDirection.startToEnd) {
-                                            Navigator.pushNamed(context,
-                                                cRoutes.EVENT_BASE_REGISTER,
-                                                arguments: ride);
+                                            Navigator.pushNamed(
+                                                context, cRoutes.REGISTER_RIDE5,
+                                                arguments: r);
                                             return false;
                                           } else {
                                             return await showDialog(
@@ -225,13 +260,25 @@ class _RidesState extends State<Rides> {
                                           }
                                         },
                                         key: Key(ride.id),
-                                        background: Container(
-                                          color: APP_EDIT_DISMISS,
-                                          child: Icon(Icons.edit),
-                                          alignment: Alignment.centerLeft,
-                                          padding: EdgeInsets.only(left: 15),
-                                          margin: EdgeInsets.only(bottom: 20),
-                                        ),
+                                        background: edit
+                                            ? Container(
+                                                color: APP_EDIT_DISMISS,
+                                                child: Icon(Icons.edit),
+                                                alignment: Alignment.centerLeft,
+                                                padding:
+                                                    EdgeInsets.only(left: 15),
+                                                margin:
+                                                    EdgeInsets.only(bottom: 20),
+                                              )
+                                            : Container(
+                                                color: Colors.blueAccent,
+                                                child: Icon(Icons.timer),
+                                                alignment: Alignment.centerLeft,
+                                                padding:
+                                                    EdgeInsets.only(left: 15),
+                                                margin:
+                                                    EdgeInsets.only(bottom: 20),
+                                              ),
                                         secondaryBackground: Container(
                                           color: APP_REMOVE_DISMISS,
                                           child: Icon(Icons.delete),
@@ -286,8 +333,16 @@ class _RidesState extends State<Rides> {
       Utils.showToast(
           AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast("Falha ao deletar carona!",
-          APP_ERROR_BACKGROUND);
+      Utils.showToast("Falha ao deletar carona!", APP_ERROR_BACKGROUND);
+    }
+  }
+
+  void _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
+    if (usuarioLogado != null) {
+      _idLoggedUser = usuarioLogado.uid;
     }
   }
 }

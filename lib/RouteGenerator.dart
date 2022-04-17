@@ -31,113 +31,97 @@ import 'Screen/Vehicle/VehicleRegister.dart';
 import 'Util/Utils.dart';
 
 class RouteGenerator {
-
-  static Route<dynamic>? generateRoute(RouteSettings set){
-
+  static Route<dynamic>? generateRoute(RouteSettings set) {
     var args = set.arguments;
 
-    switch(set.name){
+    switch (set.name) {
       case cRoutes.INITIAL_ROUTE:
       case cRoutes.LOGIN:
-        return MaterialPageRoute(
-            builder: (_) => Login()
-        );
+        return MaterialPageRoute(builder: (_) => Login());
       case cRoutes.CONFIGURATIONS:
-        return MaterialPageRoute(
-            builder: (_) => Configurations()
-        );
+        return MaterialPageRoute(builder: (_) => Configurations());
       case cRoutes.VEHICLES:
-        return MaterialPageRoute(
-            builder: (_) => Vechicles()
-        );
+        return MaterialPageRoute(builder: (_) => Vechicles());
       case cRoutes.VEHICLES_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => VehicleRegister(args as DocumentSnapshot)
-        );
+            builder: (_) => VehicleRegister(args as DocumentSnapshot));
       case cRoutes.EVENTS:
-        return MaterialPageRoute(
-            builder: (_) => Events()
-        );
+        return MaterialPageRoute(builder: (_) => Events());
       case cRoutes.EVENT_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => EventRegister(args as DocumentSnapshot)
-        );
+            builder: (_) => EventRegister(args as DocumentSnapshot));
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(
-            builder: (_) => EventBaseRegister(args as DocumentSnapshot)
-        );
+            builder: (_) => EventBaseRegister(args as DocumentSnapshot));
       case cRoutes.EVENT_BASE:
-        return MaterialPageRoute(
-            builder: (_) => EventBase()
-        );
+        return MaterialPageRoute(builder: (_) => EventBase());
       case cRoutes.PERMISSION:
-        return MaterialPageRoute(
-            builder: (_) => Permission()
-        );
+        return MaterialPageRoute(builder: (_) => Permission());
       case cRoutes.PERMISSION_MANAGER:
         return MaterialPageRoute(
-            builder: (_) => PermissionManager(args as eUser)
-        );
+            builder: (_) => PermissionManager(args as eUser));
       case cRoutes.REGISTER_RIDE1:
-        return MaterialPageRoute(
-            builder: (_) => RideRegister_1()
-        );
+        return MaterialPageRoute(builder: (_) => RideRegister_1());
       case cRoutes.REGISTER_RIDE2:
-        return MaterialPageRoute(
-            builder: (_) => RideRegister_2(args as eRide)
-        );
+        {
+          if (args is eRide) {
+            return MaterialPageRoute(
+                builder: (_) => RideRegister_2(args as eRide, false));
+          } else {
+            Map<String, dynamic> values = args as Map<String, dynamic>;
+            return MaterialPageRoute(
+                builder: (_) => RideRegister_2(values['ride'], values['edit']));
+          }
+        }
       case cRoutes.REGISTER_RIDE3:
-        return MaterialPageRoute(
-            builder: (_) => RideRegister_3(args as eRide)
-        );
+        {
+          if (args is eRide) {
+            return MaterialPageRoute(
+                builder: (_) => RideRegister_3(args as eRide, false));
+          } else {
+            Map<String, dynamic> values = args as Map<String, dynamic>;
+            return MaterialPageRoute(
+                builder: (_) => RideRegister_3(values['ride'], values['edit']));
+          }
+        }
+
       case cRoutes.REGISTER_RIDE4:
-        return MaterialPageRoute(
-            builder: (_) => RideRegister_4(args as eRide)
-        );
+        {
+          if (args is eRide) {
+            return MaterialPageRoute(
+                builder: (_) => RideRegister_4(args as eRide, false));
+          } else {
+            Map<String, dynamic> values = args as Map<String, dynamic>;
+            return MaterialPageRoute(
+                builder: (_) => RideRegister_4(values['ride'], values['edit']));
+          }
+        }
       case cRoutes.REGISTER_RIDE5:
-        return MaterialPageRoute(
-            builder: (_) => RideRegister_5(args as eRide)
-        );
+        return MaterialPageRoute(builder: (_) => RideRegister_5(args as eRide));
       case cRoutes.REGISTER_USER:
-        return MaterialPageRoute(
-            builder: (_) => RegisterUser()
-        );
+        return MaterialPageRoute(builder: (_) => RegisterUser());
       case cRoutes.REGISTER_USER_PICTURE:
         return MaterialPageRoute(
-            builder: (_) => RegisterUserPicture(args as eUser)
-        );
+            builder: (_) => RegisterUserPicture(args as eUser));
       case cRoutes.REGISTER_USER_PASSWORD:
         return MaterialPageRoute(
-            builder: (_) => RegisterUserPassword(args as eUser)
-        );
+            builder: (_) => RegisterUserPassword(args as eUser));
       case cRoutes.USER_MENU:
-        return MaterialPageRoute(
-            builder: (_) => UserMenu()
-        );
+        return MaterialPageRoute(builder: (_) => UserMenu());
       case cRoutes.USER_REQUESTS:
-        return MaterialPageRoute(
-            builder: (_) => userRequests()
-        );
+        return MaterialPageRoute(builder: (_) => userRequests());
       case cRoutes.SEND_EMAIL_NEW_USER:
-        return MaterialPageRoute(
-            builder: (_) => SendEmailNewUser()
-        );
+        return MaterialPageRoute(builder: (_) => SendEmailNewUser());
       case cRoutes.USER_REQUEST_DETAIL:
         return MaterialPageRoute(
-            builder: (_) => userRequestDetail(args as DocumentSnapshot)
-        );
+            builder: (_) => userRequestDetail(args as DocumentSnapshot));
       case cRoutes.USERS_LIST:
-        return MaterialPageRoute(
-            builder: (_) => usersList()
-        );
+        return MaterialPageRoute(builder: (_) => usersList());
       case cRoutes.USER_PERFIL:
         return MaterialPageRoute(
-            builder: (_) => userPerfil(args as DocumentSnapshot)
-        );
+            builder: (_) => userPerfil(args as DocumentSnapshot));
       case cRoutes.RIDES:
-        return MaterialPageRoute(
-            builder: (_) => Rides()
-        );
+        return MaterialPageRoute(builder: (_) => Rides());
       default:
         _routeNotFound();
     }
