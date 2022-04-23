@@ -99,111 +99,115 @@ class _RidesState extends State<Rides> {
                                                   _idLoggedUser;
 
                                       return Dismissible(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    ride[
-                                                        DbData
-                                                            .COLUMN_EVENT][DbData
-                                                        .COLUMN_EVENT_DESC_BASE_EVENT],
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                      child: RichText(
-                                                        text: TextSpan(
-                                                          // Note: Styles for TextSpans must be explicitly defined.
-                                                          // Child text spans will inherit styles from parent
-                                                          style: const TextStyle(
-                                                            fontSize: 14.0,
-                                                            color: Colors.black,
+                                        child: GestureDetector(
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 10),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      ride[
+                                                      DbData
+                                                          .COLUMN_EVENT][DbData
+                                                          .COLUMN_EVENT_DESC_BASE_EVENT],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 18),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                        child: RichText(
+                                                          text: TextSpan(
+
+                                                            style: const TextStyle(
+                                                              fontSize: 14.0,
+                                                              color: Colors.black,
+                                                            ),
+                                                            children: <TextSpan>[
+                                                              TextSpan(text: 'Localização: '),
+                                                              TextSpan(
+                                                                  text: ride[
+                                                                  DbData
+                                                                      .COLUMN_EVENT][DbData
+                                                                      .COLUMN_LOCATION] ,
+                                                                  style: TextStyle(
+                                                                      color: APP_SUB_TEXT
+                                                                  )),
+                                                            ],
                                                           ),
-                                                          children: <TextSpan>[
-                                                            TextSpan(text: 'Localização: '),
-                                                            TextSpan(
-                                                                text: ride[
-                                                                DbData
-                                                                    .COLUMN_EVENT][DbData
-                                                                    .COLUMN_LOCATION] ,
-                                                                style: TextStyle(
-                                                                  color: APP_SUB_TEXT
-                                                                )),
-                                                          ],
-                                                        ),
-                                                      )
-                                                  )
-                                                  ,
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("Data/Horário: "),
-                                                  Text(
-                                                    ride[DbData
-                                                            .COLUMN_DEPARTURE_DATE] +
-                                                        " - " +
-                                                        ride[DbData
-                                                            .COLUMN_DEPARTURE_TIME],
-                                                    style: TextStyle(
-                                                        color: APP_SUB_TEXT),
-                                                  )
-                                                ],
-                                              ),
-                                              ride[DbData.COLUMN_RETURN_DATE] !=
-                                                          null &&
+                                                        )
+                                                    )
+                                                    ,
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text("Data/Horário: "),
+                                                    Text(
                                                       ride[DbData
-                                                              .COLUMN_RETURN_DATE] !=
-                                                          ""
-                                                  ? Text(
-                                                      ride[DbData
-                                                              .COLUMN_RETURN_DATE] +
+                                                          .COLUMN_DEPARTURE_DATE] +
                                                           " - " +
                                                           ride[DbData
-                                                              .COLUMN_RETURN_TIME],
+                                                              .COLUMN_DEPARTURE_TIME],
                                                       style: TextStyle(
                                                           color: APP_SUB_TEXT),
                                                     )
-                                                  : Text(
-                                                      "Sem Dados de Retorno Informados",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: APP_SUB_TEXT),
-                                                    ),
-                                              Row(
-                                                children: [
-                                                  Text("Motorista: "),
-                                                  Text(
+                                                  ],
+                                                ),
+                                                ride[DbData.COLUMN_RETURN_DATE] !=
+                                                    null &&
                                                     ride[DbData
-                                                        .COLUMN_DRIVER_NAME],
-                                                    style: TextStyle(
-                                                        color: APP_SUB_TEXT),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("Registrado há : " +
-                                                      Utils.getDateTimeUntilNow(
-                                                          ride[DbData
-                                                              .COLUMN_REGISTRATION_DATE]))
-                                                ],
-                                              ),
-                                              Divider(),
-                                            ],
+                                                        .COLUMN_RETURN_DATE] !=
+                                                        ""
+                                                    ? Text(
+                                                  ride[DbData
+                                                      .COLUMN_RETURN_DATE] +
+                                                      " - " +
+                                                      ride[DbData
+                                                          .COLUMN_RETURN_TIME],
+                                                  style: TextStyle(
+                                                      color: APP_SUB_TEXT),
+                                                )
+                                                    : Text(
+                                                  "Sem Dados de Retorno Informados",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      color: APP_SUB_TEXT),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text("Motorista: "),
+                                                    Text(
+                                                      ride[DbData
+                                                          .COLUMN_DRIVER_NAME],
+                                                      style: TextStyle(
+                                                          color: APP_SUB_TEXT),
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text("Registrado há : " +
+                                                        Utils.getDateTimeUntilNow(
+                                                            ride[DbData
+                                                                .COLUMN_REGISTRATION_DATE]))
+                                                  ],
+                                                ),
+                                                Divider(),
+                                              ],
+                                            ),
                                           ),
-                                        ),
+                                          onTap: (){
+                                            Navigator.pushNamed(context, cRoutes.SCHEDULING, arguments: ride);
+                                          },
+                                        ) ,
                                         confirmDismiss: (d) async {
                                           eRide r = eRide();
                                           r.docToRide(ride);

@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'eEvent.dart';
 
 class eRide {
+  String? _uid;
+  String get uid => _uid!;
   eEvent? _event;
   eVehicle? _vehicle;
   String? _departureAddress;
@@ -46,6 +48,7 @@ class eRide {
   }
 
   void docToRide(DocumentSnapshot<Object?> ride) {
+    this.uid = ride.id;
     this.departureAddress = ride[DbData.COLUMN_DEPARTURE_ADDRESS];
     this.returnAddress = ride[DbData.COLUMN_RETURN_ADDRESS];
     this.departureDate = ride[DbData.COLUMN_DEPARTURE_DATE];
@@ -59,6 +62,10 @@ class eRide {
     this.vehicle.docToEntity(ride[DbData.COLUMN_VEHICLE]);
     this.event = eEvent.empty();
     this.event.docToEntity(ride[DbData.COLUMN_EVENT]);
+  }
+
+  set uid(String value) {
+    _uid = value;
   }
 
   set departureAddress(String value) {

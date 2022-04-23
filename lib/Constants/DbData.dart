@@ -8,6 +8,7 @@ class DbData {
   static const TABLE_BASE_EVENT = "base_event";
   static const TABLE_USER = "user";
   static const TABLE_RIDE = "ride";
+  static const TABLE_SCHEDULING = "scheduling";
 
   static const COLUMN_SIGN = "sign";
   static const COLUMN_SEATS = "seats";
@@ -49,5 +50,8 @@ class DbData {
   static const COLUMN_VEHICLE = "vehicle";
   static const COLUMN_DRIVER_ID = "driverId";
   static const COLUMN_DRIVER_NAME = "driverName";
-
+  static const COLUMN_UID = "uid";
+  static const COLUMN_RIDE_ID = "ride_id";
+  static const COLUMN_RESERVED_SEATS = "reserved_seats";
+  static const COLUMN_RESERVED_LUGGAGES = "reserved_luggages";
 }

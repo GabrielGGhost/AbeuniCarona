@@ -4,6 +4,7 @@ import 'package:abeuni_carona/Screen/Events/Events/EventRegister.dart';
 import 'package:abeuni_carona/Screen/Events/Events/Events.dart';
 import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
+import 'package:abeuni_carona/Screen/Rides/Ride/Scheduling.dart';
 import 'package:abeuni_carona/Screen/Users/Perfil/userPerfil.dart';
 import 'package:abeuni_carona/Screen/Users/Register/RegisterUserPassword.dart';
 import 'package:abeuni_carona/Screen/Users/Register/SendEmailNewUser.dart';
@@ -17,6 +18,7 @@ import 'Entity/eRide.dart';
 import 'Screen/Events/baseEvents/EventBaseRegister.dart';
 import 'Screen/Login.dart';
 import 'Screen/Permission/PermissionManager.dart';
+import 'Screen/Rides/Ride/Partaker.dart';
 import 'Screen/Rides/Ride/Rides.dart';
 import 'Screen/Rides/RideRegister/RideRegister_1.dart';
 import 'Screen/Rides/RideRegister/RideRegister_2.dart';
@@ -120,8 +122,13 @@ class RouteGenerator {
       case cRoutes.USER_PERFIL:
         return MaterialPageRoute(
             builder: (_) => userPerfil(args as DocumentSnapshot));
+      case cRoutes.PARTAKER:
+        return MaterialPageRoute(
+            builder: (_) => Partaker());
       case cRoutes.RIDES:
         return MaterialPageRoute(builder: (_) => Rides());
+      case cRoutes.SCHEDULING:
+        return MaterialPageRoute(builder: (_) => Scheduling(args as DocumentSnapshot));
       default:
         _routeNotFound();
     }

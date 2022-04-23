@@ -213,9 +213,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           Text(""),
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Rides()
+                MyRides()
               ],
             )
           )

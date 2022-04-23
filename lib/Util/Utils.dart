@@ -148,7 +148,7 @@ class Utils {
     return string != null ? string : "";
   }
 
-  /*
+  /**
     Recebe: Data no formato DateTime
     Retorna: Se a uma String com uma descrição de menor tempo segundo a data
   */
@@ -272,5 +272,14 @@ class Utils {
     final m = dateTime.month.toString().padLeft(2, '0');
     final d = dateTime.day.toString().padLeft(2, '0');
     return "$y$m$d";
+  }
+
+  static String getSafeNumber(String value) {
+    try{
+      int number = int.parse(value);
+      return number.toString();
+    } catch(e){
+      return "0";
+    }
   }
 }
