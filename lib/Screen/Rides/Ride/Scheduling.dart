@@ -22,6 +22,8 @@ class _SchedulingState extends State<Scheduling> {
   eRide ride = eRide();
   String? _seatsReserved = "0";
   String? _lugaggeReserved = "0";
+  int totalAvaliableSeats = 0;
+  int totalAvaliableLuggages = 0;
 
   TextEditingController _controllerSeats = TextEditingController();
   TextEditingController _controllerLuggages = TextEditingController();
@@ -46,7 +48,8 @@ class _SchedulingState extends State<Scheduling> {
   @override
   Widget build(BuildContext context) {
     ride.docToRide(widget.ride);
-    String driveName = "";
+    totalAvaliableSeats = int.parse(ride.vehicle.seats);
+    totalAvaliableLuggages = int.parse(ride.vehicle.luggageSpaces);
 
     return Scaffold(
       appBar: AppBar(
@@ -251,18 +254,63 @@ class _SchedulingState extends State<Scheduling> {
               ),
               Row(
                 children: [
-                  Text("Vagas: ",
+                  Text("Vagas Remanescentes: ",
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(ride.vehicle.seats,
-                      style: TextStyle(color: Colors.grey)),
+                  FutureBuilder(
+                      future: findAllSchedulingSeatsByRide(ride),
+                      builder: (_, snapshot) {
+                        int totalSeats = int.parse(ride.vehicle.seats);
+
+                        if (snapshot.hasError) {
+                          return Text("Carregando...",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent));
+                        } else if (!snapshot.hasData) {
+                          return Text("Carregando...",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent));
+                        } else {
+                          int reservedSeats =
+                              int.parse(snapshot.data.toString());
+                          totalAvaliableSeats = totalSeats - reservedSeats;
+                          return Text((totalSeats - reservedSeats).toString(),
+                              style: TextStyle(color: Colors.grey));
+                        }
+                      })
                 ],
               ),
               Row(
                 children: [
-                  Text("Espaço para Bagagens: ",
+                  Text("Bagagens Remanescentes: ",
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(ride.vehicle.luggageSpaces,
-                      style: TextStyle(color: Colors.grey)),
+                  FutureBuilder(
+                      future: findAllSchedulingSeatsByRide(ride),
+                      builder: (_, snapshot) {
+                        int totalLuggages =
+                            int.parse(ride.vehicle.luggageSpaces);
+
+                        if (snapshot.hasError) {
+                          return Text("Carregando...",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent));
+                        } else if (!snapshot.hasData) {
+                          return Text("Carregando...",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent));
+                        } else {
+                          int reservedLuggages =
+                              int.parse(snapshot.data.toString());
+                          totalAvaliableLuggages =
+                              totalLuggages - reservedLuggages;
+                          return Text(
+                              (totalLuggages - reservedLuggages).toString(),
+                              style: TextStyle(color: Colors.grey));
+                        }
+                      }),
                 ],
               ),
               Divider(),
@@ -289,11 +337,12 @@ class _SchedulingState extends State<Scheduling> {
                           child: TextField(
                             controller: _controllerSeats,
                             focusNode: _focusSeats,
+                            textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             onChanged: (value) {
                               setState(() {
                                 value =
-                                    checkMaxSpaces(value, ride.vehicle.seats);
+                                    checkMaxSeats(value, totalAvaliableSeats);
                                 value = Utils.getSafeNumber(value);
                                 _seatsReserved = value;
                               });
@@ -315,11 +364,12 @@ class _SchedulingState extends State<Scheduling> {
                           child: TextField(
                             controller: _controllerLuggages,
                             focusNode: _focusLuggages,
+                            textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             onChanged: (value) {
                               setState(() {
-                                value = checkMaxSpaces(
-                                    value, ride.vehicle.luggageSpaces);
+                                value = checkMaxLuggages(
+                                    value, totalAvaliableLuggages);
                                 value = Utils.getSafeNumber(value);
                                 _lugaggeReserved = value;
                               });
@@ -363,12 +413,32 @@ class _SchedulingState extends State<Scheduling> {
     return result[DbData.COLUMN_USERNAME];
   }
 
-  String checkMaxSpaces(String value, String info) {
-    int avaliable = int.parse(info);
+  String checkMaxSeats(String value, int qtt) {
+    int avaliable = qtt;
     value = value == "" ? "0" : value;
     int required = int.parse(value);
 
-    if (required > avaliable || required < 1) {
+    if ((required > 0 && required > avaliable) || required < 1) {
+      if (avaliable == 1) {
+        Utils.showToast("Espaço insuficiente! Apenas 1 disponível");
+      } else if (required == 0) {
+        return "";
+      } else if (avaliable > 1) {
+        Utils.showToast("Espaço insuficiente! Apenas $avaliable disponíveis");
+      } else {
+        Utils.showToast("Espaço para vagas lotado!");
+      }
+      return "0";
+    }
+    return required.toString();
+  }
+
+  String checkMaxLuggages(String value, int qtt) {
+    int avaliable = qtt;
+    value = value == "" ? "0" : value;
+    int required = int.parse(value);
+
+    if ((required > 0 && required > avaliable) || required < 0) {
       if (avaliable == 1) {
         Utils.showToast("Espaço insuficiente! Apenas 1 disponível");
       } else if (required == 0) {
@@ -385,8 +455,8 @@ class _SchedulingState extends State<Scheduling> {
 
   void save() {
     if (checkFields()) {
-
-      eScheduling scheduling = eScheduling.full(ride.uid, _seatsReserved, _lugaggeReserved);
+      eScheduling scheduling =
+          eScheduling.full(ride.uid, _seatsReserved, _lugaggeReserved);
 
       insert(scheduling);
       Utils.showToast("Registrado", APP_SUCCESS_BACKGROUND);
@@ -414,5 +484,37 @@ class _SchedulingState extends State<Scheduling> {
 
   void insert(eScheduling scheduling) {
     db.collection(DbData.TABLE_SCHEDULING).add(scheduling.toMap());
+  }
+
+  Future<int> findAllSchedulingSeatsByRide(eRide ride) async {
+    QuerySnapshot<Map<String, dynamic>> result = await db
+        .collection(DbData.TABLE_SCHEDULING)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
+        .get();
+
+    final allData = result.docs.map((doc) => doc.data()).toList();
+    int totalReservedSeats = 0;
+    for (var schedule in allData) {
+      totalReservedSeats += int.parse(
+          Utils.getSafeNumber(schedule[DbData.COLUMN_RESERVED_SEATS]));
+    }
+
+    return totalReservedSeats;
+  }
+
+  Future<int> findAllSchedulingLuggagesByRide(eRide ride) async {
+    QuerySnapshot<Map<String, dynamic>> result = await db
+        .collection(DbData.TABLE_SCHEDULING)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
+        .get();
+
+    final allData = result.docs.map((doc) => doc.data()).toList();
+    int totalReservedLuggages = 0;
+    for (var schedule in allData) {
+      totalReservedLuggages += int.parse(
+          Utils.getSafeNumber(schedule[DbData.COLUMN_RESERVED_LUGGAGES]));
+    }
+
+    return totalReservedLuggages;
   }
 }

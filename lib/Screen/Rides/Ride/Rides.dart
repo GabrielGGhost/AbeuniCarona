@@ -109,12 +109,12 @@ class _RidesState extends State<Rides> {
                                                   children: [
                                                     Text(
                                                       ride[
-                                                      DbData
-                                                          .COLUMN_EVENT][DbData
+                                                          DbData
+                                                              .COLUMN_EVENT][DbData
                                                           .COLUMN_EVENT_DESC_BASE_EVENT],
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           fontSize: 18),
                                                     ),
                                                   ],
@@ -123,27 +123,26 @@ class _RidesState extends State<Rides> {
                                                   children: [
                                                     Expanded(
                                                         child: RichText(
-                                                          text: TextSpan(
-
-                                                            style: const TextStyle(
-                                                              fontSize: 14.0,
-                                                              color: Colors.black,
-                                                            ),
-                                                            children: <TextSpan>[
-                                                              TextSpan(text: 'Localização: '),
-                                                              TextSpan(
-                                                                  text: ride[
-                                                                  DbData
-                                                                      .COLUMN_EVENT][DbData
-                                                                      .COLUMN_LOCATION] ,
-                                                                  style: TextStyle(
-                                                                      color: APP_SUB_TEXT
-                                                                  )),
-                                                            ],
-                                                          ),
-                                                        )
-                                                    )
-                                                    ,
+                                                      text: TextSpan(
+                                                        style: const TextStyle(
+                                                          fontSize: 14.0,
+                                                          color: Colors.black,
+                                                        ),
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                              text:
+                                                                  'Localização: '),
+                                                          TextSpan(
+                                                              text: ride[DbData
+                                                                      .COLUMN_EVENT]
+                                                                  [DbData
+                                                                      .COLUMN_LOCATION],
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      APP_SUB_TEXT)),
+                                                        ],
+                                                      ),
+                                                    )),
                                                   ],
                                                 ),
                                                 Row(
@@ -151,7 +150,7 @@ class _RidesState extends State<Rides> {
                                                     Text("Data/Horário: "),
                                                     Text(
                                                       ride[DbData
-                                                          .COLUMN_DEPARTURE_DATE] +
+                                                              .COLUMN_DEPARTURE_DATE] +
                                                           " - " +
                                                           ride[DbData
                                                               .COLUMN_DEPARTURE_TIME],
@@ -161,26 +160,28 @@ class _RidesState extends State<Rides> {
                                                   ],
                                                 ),
                                                 ride[DbData.COLUMN_RETURN_DATE] !=
-                                                    null &&
-                                                    ride[DbData
-                                                        .COLUMN_RETURN_DATE] !=
-                                                        ""
+                                                            null &&
+                                                        ride[DbData
+                                                                .COLUMN_RETURN_DATE] !=
+                                                            ""
                                                     ? Text(
-                                                  ride[DbData
-                                                      .COLUMN_RETURN_DATE] +
-                                                      " - " +
-                                                      ride[DbData
-                                                          .COLUMN_RETURN_TIME],
-                                                  style: TextStyle(
-                                                      color: APP_SUB_TEXT),
-                                                )
+                                                        ride[DbData
+                                                                .COLUMN_RETURN_DATE] +
+                                                            " - " +
+                                                            ride[DbData
+                                                                .COLUMN_RETURN_TIME],
+                                                        style: TextStyle(
+                                                            color:
+                                                                APP_SUB_TEXT),
+                                                      )
                                                     : Text(
-                                                  "Sem Dados de Retorno Informados",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                      FontWeight.bold,
-                                                      color: APP_SUB_TEXT),
-                                                ),
+                                                        "Sem Dados de Retorno Informados",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                APP_SUB_TEXT),
+                                                      ),
                                                 Row(
                                                   children: [
                                                     Text("Motorista: "),
@@ -190,6 +191,65 @@ class _RidesState extends State<Rides> {
                                                       style: TextStyle(
                                                           color: APP_SUB_TEXT),
                                                     )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text("Vagas: "),
+                                                    FutureBuilder(
+                                                        future:
+                                                            findAllSchedulingSeatsByRide(
+                                                                ride.id),
+                                                        builder: (_, snapshot) {
+                                                          int totalSeats = int.parse(
+                                                              Utils.getSafeNumber(ride[
+                                                                  DbData
+                                                                      .COLUMN_VEHICLE][DbData
+                                                                  .COLUMN_SEATS]));
+
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                                "Carregando...",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .redAccent));
+                                                          } else if (!snapshot
+                                                              .hasData) {
+                                                            return Text(
+                                                                "Carregando...",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .redAccent));
+                                                          } else {
+                                                            int reservedSeats =
+                                                            int.parse(snapshot
+                                                                .data
+                                                                .toString());
+                                                            int currentSeats = totalSeats - reservedSeats;
+                                                            if (currentSeats ==
+                                                                0) {
+                                                              return Text(
+                                                                "LOTADO",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .redAccent),
+                                                              );
+                                                            }
+                                                            return Text(
+                                                                (currentSeats.toString())
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey));
+                                                          }
+                                                        })
                                                   ],
                                                 ),
                                                 Row(
@@ -204,10 +264,14 @@ class _RidesState extends State<Rides> {
                                               ],
                                             ),
                                           ),
-                                          onTap: (){
-                                            Navigator.pushNamed(context, cRoutes.SCHEDULING, arguments: ride);
+                                          onTap: () async {
+                                            await Navigator.pushNamed(
+                                                context, cRoutes.SCHEDULING,
+                                                arguments: ride);
+
+                                            _addListenerBorrowedVehicles();
                                           },
-                                        ) ,
+                                        ),
                                         confirmDismiss: (d) async {
                                           eRide r = eRide();
                                           r.docToRide(ride);
@@ -348,5 +412,37 @@ class _RidesState extends State<Rides> {
     if (usuarioLogado != null) {
       _idLoggedUser = usuarioLogado.uid;
     }
+  }
+
+  Future<int> findAllSchedulingSeatsByRide(String rideId) async {
+    QuerySnapshot<Map<String, dynamic>> result = await db
+        .collection(DbData.TABLE_SCHEDULING)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: rideId)
+        .get();
+
+    final allData = result.docs.map((doc) => doc.data()).toList();
+    int totalReservedSeats = 0;
+    for (var schedule in allData) {
+      totalReservedSeats += int.parse(
+          Utils.getSafeNumber(schedule[DbData.COLUMN_RESERVED_SEATS]));
+    }
+
+    return totalReservedSeats;
+  }
+
+  Future<int> findAllSchedulingLuggagesByRide(eRide ride) async {
+    QuerySnapshot<Map<String, dynamic>> result = await db
+        .collection(DbData.TABLE_SCHEDULING)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
+        .get();
+
+    final allData = result.docs.map((doc) => doc.data()).toList();
+    int totalReservedLuggages = 0;
+    for (var schedule in allData) {
+      totalReservedLuggages += int.parse(
+          Utils.getSafeNumber(schedule[DbData.COLUMN_RESERVED_LUGGAGES]));
+    }
+
+    return totalReservedLuggages;
   }
 }
