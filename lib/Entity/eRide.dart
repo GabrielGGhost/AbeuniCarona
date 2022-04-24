@@ -47,7 +47,7 @@ class eRide {
     };
   }
 
-  void docToRide(DocumentSnapshot<Object?> ride) {
+  void docToRide(DocumentSnapshot ride) {
     this.uid = ride.id;
     this.departureAddress = ride[DbData.COLUMN_DEPARTURE_ADDRESS];
     this.returnAddress = ride[DbData.COLUMN_RETURN_ADDRESS];

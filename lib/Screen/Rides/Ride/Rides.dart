@@ -331,9 +331,15 @@ class _RidesState extends State<Rides> {
                                             ),
                                           ),
                                           onTap: () async {
-                                            await Navigator.pushNamed(
-                                                context, cRoutes.SCHEDULING,
-                                                arguments: ride);
+                                            if (edit) {
+                                              await Navigator.pushNamed(
+                                                  context, cRoutes.PARTAKER,
+                                                  arguments: ride);
+                                            } else {
+                                              await Navigator.pushNamed(
+                                                  context, cRoutes.SCHEDULING,
+                                                  arguments: ride);
+                                            }
 
                                             _addListenerBorrowedVehicles();
                                           },
@@ -343,9 +349,17 @@ class _RidesState extends State<Rides> {
                                           r.docToRide(ride);
                                           if (d ==
                                               DismissDirection.startToEnd) {
-                                            Navigator.pushNamed(
-                                                context, cRoutes.REGISTER_RIDE5,
-                                                arguments: r);
+                                            eRide rid = eRide();
+                                            rid.docToRide(ride);
+                                            if (edit) {
+                                              await Navigator.pushNamed(context,
+                                                  cRoutes.REGISTER_RIDE5,
+                                                  arguments: rid);
+                                            } else {
+                                              await Navigator.pushNamed(
+                                                  context, cRoutes.SCHEDULING,
+                                                  arguments: ride);
+                                            }
                                             return false;
                                           } else {
                                             return await showDialog(
