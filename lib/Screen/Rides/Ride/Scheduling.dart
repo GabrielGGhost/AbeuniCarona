@@ -290,7 +290,7 @@ class _SchedulingState extends State<Scheduling> {
                   Text("Bagagens Remanescentes: ",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   FutureBuilder(
-                      future: findAllSchedulingSeatsByRide(ride),
+                      future: findAllSchedulingLuggagesByRide(ride),
                       builder: (_, snapshot) {
                         int totalLuggages =
                             int.parse(ride.vehicle.luggageSpaces);
@@ -470,6 +470,21 @@ class _SchedulingState extends State<Scheduling> {
   }
 
   bool checkFields() {
+
+    if (totalAvaliableSeats == 0 && _controllerSeats.text != "0") {
+      Utils.showDialogBox(
+          "Vagas lotadas!", context);
+      _focusSeats!.requestFocus();
+      return false;
+    }
+
+    if (totalAvaliableLuggages == 0 && _controllerLuggages.text != "0") {
+      Utils.showDialogBox(
+          "Bagagens lotadas!", context);
+      _focusSeats!.requestFocus();
+      return false;
+    }
+
     if (_seatsReserved == "") {
       Utils.showDialogBox(
           "É preciso selecionar quantas vagas irá ocupar!", context);

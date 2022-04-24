@@ -229,10 +229,12 @@ class _RidesState extends State<Rides> {
                                                                         .redAccent));
                                                           } else {
                                                             int reservedSeats =
-                                                            int.parse(snapshot
-                                                                .data
-                                                                .toString());
-                                                            int currentSeats = totalSeats - reservedSeats;
+                                                                int.parse(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                            int currentSeats =
+                                                                totalSeats -
+                                                                    reservedSeats;
                                                             if (currentSeats ==
                                                                 0) {
                                                               return Text(
@@ -243,7 +245,71 @@ class _RidesState extends State<Rides> {
                                                               );
                                                             }
                                                             return Text(
-                                                                (currentSeats.toString())
+                                                                (currentSeats
+                                                                        .toString())
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey));
+                                                          }
+                                                        })
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text("Bagagens: "),
+                                                    FutureBuilder(
+                                                        future:
+                                                            findAllSchedulingLuggagesByRide(
+                                                                ride.id),
+                                                        builder: (_, snapshot) {
+                                                          int totalLuggages =
+                                                              int.parse(Utils
+                                                                  .getSafeNumber(ride[
+                                                                      DbData
+                                                                          .COLUMN_VEHICLE][DbData
+                                                                      .COLUMN_LUGGAGE_SPACES]));
+
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                                "Carregando...",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .redAccent));
+                                                          } else if (!snapshot
+                                                              .hasData) {
+                                                            return Text(
+                                                                "Carregando...",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .redAccent));
+                                                          } else {
+                                                            int reservedLuggages =
+                                                                int.parse(snapshot
+                                                                    .data
+                                                                    .toString());
+                                                            int currentLuggages =
+                                                                totalLuggages -
+                                                                    reservedLuggages;
+                                                            if (currentLuggages ==
+                                                                0) {
+                                                              return Text(
+                                                                "LOTADO",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .redAccent),
+                                                              );
+                                                            }
+                                                            return Text(
+                                                                (currentLuggages
+                                                                        .toString())
                                                                     .toString(),
                                                                 style: TextStyle(
                                                                     color: Colors
@@ -430,10 +496,10 @@ class _RidesState extends State<Rides> {
     return totalReservedSeats;
   }
 
-  Future<int> findAllSchedulingLuggagesByRide(eRide ride) async {
+  Future<int> findAllSchedulingLuggagesByRide(String? rideId) async {
     QuerySnapshot<Map<String, dynamic>> result = await db
         .collection(DbData.TABLE_SCHEDULING)
-        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: rideId)
         .get();
 
     final allData = result.docs.map((doc) => doc.data()).toList();
