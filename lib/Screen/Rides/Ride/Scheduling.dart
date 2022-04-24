@@ -4,6 +4,7 @@ import 'package:abeuni_carona/Entity/eScheduling.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +32,13 @@ class _SchedulingState extends State<Scheduling> {
   FocusNode? _focusSeats;
   FocusNode? _focusLuggages;
 
+  String? _idLoggedUser;
+
   @override
   void initState() {
     _focusSeats = FocusNode();
     _focusLuggages = FocusNode();
+    _getUserData();
     super.initState();
   }
 
@@ -295,9 +299,9 @@ class _SchedulingState extends State<Scheduling> {
                           return Text("Carregando...",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent));
+                                  color: Colors.grey));
                         } else if (!snapshot.hasData) {
-                          return Text("Carregando...",
+                          return Text("Erro ao carregar dados",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.redAccent));
@@ -456,7 +460,8 @@ class _SchedulingState extends State<Scheduling> {
   void save() {
     if (checkFields()) {
       eScheduling scheduling =
-          eScheduling.full(ride.uid, _seatsReserved, _lugaggeReserved);
+          eScheduling.full(ride.uid, _idLoggedUser, _seatsReserved, _lugaggeReserved);
+      scheduling.registrationDate = Utils.getDateTimeNow()!;
 
       insert(scheduling);
       Utils.showToast("Registrado", APP_SUCCESS_BACKGROUND);
@@ -516,5 +521,14 @@ class _SchedulingState extends State<Scheduling> {
     }
 
     return totalReservedLuggages;
+  }
+
+  void _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
+    if (usuarioLogado != null) {
+      _idLoggedUser = usuarioLogado.uid;
+    }
   }
 }
