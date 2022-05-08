@@ -63,7 +63,13 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => PermissionManager(args as eUser));
       case cRoutes.REGISTER_RIDE1:
-        return MaterialPageRoute(builder: (_) => RideRegister_1());
+        if (args == null) {
+          return MaterialPageRoute(builder: (_) => RideRegister_1(null, false));
+        } else {
+          Map<String, dynamic> values = args as Map<String, dynamic>;
+          return MaterialPageRoute(
+              builder: (_) => RideRegister_1(values['ride'], values['edit']));
+        }
       case cRoutes.REGISTER_RIDE2:
         {
           if (args is eRide) {
@@ -99,7 +105,13 @@ class RouteGenerator {
           }
         }
       case cRoutes.REGISTER_RIDE5:
-        return MaterialPageRoute(builder: (_) => RideRegister_5(args as eRide));
+        if (args is eRide) {
+          return MaterialPageRoute(builder: (_) => RideRegister_5(args, false));
+        } else {
+          Map<String, dynamic> values = args as Map<String, dynamic>;
+          return MaterialPageRoute(
+              builder: (_) => RideRegister_5(values['ride'], values['edit']));
+        }
       case cRoutes.REGISTER_USER:
         return MaterialPageRoute(builder: (_) => RegisterUser());
       case cRoutes.REGISTER_USER_PICTURE:
@@ -124,11 +136,12 @@ class RouteGenerator {
             builder: (_) => userPerfil(args as DocumentSnapshot));
       case cRoutes.PARTAKER:
         return MaterialPageRoute(
-            builder: (_) => Partaker());
+            builder: (_) => Partaker(args as DocumentSnapshot));
       case cRoutes.RIDES:
         return MaterialPageRoute(builder: (_) => Rides());
       case cRoutes.SCHEDULING:
-        return MaterialPageRoute(builder: (_) => Scheduling(args as DocumentSnapshot));
+        return MaterialPageRoute(
+            builder: (_) => Scheduling(args as DocumentSnapshot));
       default:
         _routeNotFound();
     }

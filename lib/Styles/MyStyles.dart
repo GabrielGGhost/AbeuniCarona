@@ -1,21 +1,22 @@
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter/material.dart';
 
-Color APP_BAR_BACKGROUND_COLOR = Colors.blueAccent;
-Color APP_EDIT_DISMISS = Colors.green;
-Color APP_REMOVE_DISMISS = Colors.redAccent;
-Color APP_MAIN_TEXT = Colors.black;
-Color APP_SUB_TEXT = Colors.grey;
-Color APP_ERROR_BACKGROUND = Colors.redAccent;
-Color APP_ERROR_FINISH_EVENT = Colors.redAccent;
-Color APP_ERROR_REACTIVE_EVENT = Colors.blueAccent;
-Color APP_SUCCESS_BACKGROUND = Colors.green;
-Color APP_WHITE_FONT = Colors.white;
-Color APP_HINT_TEXT_FIELD = Colors.grey;
-Color APP_CARD_BACKGROUND = Colors.white;
-Color APP_CANCEL_BUTTON = Colors.black;
-Color APP_TEXT_FIELD_BACKGROUND = Colors.white;
-Color APP_CHECK_COLOR = Colors.white;
+// ignore: non_constant_identifier_names
+const APP_BAR_BACKGROUND_COLOR = Colors.blueAccent;
+const APP_EDIT_DISMISS = Colors.green;
+const APP_REMOVE_DISMISS = Colors.redAccent;
+const APP_MAIN_TEXT = Colors.black;
+const APP_SUB_TEXT = Colors.grey;
+const APP_ERROR_BACKGROUND = Colors.redAccent;
+const APP_ERROR_FINISH_EVENT = Colors.redAccent;
+const APP_ERROR_REACTIVE_EVENT = Colors.blueAccent;
+const APP_SUCCESS_BACKGROUND = Colors.green;
+const APP_WHITE_FONT = Colors.white;
+const APP_HINT_TEXT_FIELD = Colors.grey;
+const APP_CARD_BACKGROUND = Colors.white;
+const APP_CANCEL_BUTTON = Colors.black;
+const APP_TEXT_FIELD_BACKGROUND = Colors.white;
+const APP_CHECK_COLOR = Colors.white;
 
 double APP_TEXT_EDIT_RADIUS_BORDER = 16;
 // TEXT FIELDS

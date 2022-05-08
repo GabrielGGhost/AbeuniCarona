@@ -16,7 +16,8 @@ import 'RideRegister_4.dart';
 
 class RideRegister_5 extends StatefulWidget {
   eRide ride;
-  RideRegister_5(this.ride);
+  bool edit;
+  RideRegister_5(this.ride, this.edit);
 
   @override
   _RideRegister_5State createState() => _RideRegister_5State();
@@ -28,6 +29,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
   String? _idLoggedUser;
   eUser? user = eUser.empty();
   eRide ride = eRide();
+  bool edit = false;
   @override
   void initState() {
     _getUserData();
@@ -37,6 +39,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
   @override
   Widget build(BuildContext context) {
     ride = widget.ride;
+    edit = widget.edit;
     return Scaffold(
       appBar: AppBar(
         title: Text("Resumo da Carona"),
@@ -53,7 +56,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Confira as informações informadas, para corrigir alguma, clique no card para ser redirecionado à tela!",
+                      "Confira os dados informadas, para corrigir alguma, clique no card para ser redirecionado à tela!",
                       style: TextStyle(color: Colors.grey),
                     ),
                   )
@@ -66,6 +69,115 @@ class _RideRegister_5State extends State<RideRegister_5> {
                     Card(
                       child: Column(
                         children: [
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Evento",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        )
+                                      ]),
+                                  Row(children: [
+                                    Text("Tipo: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15)),
+                                    Text(ride.event.descBaseEvent,
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 15)),
+                                  ]),
+                                  Row(children: [
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          // Note: Styles for TextSpans must be explicitly defined.
+                                          // Child text spans will inherit styles from parent
+                                          style: const TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: 'Localização: ',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextSpan(
+                                                text: ride.event.location,
+                                                style: TextStyle(
+                                                    color: APP_SUB_TEXT)),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ]),
+                                  Row(children: [
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(text: 'Obs.: '),
+                                            TextSpan(
+                                                text: ride.event.obsEvent,
+                                                style: TextStyle(
+                                                    color: APP_SUB_TEXT)),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ]),
+                                  Row(children: [
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          // Note: Styles for TextSpans must be explicitly defined.
+                                          // Child text spans will inherit styles from parent
+                                          style: const TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text:
+                                                    ride.event.dateEventStart +
+                                                        " - " +
+                                                        ride.event.dateEventEnd,
+                                                style: TextStyle(
+                                                    color: APP_SUB_TEXT)),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ]),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        child: Text(
+                                          "Alterar",
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              decoration:
+                                                  TextDecoration.underline),
+                                        ),
+                                        onTap: () => {_updateEventBase()},
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
+                          Divider(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -118,7 +230,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             decoration:
                                                 TextDecoration.underline),
                                       ),
-                                      onTap: () => {_updateVehicle(context)},
+                                      onTap: () => {_updateVehicle()},
                                     ),
                                   ],
                                 ),
@@ -163,95 +275,13 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             decoration:
                                                 TextDecoration.underline),
                                       ),
-                                      onTap: () =>
-                                          {_updateVehicleNumbers(context)},
+                                      onTap: () => {_updateVehicleNumbers()},
                                     ),
                                   ],
                                 ),
                               ],
                             ),
                           ),
-                          Divider(),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Evento",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                )
-                              ]),
-                          Row(children: [
-                            Text("Tipo: ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                            Text(ride.event.descBaseEvent,
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 15)),
-                          ]),
-                          Row(children: [
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.black,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: 'Localização: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    TextSpan(
-                                        text: ride.event.location,
-                                        style: TextStyle(color: APP_SUB_TEXT)),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ]),
-                          Row(children: [
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.black,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(text: 'Obs.: '),
-                                    TextSpan(
-                                        text: ride.event.obsEvent,
-                                        style: TextStyle(color: APP_SUB_TEXT)),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ]),
-                          Row(children: [
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.black,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: ride.event.dateEventStart + " - " + ride.event.dateEventEnd,
-                                        style: TextStyle(color: APP_SUB_TEXT)),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ]),
                           Divider(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -385,7 +415,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             decoration:
                                                 TextDecoration.underline),
                                       ),
-                                      onTap: () => {_updateEvent(context)},
+                                      onTap: () => {_updateEvent()},
                                     ),
                                   ],
                                 ),
@@ -426,14 +456,19 @@ class _RideRegister_5State extends State<RideRegister_5> {
   }
 
   void save(eRide ride) {
-    ride.registerDate = Utils.getDateTimeNow()!;
     ride.driverId = _idLoggedUser!;
     ride.driverName = user!.nickName + " [ " + user!.userName + "]";
-    insert(ride);
 
-    Utils.showToast("Cadastrado com sucesso!", APP_SUCCESS_BACKGROUND);
-    int count = 0;
-    Navigator.of(context).popUntil((_) => count++ >= 5);
+    if (edit) {
+      update(ride);
+      Navigator.pop(context);
+    } else {
+      ride.registerDate = Utils.getDateTimeNow()!;
+      insert(ride);
+      Utils.showToast("Cadastrado com sucesso!", APP_SUCCESS_BACKGROUND);
+      int count = 0;
+      Navigator.of(context).popUntil((_) => count++ >= 5);
+    }
   }
 
   void insert(eRide ride) {
@@ -454,7 +489,16 @@ class _RideRegister_5State extends State<RideRegister_5> {
     }
   }
 
-  _updateVehicle(BuildContext context) async {
+  _updateEventBase() async {
+    eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE1,
+        arguments: {'ride': ride, 'edit': true}) as eRide;
+
+    setState(() {
+      ride = result;
+    });
+  }
+
+  _updateVehicle() async {
     eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2,
         arguments: {'ride': ride, 'edit': true}) as eRide;
 
@@ -463,7 +507,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
     });
   }
 
-  _updateVehicleNumbers(BuildContext context) async {
+  _updateVehicleNumbers() async {
     eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE3,
         arguments: {'ride': ride, 'edit': true}) as eRide;
 
@@ -472,12 +516,16 @@ class _RideRegister_5State extends State<RideRegister_5> {
     });
   }
 
-  _updateEvent(BuildContext context) async {
+  _updateEvent() async {
     eRide result = await Navigator.pushNamed(context, cRoutes.REGISTER_RIDE4,
         arguments: {'ride': ride, 'edit': true}) as eRide;
 
     setState(() {
       ride = result;
     });
+  }
+
+  update(eRide ride) {
+    db.collection(DbData.TABLE_RIDE).doc(ride.uid).update(ride.toMap());
   }
 }

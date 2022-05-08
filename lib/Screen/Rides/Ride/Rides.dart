@@ -354,7 +354,10 @@ class _RidesState extends State<Rides> {
                                             if (edit) {
                                               await Navigator.pushNamed(context,
                                                   cRoutes.REGISTER_RIDE5,
-                                                  arguments: rid);
+                                                  arguments: {
+                                                    'ride': rid,
+                                                    'edit': true
+                                                  });
                                             } else {
                                               await Navigator.pushNamed(
                                                   context, cRoutes.SCHEDULING,
@@ -362,49 +365,56 @@ class _RidesState extends State<Rides> {
                                             }
                                             return false;
                                           } else {
-                                            return await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .confirmarExclusao),
-                                                  content: Text(
-                                                      "Tem certeza que deseja excluir esta carona?"),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          delete(ride.id);
-                                                          Navigator.of(context)
-                                                              .pop(true);
-                                                        },
-                                                        child: Text(
+                                            return edit
+                                                ? await showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
                                                             AppLocalizations.of(
                                                                     context)!
-                                                                .tenhoCerteza)),
-                                                    TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(false),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .cancelar,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  APP_MAIN_TEXT,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                  ],
-                                                );
-                                              },
-                                            );
+                                                                .confirmarExclusao),
+                                                        content: Text(
+                                                            "Tem certeza que deseja excluir esta carona?"),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                delete(ride.id);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(true);
+                                                              },
+                                                              child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .tenhoCerteza)),
+                                                          TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(
+                                                                          false),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(5),
+                                                                child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .cancelar,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        APP_MAIN_TEXT,
+                                                                  ),
+                                                                ),
+                                                              )),
+                                                        ],
+                                                      );
+                                                    },
+                                                  )
+                                                : null;
                                           }
                                         },
                                         key: Key(ride.id),
@@ -427,13 +437,18 @@ class _RidesState extends State<Rides> {
                                                 margin:
                                                     EdgeInsets.only(bottom: 20),
                                               ),
-                                        secondaryBackground: Container(
-                                          color: APP_REMOVE_DISMISS,
-                                          child: Icon(Icons.delete),
-                                          alignment: Alignment.centerRight,
-                                          padding: EdgeInsets.only(right: 15),
-                                          margin: EdgeInsets.only(bottom: 20),
-                                        ),
+                                        secondaryBackground: edit
+                                            ? Container(
+                                                color: APP_REMOVE_DISMISS,
+                                                child: Icon(Icons.delete),
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                padding:
+                                                    EdgeInsets.only(right: 15),
+                                                margin:
+                                                    EdgeInsets.only(bottom: 20),
+                                              )
+                                            : Container(),
                                       );
                                     });
                               } else {

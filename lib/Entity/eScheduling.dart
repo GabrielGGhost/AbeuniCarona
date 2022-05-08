@@ -3,12 +3,14 @@ import 'package:abeuni_carona/Constants/DbData.dart';
 import 'eRide.dart';
 
 class eScheduling {
+  String _uid = "";
   String? _rideId;
   String? _partakerId;
   String? _reservedSeats;
   String? _reservedLugagges;
   String? _registrationDate;
 
+  String get uid => _uid;
   String get partakerId => _partakerId!;
   String get rideId => _rideId!;
   String get reservedSeats => _reservedSeats!;
@@ -46,5 +48,8 @@ class eScheduling {
 
   set registrationDate(String value) {
     _registrationDate = value;
+  }
+  set uid(String value) {
+    _uid = value;
   }
 }

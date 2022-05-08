@@ -15,7 +15,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
 
 class RideRegister_1 extends StatefulWidget {
-  const RideRegister_1({Key? key}) : super(key: key);
+  eRide? ride;
+  bool edit;
+
+  RideRegister_1(this.ride, this.edit);
 
   @override
   _RideRegister_1State createState() => _RideRegister_1State();
@@ -30,12 +33,15 @@ class _RideRegister_1State extends State<RideRegister_1> {
   final baseEvents = db.collection(DbData.TABLE_BASE_EVENT).get();
 
   Future<Stream<QuerySnapshot<Object?>>?> _addListenerActiveEvents() async {
-    final activeEvents = db.collection(DbData.TABLE_EVENT).snapshots();
+    final activeEvents = db.collection(DbData.TABLE_EVENT).where(DbData.COLUMN_ACTIVE, isEqualTo: true).snapshots();
 
     activeEvents.listen((data) {
       _controllerActiveEvents.add(data);
     });
   }
+
+  eRide? editRide;
+  bool edit = false;
 
   @override
   void initState() {
@@ -46,6 +52,9 @@ class _RideRegister_1State extends State<RideRegister_1> {
 
   @override
   Widget build(BuildContext context) {
+    editRide = widget.ride;
+    edit = widget.edit;
+
     return Scaffold(
         appBar: AppBar(
           title: Text("Cadastro de evento"),
@@ -217,6 +226,11 @@ class _RideRegister_1State extends State<RideRegister_1> {
     eRide ride = eRide();
     ride.event = choosenEvent;
 
-    Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2, arguments: ride);
+    if (edit) {
+      editRide!.event = choosenEvent;
+      Navigator.pop(context, editRide);
+    } else {
+      Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2, arguments: ride);
+    }
   }
 }

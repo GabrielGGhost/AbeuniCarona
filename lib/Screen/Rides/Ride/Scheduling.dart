@@ -25,7 +25,10 @@ class _SchedulingState extends State<Scheduling> {
   String? _lugaggeReserved = "0";
   int totalAvaliableSeats = 0;
   int totalAvaliableLuggages = 0;
-
+  int editSeats = 0;
+  int editLuggages = 0;
+  bool loadedSchedule = false;
+  String _uid = "";
   TextEditingController _controllerSeats = TextEditingController();
   TextEditingController _controllerLuggages = TextEditingController();
 
@@ -33,6 +36,8 @@ class _SchedulingState extends State<Scheduling> {
   FocusNode? _focusLuggages;
 
   String? _idLoggedUser;
+
+  bool edit = false;
 
   @override
   void initState() {
@@ -54,7 +59,7 @@ class _SchedulingState extends State<Scheduling> {
     ride.docToRide(widget.ride);
     totalAvaliableSeats = int.parse(ride.vehicle.seats);
     totalAvaliableLuggages = int.parse(ride.vehicle.luggageSpaces);
-
+    edit = false;
     return Scaffold(
       appBar: AppBar(
         title: Text("Agendamento"),
@@ -278,8 +283,9 @@ class _SchedulingState extends State<Scheduling> {
                         } else {
                           int reservedSeats =
                               int.parse(snapshot.data.toString());
-                          totalAvaliableSeats = totalSeats - reservedSeats;
-                          return Text((totalSeats - reservedSeats).toString(),
+                          totalAvaliableSeats =
+                              totalSeats - reservedSeats + editSeats;
+                          return Text(totalAvaliableSeats.toString(),
                               style: TextStyle(color: Colors.grey));
                         }
                       })
@@ -309,100 +315,270 @@ class _SchedulingState extends State<Scheduling> {
                           int reservedLuggages =
                               int.parse(snapshot.data.toString());
                           totalAvaliableLuggages =
-                              totalLuggages - reservedLuggages;
-                          return Text(
-                              (totalLuggages - reservedLuggages).toString(),
+                              totalLuggages - reservedLuggages + editLuggages;
+                          return Text(totalAvaliableLuggages.toString(),
                               style: TextStyle(color: Colors.grey));
                         }
                       }),
                 ],
               ),
               Divider(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Text(
-                  "Detalhes",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Row(
+              Column(
                 children: [
-                  _seatsReserved == "1"
-                      ? Text("Reservar $_seatsReserved vaga*: ",
-                          style: TextStyle(fontWeight: FontWeight.bold))
-                      : Text("Reservar $_seatsReserved vagas*: ",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  Expanded(
-                      child: Container(
-                          height: 35,
-                          child: TextField(
-                            controller: _controllerSeats,
-                            focusNode: _focusSeats,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              setState(() {
-                                value =
-                                    checkMaxSeats(value, totalAvaliableSeats);
-                                value = Utils.getSafeNumber(value);
-                                _seatsReserved = value;
-                              });
-                            },
-                          )))
+                  FutureBuilder(
+                      future: _findRideSchedule(),
+                      builder: (_, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Text("Carregando...",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.redAccent));
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error.toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold));
+                        } else {
+                          Map<String, dynamic> result =
+                              snapshot.data as Map<String, dynamic>;
+                          if (result.length > 0) {
+                            edit = true;
+                            editSeats =
+                                int.parse(result[DbData.COLUMN_RESERVED_SEATS]);
+                            editLuggages = int.parse(
+                                result[DbData.COLUMN_RESERVED_LUGGAGES]);
+                            _uid = result[DbData.COLUMN_UID];
+                            if (!loadedSchedule) {
+                              _controllerSeats.text = editSeats.toString();
+                              _controllerLuggages.text =
+                                  editLuggages.toString();
+                              loadedSchedule = true;
+                            }
+                            _seatsReserved = _controllerSeats.text;
+                            _lugaggeReserved = _controllerLuggages.text;
+
+                            totalAvaliableSeats += editSeats;
+                            totalAvaliableLuggages += editLuggages;
+
+                            _uid = result[DbData.COLUMN_UID];
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    "Detalhes",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    _seatsReserved == "1"
+                                        ? Text(
+                                            "Reservar $_seatsReserved vaga*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))
+                                        : Text(
+                                            "Reservar $_seatsReserved vagas*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                    Expanded(
+                                        child: Container(
+                                            height: 35,
+                                            child: TextField(
+                                              controller: _controllerSeats,
+                                              focusNode: _focusSeats,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  value = checkMaxSeats(value,
+                                                      totalAvaliableSeats);
+                                                  value = Utils.getSafeNumber(
+                                                      value);
+                                                  _seatsReserved = value;
+                                                });
+                                              },
+                                            )))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    _lugaggeReserved == "1"
+                                        ? Text(
+                                            "Reservar $_lugaggeReserved vaga*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))
+                                        : Text(
+                                            "Reservar $_lugaggeReserved vagas*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                    Expanded(
+                                        child: Container(
+                                            height: 35,
+                                            child: TextField(
+                                              controller: _controllerLuggages,
+                                              focusNode: _focusLuggages,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  value = checkMaxLuggages(
+                                                      value,
+                                                      totalAvaliableLuggages);
+                                                  value = Utils.getSafeNumber(
+                                                      value);
+                                                  _lugaggeReserved = value;
+                                                });
+                                              },
+                                            )))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: ElevatedButton(
+                                        style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                APP_BAR_BACKGROUND_COLOR,
+                                            padding: EdgeInsets.fromLTRB(
+                                                28, 16, 28, 16),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30))),
+                                        child: Text(
+                                          "Atualizar",
+                                          style: (TextStyle(
+                                              color: APP_WHITE_FONT,
+                                              fontSize: 20)),
+                                        ),
+                                        onPressed: () {
+                                          save();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    "Detalhes",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    _seatsReserved == "1"
+                                        ? Text(
+                                            "Reservar $_seatsReserved vaga*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))
+                                        : Text(
+                                            "Reservar $_seatsReserved vagas*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                    Expanded(
+                                        child: Container(
+                                            height: 35,
+                                            child: TextField(
+                                              controller: _controllerSeats,
+                                              focusNode: _focusSeats,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  value = checkMaxSeats(value,
+                                                      totalAvaliableSeats);
+                                                  value = Utils.getSafeNumber(
+                                                      value);
+                                                  _seatsReserved = value;
+                                                });
+                                              },
+                                            )))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    _lugaggeReserved == "1"
+                                        ? Text(
+                                            "Reservar $_lugaggeReserved vaga*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))
+                                        : Text(
+                                            "Reservar $_lugaggeReserved vagas*: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                    Expanded(
+                                        child: Container(
+                                            height: 35,
+                                            child: TextField(
+                                              controller: _controllerLuggages,
+                                              focusNode: _focusLuggages,
+                                              textAlign: TextAlign.center,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  value = checkMaxLuggages(
+                                                      value,
+                                                      totalAvaliableLuggages);
+                                                  value = Utils.getSafeNumber(
+                                                      value);
+                                                  _lugaggeReserved = value;
+                                                });
+                                              },
+                                            )))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: ElevatedButton(
+                                        style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                APP_BAR_BACKGROUND_COLOR,
+                                            padding: EdgeInsets.fromLTRB(
+                                                28, 16, 28, 16),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30))),
+                                        child: Text(
+                                          "Agendar",
+                                          style: (TextStyle(
+                                              color: APP_WHITE_FONT,
+                                              fontSize: 20)),
+                                        ),
+                                        onPressed: () {
+                                          save();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            );
+                          }
+                        }
+                      })
                 ],
               ),
-              Row(
-                children: [
-                  _lugaggeReserved == "1"
-                      ? Text("Reservar $_lugaggeReserved vaga*: ",
-                          style: TextStyle(fontWeight: FontWeight.bold))
-                      : Text("Reservar $_lugaggeReserved vagas*: ",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  Expanded(
-                      child: Container(
-                          height: 35,
-                          child: TextField(
-                            controller: _controllerLuggages,
-                            focusNode: _focusLuggages,
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              setState(() {
-                                value = checkMaxLuggages(
-                                    value, totalAvaliableLuggages);
-                                value = Utils.getSafeNumber(value);
-                                _lugaggeReserved = value;
-                              });
-                            },
-                          )))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: ElevatedButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: APP_BAR_BACKGROUND_COLOR,
-                          padding: EdgeInsets.fromLTRB(28, 16, 28, 16),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30))),
-                      child: Text(
-                        "Agendar",
-                        style: (TextStyle(color: APP_WHITE_FONT, fontSize: 20)),
-                      ),
-                      onPressed: () {
-                        save();
-                      },
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ),
@@ -412,8 +588,7 @@ class _SchedulingState extends State<Scheduling> {
 
   Future<String> getDriverName(String driverId) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    var result = await db.collection(DbData.TABLE_USER).doc(driverId).get();
-
+    final result = await db.collection(DbData.TABLE_USER).doc(driverId).get();
     return result[DbData.COLUMN_USERNAME];
   }
 
@@ -459,28 +634,38 @@ class _SchedulingState extends State<Scheduling> {
 
   void save() {
     if (checkFields()) {
-      eScheduling scheduling =
-          eScheduling.full(ride.uid, _idLoggedUser, _seatsReserved, _lugaggeReserved);
+      eScheduling scheduling = eScheduling.full(
+          ride.uid, _idLoggedUser, _seatsReserved, _lugaggeReserved);
+      scheduling.uid = _uid;
       scheduling.registrationDate = Utils.getDateTimeNow()!;
 
-      insert(scheduling);
-      Utils.showToast("Registrado", APP_SUCCESS_BACKGROUND);
+      if (edit) {
+        update(scheduling);
+        Utils.showToast("Atualizado", APP_SUCCESS_BACKGROUND);
+      } else {
+        insert(scheduling);
+        Utils.showToast("Registrado", APP_SUCCESS_BACKGROUND);
+      }
       Navigator.pop(context);
     }
   }
 
-  bool checkFields() {
+  void update(eScheduling scheduling) {
+    db
+        .collection(DbData.TABLE_SCHEDULING)
+        .doc(scheduling.uid)
+        .update(scheduling.toMap());
+  }
 
+  bool checkFields() {
     if (totalAvaliableSeats == 0 && _controllerSeats.text != "0") {
-      Utils.showDialogBox(
-          "Vagas lotadas!", context);
+      Utils.showDialogBox("Vagas lotadas!", context);
       _focusSeats!.requestFocus();
       return false;
     }
 
     if (totalAvaliableLuggages == 0 && _controllerLuggages.text != "0") {
-      Utils.showDialogBox(
-          "Bagagens lotadas!", context);
+      Utils.showDialogBox("Bagagens lotadas!", context);
       _focusSeats!.requestFocus();
       return false;
     }
@@ -545,5 +730,37 @@ class _SchedulingState extends State<Scheduling> {
     if (usuarioLogado != null) {
       _idLoggedUser = usuarioLogado.uid;
     }
+  }
+
+  Future<Map<String, dynamic>> _findRideSchedule() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = auth.currentUser;
+    Map<String, dynamic> finalResult = {};
+
+    QuerySnapshot<Map<String, dynamic>> result = await db
+        .collection(DbData.TABLE_SCHEDULING)
+        .where(DbData.COLUMN_PARTAKER_ID, isEqualTo: usuarioLogado!.uid)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
+        .get();
+
+    for (var schedule in result.docs) {
+      int seats = int.parse(
+          Utils.getSafeNumber(schedule[DbData.COLUMN_RESERVED_SEATS]));
+      int luggages = int.parse(
+          Utils.getSafeNumber(schedule[DbData.COLUMN_RESERVED_LUGGAGES]));
+      setState(() {
+        totalAvaliableSeats += seats;
+        totalAvaliableLuggages += luggages;
+      });
+      finalResult = {
+        DbData.COLUMN_RESERVED_SEATS: seats.toString(),
+        DbData.COLUMN_RESERVED_LUGGAGES: luggages.toString(),
+        DbData.COLUMN_UID: schedule.id
+      };
+      break;
+    }
+
+    return finalResult;
   }
 }

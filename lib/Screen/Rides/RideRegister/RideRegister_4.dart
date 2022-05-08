@@ -45,8 +45,6 @@ class _RideRegister_4State extends State<RideRegister_4> {
     _returnDateFocus = FocusNode();
     _departureTimeFocus = FocusNode();
     _returnTimeFocus = FocusNode();
-
-    _returnAddressController.addListener(_changeReturnLabels);
   }
 
   @override
@@ -69,7 +67,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
     eRide? ride = widget.ride;
     edit = widget.edit;
 
-    if(edit){
+    if (edit) {
       _departureAddressController.text = ride.departureAddress;
       _departureDateController.text = ride.departureDate;
       _departureTimeController.text = ride.departureTime;
@@ -111,6 +109,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
                   controller: _departureAddressController,
                   keyboardType: TextInputType.text,
                   focusNode: _departureAddressFocus,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: "Localização de partida*",
@@ -196,6 +195,16 @@ class _RideRegister_4State extends State<RideRegister_4> {
                   controller: _returnAddressController,
                   keyboardType: TextInputType.text,
                   focusNode: _returnAddressFocus,
+                  textCapitalization: TextCapitalization.sentences,
+                  onChanged: (valor) {
+                    if (valor.isEmpty) {
+                      lblDateReturn = "Data de retorno";
+                      lblTimeReturn = "Horário de retorno";
+                    } else {
+                      lblDateReturn = "Data de retorno*";
+                      lblTimeReturn = "Horário de retorno*";
+                    }
+                  },
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: "Localização de retorno",
@@ -368,17 +377,5 @@ class _RideRegister_4State extends State<RideRegister_4> {
     Utils.showDialogBox(msg, context);
   }
 
-  void _changeReturnLabels() {
-    if (_returnAddressController.text.isEmpty) {
-      setState(() {
-        lblDateReturn = "Data de retorno";
-        lblTimeReturn = "Horário de retorno";
-      });
-    } else {
-      setState(() {
-        lblDateReturn = "Data de retorno*";
-        lblTimeReturn = "Horário de retorno*";
-      });
-    }
-  }
+  void _changeReturnLabels() {}
 }

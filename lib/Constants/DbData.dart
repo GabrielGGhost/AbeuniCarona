@@ -54,5 +54,5 @@ class DbData {
   static const COLUMN_RIDE_ID = "ride_id";
   static const COLUMN_RESERVED_SEATS = "reserved_seats";
   static const COLUMN_RESERVED_LUGGAGES = "reserved_luggages";
-  static const COLUMN_PARTAKER_ID = "partaler_id";
+  static const COLUMN_PARTAKER_ID = "partaker_id";
 }
