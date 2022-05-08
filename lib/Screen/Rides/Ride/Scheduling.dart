@@ -1,6 +1,8 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:abeuni_carona/Constants/cSituation.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Entity/eScheduling.dart';
+import 'package:abeuni_carona/Entity/eSchedulingHistory.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -637,12 +639,15 @@ class _SchedulingState extends State<Scheduling> {
       eScheduling scheduling = eScheduling.full(
           ride.uid, _idLoggedUser, _seatsReserved, _lugaggeReserved);
       scheduling.uid = _uid;
-      scheduling.registrationDate = Utils.getDateTimeNow()!;
 
       if (edit) {
         update(scheduling);
         Utils.showToast("Atualizado", APP_SUCCESS_BACKGROUND);
       } else {
+        eSchedulingHistory hist = eSchedulingHistory.full(cSituation.RIDE_IN_PROGRESS, scheduling.rideId, _idLoggedUser);
+
+        insertHistory(hist);
+        scheduling.registrationDate = Utils.getDateTimeNow()!;
         insert(scheduling);
         Utils.showToast("Registrado", APP_SUCCESS_BACKGROUND);
       }
@@ -762,5 +767,10 @@ class _SchedulingState extends State<Scheduling> {
     }
 
     return finalResult;
+  }
+
+  void insertHistory(eSchedulingHistory scheduling) {
+    db.collection(DbData.TABLE_SCHEDULING_HISTORY).add(scheduling.toMap());
+
   }
 }

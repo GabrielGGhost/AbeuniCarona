@@ -1,7 +1,9 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Constants/cSituation.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
+import 'package:abeuni_carona/Entity/eSchedulingHistory.dart';
 import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
 import 'package:abeuni_carona/Screen/Rides/RideRegister/RideRegister_2.dart';
@@ -11,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'RideRegister_4.dart';
 
@@ -439,6 +442,65 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                     },
                                   ),
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: ElevatedButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: APP_ERROR_BACKGROUND,
+                                        padding:
+                                            EdgeInsets.fromLTRB(28, 16, 28, 16),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30))),
+                                    child: Text(
+                                      "Cancelar Carona",
+                                      style: (TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                    ),
+                                    onPressed: () {
+                                      print("CLICADO CANCELAR");
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .confirmarExclusao),
+                                              content: Text(
+                                                  "Tem certeza que deseja excluir esta carona?"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                    onPressed: () {
+                                                      finishRide();
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                    },
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .tenhoCerteza)),
+                                                TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(5),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .cancelar,
+                                                        style: TextStyle(
+                                                          color: APP_MAIN_TEXT,
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                           )
@@ -527,5 +589,25 @@ class _RideRegister_5State extends State<RideRegister_5> {
 
   update(eRide ride) {
     db.collection(DbData.TABLE_RIDE).doc(ride.uid).update(ride.toMap());
+  }
+
+  void finishRide() {
+    updateScheduleHistory();
+  }
+
+  void updateScheduleHistory() async {
+    QuerySnapshot<Map<String, dynamic>> result = await db
+        .collection(DbData.TABLE_SCHEDULING_HISTORY)
+        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
+        .get();
+
+    final docs = result.docs;
+    print("CANCELANDO " + docs.length.toString() + " agendamentos");
+    for (var doc in docs) {
+      db
+          .collection(DbData.TABLE_SCHEDULING_HISTORY)
+          .doc(doc.id)
+          .update({DbData.COLUMN_SITUATION: cSituation.RIDE_CANCELLED});
+    }
   }
 }
