@@ -7,15 +7,15 @@ class eEventBase{
   String? _eventName;
   String? _obsEvent;
   bool _active;
-  DateTime? _registerDate;
+  Timestamp? _registerDate;
 
-  eEventBase(this._id, this._eventName, this._obsEvent, this._active, this._registerDate);
+  eEventBase(this._id, this._eventName, this._obsEvent, this._active);
 
   String get id => _id!;
   String get eventName => _eventName!;
   String get obsEvent => _obsEvent!;
   bool get active => _active;
-  DateTime get registerDate => _registerDate!;
+  Timestamp get registerDate => _registerDate!;
 
 
   toMap(){
@@ -39,7 +39,7 @@ class eEventBase{
   set active(bool value) {
     _active = value;
   }
-  set registerDate(DateTime value) {
+  set registerDate(Timestamp value) {
     _registerDate = value;
   }
 }

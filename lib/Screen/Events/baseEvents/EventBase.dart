@@ -21,7 +21,7 @@ class _EventBaseState extends State<EventBase> {
   final _controllerBaseEvents = StreamController<QuerySnapshot>.broadcast();
 
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
-    final baseEvents = db.collection(DbData.TABLE_BASE_EVENT).snapshots();
+    final baseEvents = db.collection(DbData.TABLE_BASE_EVENT).orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true).snapshots();
 
     baseEvents.listen((data) {
       _controllerBaseEvents.add(data);

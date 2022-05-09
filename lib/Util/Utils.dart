@@ -296,9 +296,9 @@ class Utils {
     return formatted;
   }
 
-  static String? getStringDateFromTimesatamp(Timestamp stamp, String format) {
-    int miliseconds = (stamp.seconds * 1000).round();
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(miliseconds);
+  static String? getStringDateFromTimestamp(Timestamp stamp, String format) {
+    int milliseconds = (stamp.seconds * 1000).round();
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(milliseconds);
     return getFormatedStringFromDateTime(date, format);
   }
 }

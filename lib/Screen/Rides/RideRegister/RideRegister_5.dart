@@ -43,6 +43,10 @@ class _RideRegister_5State extends State<RideRegister_5> {
   Widget build(BuildContext context) {
     ride = widget.ride;
     edit = widget.edit;
+    String textButton = "Registrar Carona";
+
+    textButton = edit ? "Atualizar Carona" : textButton;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Resumo da Carona"),
@@ -433,7 +437,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             borderRadius:
                                                 BorderRadius.circular(30))),
                                     child: Text(
-                                      "Registrar Carona",
+                                      textButton,
                                       style: (TextStyle(
                                           color: Colors.white, fontSize: 20)),
                                     ),

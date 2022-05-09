@@ -55,9 +55,8 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
       _active = eventBase![DbData.COLUMN_ACTIVE] != null && eventBase![DbData.COLUMN_ACTIVE] != false?  true : false;
 
       _loeaded = true;
-      print("VALOR AQUI");
       Timestamp date = eventBase![DbData.COLUMN_REGISTRATION_DATE];
-      _registration = Utils.getStringDateFromTimesatamp(date, cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
+      _registration = Utils.getStringDateFromTimestamp(date, cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
     }
     if(eventBase != null){
       title = AppLocalizations.of(context)!.alteracaoDeEventoBase;
@@ -184,8 +183,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
     eEventBase base = eEventBase(_id,
                                 _eventNameController.text,
                                 _obsEventController.text,
-                                _active!,
-                                DateTime.now());
+                                _active!);
 
     if(eventBase != null){
 
@@ -199,7 +197,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
 
       if(checkFields()) return;
 
-      base.registerDate = DateTime.now();
+      base.registerDate = Timestamp.now();
       insert(base);
 
       Navigator.pop(context);
