@@ -4,7 +4,7 @@ import 'package:abeuni_carona/Screen/Events/Events/EventRegister.dart';
 import 'package:abeuni_carona/Screen/Events/Events/Events.dart';
 import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
-import 'package:abeuni_carona/Screen/Rides/Ride/Scheduling.dart';
+import 'package:abeuni_carona/Screen/Rides/Scheduling/Scheduling.dart';
 import 'package:abeuni_carona/Screen/Users/Perfil/userPerfil.dart';
 import 'package:abeuni_carona/Screen/Users/Register/RegisterUserPassword.dart';
 import 'package:abeuni_carona/Screen/Users/Register/SendEmailNewUser.dart';
