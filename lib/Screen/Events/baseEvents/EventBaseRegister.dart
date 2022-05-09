@@ -22,7 +22,6 @@ class EventBaseRegister extends StatefulWidget {
 class _EventBaseRegisterState extends State<EventBaseRegister> {
 
   String? _idLoggedUser;
-  String? _registrationDate = "";
   String? _id = "";
   bool? _active = true;
   TextEditingController _eventNameController = TextEditingController();
@@ -54,11 +53,11 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
       _obsEventController.text = eventBase![DbData.COLUMN_OBS];
       _id = eventBase!.id;
       _active = eventBase![DbData.COLUMN_ACTIVE] != null && eventBase![DbData.COLUMN_ACTIVE] != false?  true : false;
-      _registrationDate = eventBase![DbData.COLUMN_REGISTRATION_DATE];
 
       _loeaded = true;
-
-      _registration = Utils.getDateFromBD(eventBase![DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
+      print("VALOR AQUI");
+      Timestamp date = eventBase![DbData.COLUMN_REGISTRATION_DATE];
+      _registration = Utils.getStringDateFromTimesatamp(date, cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
     }
     if(eventBase != null){
       title = AppLocalizations.of(context)!.alteracaoDeEventoBase;
@@ -82,6 +81,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                       controller: _eventNameController,
                       focusNode: _nameEventFocus,
                       keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.nomeDoEvento + "*")
                   ),
               ),
@@ -90,6 +90,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                 child: TextField(
                     controller: _obsEventController,
                     keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.sentences,
                     maxLines: 5,
                     decoration: textFieldDefaultDecoration(AppLocalizations.of(context)!.descricaoDoEvento)
                 ),
@@ -184,7 +185,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
                                 _eventNameController.text,
                                 _obsEventController.text,
                                 _active!,
-                                _registrationDate!);
+                                DateTime.now());
 
     if(eventBase != null){
 
@@ -198,7 +199,7 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
 
       if(checkFields()) return;
 
-      base.registerDate = DateTime.now().toString();
+      base.registerDate = DateTime.now();
       insert(base);
 
       Navigator.pop(context);

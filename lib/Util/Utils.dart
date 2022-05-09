@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/cErrorCodes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:abeuni_carona/Constants/cImages.dart';
@@ -108,6 +109,7 @@ class Utils {
 
     return formattedDate;
   }
+
 
   /*
   * Recebe: Um parâmetro do formato de data desejado, caso nulo, usa o formato dd/MM/yyyy
@@ -281,5 +283,22 @@ class Utils {
     } catch(e){
       return "0";
     }
+  }
+
+  /// Recebe:
+  ///      date: Data a ser convertida
+  ///      format: formato a ser convertido
+  /// Retorna:
+  ///      Data em formato String formatada
+  static String? getFormatedStringFromDateTime(DateTime date, String format) {
+    final DateFormat formatter = DateFormat(format);
+    final String formatted = formatter.format(date);
+    return formatted;
+  }
+
+  static String? getStringDateFromTimesatamp(Timestamp stamp, String format) {
+    int miliseconds = (stamp.seconds * 1000).round();
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(miliseconds);
+    return getFormatedStringFromDateTime(date, format);
   }
 }

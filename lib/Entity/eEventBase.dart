@@ -7,7 +7,7 @@ class eEventBase{
   String? _eventName;
   String? _obsEvent;
   bool _active;
-  String? _registerDate;
+  DateTime? _registerDate;
 
   eEventBase(this._id, this._eventName, this._obsEvent, this._active, this._registerDate);
 
@@ -15,7 +15,7 @@ class eEventBase{
   String get eventName => _eventName!;
   String get obsEvent => _obsEvent!;
   bool get active => _active;
-  String get registerDate => _registerDate!;
+  DateTime get registerDate => _registerDate!;
 
 
   toMap(){
@@ -26,16 +26,6 @@ class eEventBase{
       DbData.COLUMN_REGISTRATION_DATE : this._registerDate,
     };
   }
-
-  static List<eEventBase> getEventsBase(){
-    return <eEventBase> [
-      eEventBase("0", "Evento A", "Observação A", true, ""),
-      eEventBase("1", "Evento B", "Observação B", false, ""),
-      eEventBase("2", "Evento C", "Observação C", false, ""),
-      eEventBase("3", "Evento D", "Observação D", true, ""),
-    ];
-  }
-
 
   set id(String value) {
     _id = value;
@@ -49,7 +39,7 @@ class eEventBase{
   set active(bool value) {
     _active = value;
   }
-  set registerDate(String value) {
+  set registerDate(DateTime value) {
     _registerDate = value;
   }
 }
