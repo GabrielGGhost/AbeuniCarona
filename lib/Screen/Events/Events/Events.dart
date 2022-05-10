@@ -80,93 +80,88 @@ class _EventsState extends State<Events> {
                                         child: Padding(
                                           padding: EdgeInsets.only(bottom: 15),
                                           child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                child: Column(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Column(
+                                              children: [
+                                                Row(
                                                   children: [
-                                                    Row(
-                                                      children: [
-                                                        FutureBuilder(
-                                                            future: getBaseEventName(
-                                                                event[DbData
-                                                                    .COLUMN_COD_BASE_EVENT]),
-                                                            builder:
-                                                                (_, snapshot) {
-                                                              if (snapshot
-                                                                  .hasError) {
-                                                                return Text(
-                                                                    "Erro ao carregar dados",
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Colors
-                                                                            .grey));
-                                                              } else if (!snapshot
-                                                                  .hasData) {
-                                                                return CircularProgressIndicator();
-                                                              } else {
-                                                                return Text(
-                                                                  snapshot.data
-                                                                      .toString(),
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          18),
-                                                                );
-                                                              }
-                                                            }),
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 5),
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                            "Local: ",
-                                                            style: TextStyle(
-                                                                fontSize: 12),
-                                                          ),
-                                                          Text(" - "),
-                                                          Text(
+                                                    FutureBuilder(
+                                                        future: getBaseEventName(
                                                             event[DbData
-                                                                .COLUMN_LOCATION],
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 11),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Spacer(),
-                                                        Text(
-                                                          event[DbData
-                                                              .COLUMN_START_DATE],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 11),
-                                                        ),
-                                                        Text(" - "),
-                                                        Text(
-                                                          event[DbData
-                                                              .COLUMN_END_DATE],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 11),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Divider()
+                                                                .COLUMN_COD_BASE_EVENT]),
+                                                        builder: (_, snapshot) {
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                                "Erro ao carregar dados",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .grey));
+                                                          } else if (!snapshot
+                                                              .hasData) {
+                                                            return CircularProgressIndicator();
+                                                          } else {
+                                                            return Text(
+                                                              snapshot.data
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18),
+                                                            );
+                                                          }
+                                                        }),
                                                   ],
                                                 ),
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 5),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "Local: ",
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                      Text(" - "),
+                                                      Text(
+                                                        event[DbData
+                                                            .COLUMN_LOCATION],
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 11),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      event[DbData
+                                                          .COLUMN_START_DATE],
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 11),
+                                                    ),
+                                                    Text(" - "),
+                                                    Text(
+                                                      event[DbData
+                                                          .COLUMN_END_DATE],
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 11),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider()
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         confirmDismiss: (d) async {

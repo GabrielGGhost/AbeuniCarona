@@ -39,7 +39,7 @@ class _userPerfilState extends State<userPerfil> {
     DocumentSnapshot event = widget.event;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Requisições de cadastro"),
+        title: Text("Detalhes"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(

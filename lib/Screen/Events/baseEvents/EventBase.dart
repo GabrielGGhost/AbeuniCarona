@@ -21,7 +21,10 @@ class _EventBaseState extends State<EventBase> {
   final _controllerBaseEvents = StreamController<QuerySnapshot>.broadcast();
 
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
-    final baseEvents = db.collection(DbData.TABLE_BASE_EVENT).orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true).snapshots();
+    final baseEvents = db
+        .collection(DbData.TABLE_BASE_EVENT)
+        .orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true)
+        .snapshots();
 
     baseEvents.listen((data) {
       _controllerBaseEvents.add(data);
@@ -88,42 +91,33 @@ class _EventBaseState extends State<EventBase> {
 
                                       return Dismissible(
                                         child: Padding(
-                                          padding: EdgeInsets.only(bottom: 15),
-                                          child: Card(
-                                            child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 5,
-                                                    horizontal: 10),
-                                                child: Column(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5, horizontal: 10),
+                                            child: Column(
+                                              children: [
+                                                Row(
                                                   children: [
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          event[DbData
-                                                              .COLUMN_NAME],
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 18),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          event[DbData
-                                                              .COLUMN_OBS],
-                                                          style: TextStyle(
-                                                              color:
-                                                              APP_SUB_TEXT),
-                                                        )
-                                                      ],
+                                                    Text(
+                                                      event[DbData.COLUMN_NAME],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18),
                                                     ),
                                                   ],
-                                                )),
-                                          ),
-                                        ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      event[DbData.COLUMN_OBS],
+                                                      style: TextStyle(
+                                                          color: APP_SUB_TEXT),
+                                                    )
+                                                  ],
+                                                ),
+                                                Divider()
+                                              ],
+                                            )),
                                         confirmDismiss: (d) async {
                                           if (d ==
                                               DismissDirection.startToEnd) {
@@ -137,9 +131,12 @@ class _EventBaseState extends State<EventBase> {
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   title: Text(
-                                                      AppLocalizations.of(context)!.confirmarExclusao),
-                                                  content: Text(
-                                                      AppLocalizations.of(context)!.temCertezaQueDesejaExcluirEstaBase),
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .confirmarExclusao),
+                                                  content: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .temCertezaQueDesejaExcluirEstaBase),
                                                   actions: <Widget>[
                                                     TextButton(
                                                         onPressed: () {
@@ -148,7 +145,9 @@ class _EventBaseState extends State<EventBase> {
                                                               .pop(true);
                                                         },
                                                         child: Text(
-                                                            AppLocalizations.of(context)!.tenhoCerteza)),
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .tenhoCerteza)),
                                                     TextButton(
                                                         onPressed: () =>
                                                             Navigator.of(
@@ -158,10 +157,12 @@ class _EventBaseState extends State<EventBase> {
                                                           padding:
                                                               EdgeInsets.all(5),
                                                           child: Text(
-                                                            AppLocalizations.of(context)!.cancelar,
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .cancelar,
                                                             style: TextStyle(
                                                               color:
-                                                              APP_MAIN_TEXT,
+                                                                  APP_MAIN_TEXT,
                                                             ),
                                                           ),
                                                         )),
@@ -190,22 +191,22 @@ class _EventBaseState extends State<EventBase> {
                                     });
                               } else {
                                 return Center(
-                                        child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!.naoHaEventosBaseCadastradosCliqueNoMaisParaRegistrarUm,
-                                          style: TextStyle(
-                                            color: APP_SUB_TEXT,
-                                            fontSize: 20,
-                                          ),
-                                          textAlign: TextAlign.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .naoHaEventosBaseCadastradosCliqueNoMaisParaRegistrarUm,
+                                        style: TextStyle(
+                                          color: APP_SUB_TEXT,
+                                          fontSize: 20,
                                         ),
-                                      ],
-                                    ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 );
                               }
                             }
@@ -231,9 +232,11 @@ class _EventBaseState extends State<EventBase> {
       FirebaseFirestore db = FirebaseFirestore.instance;
       db.collection(DbData.TABLE_BASE_EVENT).doc(id).delete();
 
-      Utils.showToast(AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
+      Utils.showToast(
+          AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
     } catch (e) {
-      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarBadeDeEvento, APP_ERROR_BACKGROUND);
+      Utils.showToast(AppLocalizations.of(context)!.falhaAoDeletarBadeDeEvento,
+          APP_ERROR_BACKGROUND);
     }
   }
 }

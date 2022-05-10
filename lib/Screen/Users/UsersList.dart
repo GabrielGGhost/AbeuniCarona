@@ -94,13 +94,10 @@ class _usersListState extends State<usersList> {
                                       DocumentSnapshot event =
                                           baseEvents[index];
 
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 15),
-                                        child: Card(
-                                          child: GestureDetector(
+                                      return GestureDetector(
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  vertical: 15,
+                                                  vertical: 5,
                                                   horizontal: 10),
                                               child: Row(
                                                 children: [
@@ -151,7 +148,8 @@ class _usersListState extends State<usersList> {
                                                                     .grey,
                                                                 fontSize: 12),
                                                           ),
-                                                        )
+                                                        ),
+                                                        Divider()
                                                       ],
                                                     ),
                                                   ),
@@ -163,9 +161,7 @@ class _usersListState extends State<usersList> {
                                                   cRoutes.USER_PERFIL,
                                                   arguments: event);
                                             },
-                                          ),
-                                        ),
-                                      );
+                                          );
                                     });
                               } else {
                                 return Center(
