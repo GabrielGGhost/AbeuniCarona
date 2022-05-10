@@ -20,16 +20,7 @@ class Events extends StatefulWidget {
 }
 
 class _EventsState extends State<Events> {
-  final _controllerBaseEvents = StreamController<QuerySnapshot>.broadcast();
-
-  Stream<QuerySnapshot>? _addListenerBorroweds() {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    final events = db.collection(DbData.TABLE_EVENT).snapshots();
-
-    events.listen((data) {
-      _controllerBaseEvents.add(data);
-    });
-  }
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +37,8 @@ class _EventsState extends State<Events> {
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection(DbData.TABLE_EVENT)
+                            .orderBy(DbData.COLUMN_REGISTRATION_DATE,
+                                descending: true)
                             .snapshots(),
                         builder: (_, snapshot) {
                           switch (snapshot.connectionState) {
@@ -95,14 +88,38 @@ class _EventsState extends State<Events> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Text(
-                                                          event[DbData.COLUMN_EVENT_DESC_BASE_EVENT],
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 18),
-                                                        ),
+                                                        FutureBuilder(
+                                                            future: getBaseEventName(
+                                                                event[DbData
+                                                                    .COLUMN_COD_BASE_EVENT]),
+                                                            builder:
+                                                                (_, snapshot) {
+                                                              if (snapshot
+                                                                  .hasError) {
+                                                                return Text(
+                                                                    "Erro ao carregar dados",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .grey));
+                                                              } else if (!snapshot
+                                                                  .hasData) {
+                                                                return CircularProgressIndicator();
+                                                              } else {
+                                                                return Text(
+                                                                  snapshot.data
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18),
+                                                                );
+                                                              }
+                                                            }),
                                                       ],
                                                     ),
                                                     Padding(
@@ -276,5 +293,14 @@ class _EventsState extends State<Events> {
                 ))
           ],
         ));
+  }
+
+  Future<String?> getBaseEventName(codBaseEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_BASE_EVENT).doc(codBaseEvent).get();
+
+    final data = result.data() as Map;
+
+    return data[DbData.COLUMN_NAME];
   }
 }

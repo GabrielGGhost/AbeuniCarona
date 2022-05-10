@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -60,7 +61,10 @@ class _EventRegisterState extends State<EventRegister> {
       _obsEvent.text = event![DbData.COLUMN_OBS];
       _descBaseEventAtual = event![DbData.COLUMN_EVENT_DESC_BASE_EVENT];
 
-      _done = event![DbData.COLUMN_DONE] != null && event![DbData.COLUMN_DONE] != false ? true : false;
+      _done = event![DbData.COLUMN_DONE] != null &&
+              event![DbData.COLUMN_DONE] != false
+          ? true
+          : false;
 
       loaded = true;
     }
@@ -82,10 +86,14 @@ class _EventRegisterState extends State<EventRegister> {
                         .collection(DbData.TABLE_BASE_EVENT)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
+                      if (snapshot.hasError) {
                         return Center(
                           child: Text(AppLocalizations.of(context)!
                               .erroAoCarregarEventosBase),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Center(
+                          child: Text("Sem eventos base cadastrados"),
                         );
                       }
                       return Container(
@@ -98,9 +106,9 @@ class _EventRegisterState extends State<EventRegister> {
                                 value: _descBaseEvent != null
                                     ? _descBaseEvent
                                     : _descBaseEventAtual,
-                                isDense: true,
                                 onChanged: (value) {
                                   setState(() {
+                                    print("ESCOLHEU O " + value.toString());
                                     _descBaseEvent = value as String;
                                   });
                                 },
@@ -109,7 +117,7 @@ class _EventRegisterState extends State<EventRegister> {
                                 items: snapshot.data!.docs
                                     .map((DocumentSnapshot document) {
                                   return DropdownMenuItem<String>(
-                                    value: document[DbData.COLUMN_NAME],
+                                    value: document.id,
                                     child: Text(document[DbData.COLUMN_NAME]),
                                   );
                                 }).toList(),
@@ -131,6 +139,7 @@ class _EventRegisterState extends State<EventRegister> {
               padding: EdgeInsets.only(top: 20),
               child: TextField(
                   controller: _locationControler,
+                  textCapitalization: TextCapitalization.sentences,
                   keyboardType: TextInputType.text,
                   decoration: textFieldDefaultDecoration(
                       AppLocalizations.of(context)!.localizacao +
@@ -165,6 +174,8 @@ class _EventRegisterState extends State<EventRegister> {
                     child: Padding(
                   padding: EdgeInsets.only(top: 5, right: 10),
                   child: TextField(
+                    readOnly: true,
+                    onTap: () => _picEventStarkDate(),
                     controller: _eventStartDate,
                     inputFormatters: [maskFormatter],
                     keyboardType: TextInputType.number,
@@ -177,7 +188,9 @@ class _EventRegisterState extends State<EventRegister> {
                     child: Padding(
                   padding: EdgeInsets.only(top: 5, left: 10),
                   child: TextField(
+                      readOnly: true,
                       controller: _eventEndDate,
+                      onTap: () => _pickEventEndDate(),
                       inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
                       decoration: textFieldDefaultDecoration(
@@ -194,6 +207,7 @@ class _EventRegisterState extends State<EventRegister> {
                     child: TextField(
                         controller: _obsEvent,
                         keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
                         maxLines: 5,
                         decoration: textFieldDefaultDecoration(
                             AppLocalizations.of(context)!.observacoes)),
@@ -220,16 +234,14 @@ class _EventRegisterState extends State<EventRegister> {
                       text: TextSpan(
                           text: AppLocalizations.of(context)!.ativo,
                           style: TextStyle(
-                              color: _done ? APP_MAIN_TEXT : APP_SUB_TEXT
-                          ),
+                              color: _done ? APP_MAIN_TEXT : APP_SUB_TEXT),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               setState(() {
                                 _done = !_done;
                               });
                               saveStatus();
-                            }
-                      ),
+                            }),
                     )
                   ],
                 ),
@@ -284,7 +296,7 @@ class _EventRegisterState extends State<EventRegister> {
     } else {
       if (checkFields()) {
         try {
-          e.registrationDate = DateTime.now().toString();
+          e.registrationDate = Timestamp.now();
           insert(e);
           Navigator.pop(context);
           Utils.showToast(
@@ -332,9 +344,7 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void updateStatus(String codEvent, bool done) {
-    db.collection(DbData.TABLE_EVENT).doc(codEvent).update({
-      "done" : done
-    });
+    db.collection(DbData.TABLE_EVENT).doc(codEvent).update({"done": done});
   }
 
   void saveStatus() {
@@ -349,4 +359,28 @@ class _EventRegisterState extends State<EventRegister> {
       }
     }
   }
+
+  void _picEventStarkDate() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime(3000))
+        .then((value) => {
+              _eventStartDate.text = Utils.getFormatedStringFromDateTime(
+                  value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!
+            });
+  }
+
+  void _pickEventEndDate(){
+    showDatePicker(
+        context: context,
+        initialDate: Utils.getDateTimeFromString(_eventStartDate.text),
+        firstDate:  Utils.getDateTimeFromString(_eventStartDate.text),
+        lastDate: DateTime(3000))
+        .then((value) => {
+          _eventEndDate.text = Utils.getFormatedStringFromDateTime(
+              value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!
+        });
+    }
 }

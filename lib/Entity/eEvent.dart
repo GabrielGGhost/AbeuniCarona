@@ -4,17 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class eEvent {
 
   String? _codEvent;
-  String? _descBaseEvent;
+  String? _codBaseEvent;
   String? _location;
   String? _dateEventStart;
   String? _dateEventEnd;
   String? _obsEvent;
-  String? _registrationDate;
+  Timestamp? _registrationDate;
   bool? _done;
 
   Map<String, dynamic> toMap() {
     return {
-      DbData.COLUMN_EVENT_DESC_BASE_EVENT: this._descBaseEvent,
+      DbData.COLUMN_COD_BASE_EVENT: this._codBaseEvent,
       DbData.COLUMN_LOCATION: this._location,
       DbData.COLUMN_START_DATE: this._dateEventStart,
       DbData.COLUMN_END_DATE: this._dateEventEnd,
@@ -25,21 +25,20 @@ class eEvent {
   }
 
   docToEntity(event) {
-      this._descBaseEvent = event[DbData.COLUMN_EVENT_DESC_BASE_EVENT];
+      this._codBaseEvent = event[DbData.COLUMN_COD_BASE_EVENT];
       this._location = event[DbData.COLUMN_LOCATION ];
       this._dateEventStart = event[DbData.COLUMN_START_DATE];
       this._dateEventEnd = event[DbData.COLUMN_END_DATE];
       this._obsEvent = event[DbData.COLUMN_OBS];
       this._registrationDate = event[DbData.COLUMN_REGISTRATION_DATE];
       this._done = event[DbData.COLUMN_DONE];
-
   }
 
   eEvent.empty();
 
   eEvent(
       this._codEvent,
-      this._descBaseEvent,
+      this._codBaseEvent,
       this._location,
       this._dateEventStart,
       this._dateEventEnd,
@@ -52,8 +51,9 @@ class eEvent {
   String get obsEvent => _obsEvent!;
   String get dateEventEnd => _dateEventEnd!;
   String get dateEventStart => _dateEventStart!;
-  String get registrationDate => _registrationDate!;
-  String get descBaseEvent => _descBaseEvent!;
+  String get codBaseEvent => _codBaseEvent!;
+  Timestamp get registrationDate => _registrationDate!;
+  String get descBaseEvent => _codBaseEvent!;
   bool get done => _done!;
 
   set codEvent(String value) {
@@ -71,11 +71,11 @@ class eEvent {
   set location(String value) {
     _location = value;
   }
-  set registrationDate(String value) {
+  set registrationDate(Timestamp value) {
     _registrationDate = value;
   }
-  set descBaseEvent(String value) {
-    _descBaseEvent = value;
+  set codBaseEvent(String value) {
+    _codBaseEvent = value;
   }
   set done(bool value) {
     _done = value;

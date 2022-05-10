@@ -301,4 +301,12 @@ class Utils {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(milliseconds);
     return getFormatedStringFromDateTime(date, format);
   }
+
+  static getDateTimeFromString(String date) {
+    String day = date.toString().substring(0, 2);
+    String month = date.toString().substring(3, 5);
+    String year = date.toString().substring(6, 10);
+
+    return DateTime.parse(year + "-" + month + "-" + day);
+  }
 }
