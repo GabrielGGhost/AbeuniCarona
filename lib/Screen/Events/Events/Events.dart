@@ -79,10 +79,8 @@ class _EventsState extends State<Events> {
                                       return Dismissible(
                                         child: Padding(
                                           padding: EdgeInsets.only(bottom: 15),
-                                          child: Card(
-                                            child: Padding(
+                                          child: Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                    vertical: 15,
                                                     horizontal: 10),
                                                 child: Column(
                                                   children: [
@@ -166,8 +164,9 @@ class _EventsState extends State<Events> {
                                                         ),
                                                       ],
                                                     ),
+                                                    Divider()
                                                   ],
-                                                )),
+                                                ),
                                           ),
                                         ),
                                         confirmDismiss: (d) async {
