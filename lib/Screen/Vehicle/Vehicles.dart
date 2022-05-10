@@ -28,7 +28,7 @@ class _VechiclesState extends State<Vechicles> {
 
   Future<Stream<QuerySnapshot<Object?>>?> _addListenerBorrowedVehicles() async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? usuarioLogado = await auth.currentUser;
+    User? usuarioLogado = auth.currentUser;
 
     form.idUser = usuarioLogado!.uid;
     final myCars = VehiclesSelects.getSelectByFilters(form);
@@ -43,7 +43,6 @@ class _VechiclesState extends State<Vechicles> {
     _getUserData();
     _addListenerBorrowedVehicles();
     super.initState();
-    //_getUserLoggedData();
   }
 
   @override
@@ -141,7 +140,7 @@ class _VechiclesState extends State<Vechicles> {
                                             padding: EdgeInsets.only(bottom: 0),
                                             child: Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                    vertical: 5,
+                                                    vertical: 10,
                                                     horizontal: 10),
                                                 child: Column(
                                                   children: [
@@ -234,27 +233,28 @@ class _VechiclesState extends State<Vechicles> {
                                                         ),
                                                         Text(": "),
                                                         Text(
-                                                          Utils.getDateFromBD(
+                                                          Utils.getStringDateFromTimestamp(
                                                               vehicle[DbData
                                                                   .COLUMN_REGISTRATION_DATE],
                                                               cDate
-                                                                  .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+                                                                  .FORMAT_SLASH_DD_MM_YYYY_KK_MM)!,
                                                           style: TextStyle(
                                                               color:
                                                                   APP_HINT_TEXT_FIELD),
                                                         )
                                                       ],
                                                     ),
-                                                    Divider(),
                                                   ],
                                                 )),
                                           ),
                                           confirmDismiss: (d) async {
                                             if (d ==
                                                 DismissDirection.startToEnd) {
-                                              final result = await Navigator.pushNamed(context,
-                                                  cRoutes.VEHICLES_REGISTER,
-                                                  arguments: vehicle);
+                                              final result =
+                                                  await Navigator.pushNamed(
+                                                      context,
+                                                      cRoutes.VEHICLES_REGISTER,
+                                                      arguments: vehicle);
                                               _addListenerBorrowedVehicles();
                                               return false;
                                             } else {

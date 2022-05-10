@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class VehicleRegister extends StatefulWidget {
   DocumentSnapshot vehicle;
@@ -29,11 +30,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   DocumentSnapshot? vehicle;
   String? _registration = "";
 
-  TextEditingController _signControler = TextEditingController();
-  TextEditingController _colorControler = TextEditingController();
-  TextEditingController _modelControler = TextEditingController();
-  TextEditingController _seatsControler = TextEditingController();
-  TextEditingController _luggageControler = TextEditingController();
+  TextEditingController _signController = TextEditingController();
+  TextEditingController _colorController = TextEditingController();
+  TextEditingController _modelController = TextEditingController();
+  TextEditingController _seatsController = TextEditingController();
+  TextEditingController _luggageController = TextEditingController();
 
   FocusNode? _signFocus;
   FocusNode? _colorFocus;
@@ -65,7 +66,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     String? title = AppLocalizations.of(context)!.registroDeVeiculo;
     String? textButton = AppLocalizations.of(context)!.registrarVeiculo;
     if (vehicle != null) {
-      _registration = Utils.getDateFromBD(
+      _registration = Utils.getStringDateFromTimestamp(
           vehicle![DbData.COLUMN_REGISTRATION_DATE],
           cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM);
       title = AppLocalizations.of(context)!.alteracaoDeVeiculo;
@@ -73,11 +74,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     }
 
     if (vehicle != null && !_loaded!) {
-      _signControler.text = vehicle![DbData.COLUMN_SIGN];
-      _colorControler.text = vehicle![DbData.COLUMN_COLOR];
-      _modelControler.text = vehicle![DbData.COLUMN_MODEL];
-      _seatsControler.text = vehicle![DbData.COLUMN_SEATS];
-      _luggageControler.text = vehicle![DbData.COLUMN_LUGGAGE_SPACES];
+      _signController.text = vehicle![DbData.COLUMN_SIGN];
+      _colorController.text = vehicle![DbData.COLUMN_COLOR];
+      _modelController.text = vehicle![DbData.COLUMN_MODEL];
+      _seatsController.text = vehicle![DbData.COLUMN_SEATS];
+      _luggageController.text = vehicle![DbData.COLUMN_LUGGAGE_SPACES];
       _active = vehicle![DbData.COLUMN_ACTIVE];
 
       _loaded = true;
@@ -96,10 +97,12 @@ class _VehicleRegisterState extends State<VehicleRegister> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
-                controller: _signControler,
+                controller: _signController,
                 autofocus: true,
                 focusNode: _signFocus,
+                textCapitalization: TextCapitalization.characters,
                 keyboardType: TextInputType.text,
+                maxLength: 10,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     hintText: AppLocalizations.of(context)!.placa +
@@ -113,9 +116,10 @@ class _VehicleRegisterState extends State<VehicleRegister> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
-                controller: _colorControler,
+                controller: _colorController,
                 keyboardType: TextInputType.text,
                 focusNode: _colorFocus,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     hintText: AppLocalizations.of(context)!.cor +
@@ -129,9 +133,10 @@ class _VehicleRegisterState extends State<VehicleRegister> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
-                controller: _modelControler,
+                controller: _modelController,
                 keyboardType: TextInputType.text,
                 focusNode: _modelFocus,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     hintText: AppLocalizations.of(context)!.modelo +
@@ -145,7 +150,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
-                controller: _seatsControler,
+                controller: _seatsController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -159,7 +164,7 @@ class _VehicleRegisterState extends State<VehicleRegister> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
-                controller: _luggageControler,
+                controller: _luggageController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
@@ -243,12 +248,12 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   void saveVehicle() {
     eVehicle v = eVehicle(
         null,
-        _signControler.text,
-        _colorControler.text,
-        _modelControler.text,
-        _seatsControler.text,
-        _luggageControler.text,
-        Utils.getDateTimeNow(cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM),
+        _signController.text,
+        _colorController.text,
+        _modelController.text,
+        _seatsController.text,
+        _luggageController.text,
+        Timestamp.now(),
         _idLoggedUser,
         _active);
 
@@ -268,7 +273,6 @@ class _VehicleRegisterState extends State<VehicleRegister> {
     } else {
       try {
         if (checkFields()) {
-          v.registrationDate = DateTime.now().toString();
           insert(v);
           Navigator.pop(context);
           Utils.showToast(AppLocalizations.of(context)!.veiculoCadastrado,
@@ -290,28 +294,21 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   }
 
   bool checkFields() {
-    if (_signControler.text.length == 0) {
+    if (_signController.text.length == 0) {
       Utils.showDialogBox(
           AppLocalizations.of(context)!.oVeiculoPrecisaDeUmaPlaca, context);
       _signFocus!.requestFocus();
       return false;
     }
-    if (_signControler.text.length > 8 || _signControler.text.length < 8) {
-      Utils.showDialogBox(
-          AppLocalizations.of(context)!.aPlacaDeveConterOitoCaracteres,
-          context);
-      _signFocus!.requestFocus();
-      return false;
-    }
 
-    if (_colorControler.text.length == 0) {
+    if (_colorController.text.length == 0) {
       Utils.showDialogBox(
           AppLocalizations.of(context)!.informeACorDoVeiculo, context);
       _colorFocus!.requestFocus();
       return false;
     }
 
-    if (_modelControler.text.length == 0) {
+    if (_modelController.text.length == 0) {
       Utils.showDialogBox(
           AppLocalizations.of(context)!.informeOModeloDoVeiculo, context);
       _modelFocus!.requestFocus();

@@ -2,19 +2,15 @@ import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Screen/Vehicle/VehiclesForm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class VehiclesSelects{
-
-
-
+class VehiclesSelects {
   /**
    * Recebe: stiuação do veículo
    * Retorna: Select de busca de veículos
   **/
   static getSelectByFilters(VehiclesForm form) {
-
-    if(form.situation == 'Ativos'){
+    if (form.situation == 'Ativos') {
       return getAllActiveVechicles(form);
-    } else if (form.situation == 'Inativos'){
+    } else if (form.situation == 'Inativos') {
       return getVechiclesInactives(form);
     } else {
       return getAllVechicles(form);
@@ -31,6 +27,7 @@ class VehiclesSelects{
         .collection(DbData.TABLE_VEHICLE)
         .where(DbData.COLUMN_ID_OWNER, isEqualTo: form.idUser)
         .where(DbData.COLUMN_ACTIVE, isEqualTo: true)
+        .orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true)
         .snapshots();
   }
 
@@ -44,6 +41,7 @@ class VehiclesSelects{
         .collection(DbData.TABLE_VEHICLE)
         .where(DbData.COLUMN_ID_OWNER, isEqualTo: form.idUser)
         .where(DbData.COLUMN_ACTIVE, isEqualTo: false)
+        .orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true)
         .snapshots();
   }
 
@@ -56,7 +54,7 @@ class VehiclesSelects{
     return db
         .collection(DbData.TABLE_VEHICLE)
         .where(DbData.COLUMN_ID_OWNER, isEqualTo: form.idUser)
+        .orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true)
         .snapshots();
   }
-
 }

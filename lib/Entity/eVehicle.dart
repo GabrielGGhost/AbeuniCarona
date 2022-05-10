@@ -8,7 +8,7 @@ class eVehicle {
   String? _model;
   String? _seats;
   String? _luggageSpaces;
-  String? _registrationDate;
+  Timestamp? _registrationDate;
   String? _idOwner;
   bool? _active;
 
@@ -21,7 +21,7 @@ class eVehicle {
   String get model => _model!;
   String get color => _color!;
   String get sign => _sign!;
-  String get registrationDate => _registrationDate!;
+  Timestamp get registrationDate => _registrationDate!;
   String get idOwner => _idOwner!;
   bool get active => _active!;
 
@@ -78,7 +78,7 @@ class eVehicle {
     _sign = value;
   }
 
-  set registrationDate(String value) {
+  set registrationDate(Timestamp value) {
     _registrationDate = value;
   }
 
