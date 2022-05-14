@@ -16,7 +16,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventRegister extends StatefulWidget {
   DocumentSnapshot? event;
-  EventRegister(this.event);
+  bool edit;
+  EventRegister(this.event, this.edit);
 
   @override
   _EventRegisterState createState() => _EventRegisterState();
@@ -32,11 +33,12 @@ class _EventRegisterState extends State<EventRegister> {
 
   String? _descBaseEvent;
   String? _descBaseEventAtual;
+  String? _textButton;
 
-  TextEditingController _locationControler = TextEditingController();
-  TextEditingController _eventStartDate = TextEditingController();
-  TextEditingController _eventEndDate = TextEditingController();
-  TextEditingController _obsEvent = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
+  TextEditingController _eventStartDateController = TextEditingController();
+  TextEditingController _eventEndDateController = TextEditingController();
+  TextEditingController _obsEventController = TextEditingController();
 
   FocusNode? _signFocus;
   FocusNode? _colorFocus;
@@ -44,7 +46,7 @@ class _EventRegisterState extends State<EventRegister> {
 
   bool loaded = false;
   bool _done = false;
-
+  bool edit = false;
   @override
   void initState() {
     super.initState();
@@ -53,13 +55,16 @@ class _EventRegisterState extends State<EventRegister> {
   @override
   Widget build(BuildContext context) {
     event = widget.event;
+    edit = widget.edit;
+
+    _textButton = edit ? "Atualizar Evento" : "Registrar Evento";
 
     if (event != null && loaded == false) {
-      _locationControler.text = event![DbData.COLUMN_LOCATION];
-      _eventStartDate.text = event![DbData.COLUMN_START_DATE];
-      _eventEndDate.text = event![DbData.COLUMN_END_DATE];
-      _obsEvent.text = event![DbData.COLUMN_OBS];
-      _descBaseEventAtual = event![DbData.COLUMN_EVENT_DESC_BASE_EVENT];
+      _locationController.text = event![DbData.COLUMN_LOCATION];
+      _eventStartDateController.text = event![DbData.COLUMN_START_DATE];
+      _eventEndDateController.text = event![DbData.COLUMN_END_DATE];
+      _obsEventController.text = event![DbData.COLUMN_OBS];
+      _descBaseEventAtual = event![DbData.COLUMN_COD_BASE_EVENT];
 
       _done = event![DbData.COLUMN_DONE] != null &&
               event![DbData.COLUMN_DONE] != false
@@ -138,7 +143,7 @@ class _EventRegisterState extends State<EventRegister> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: TextField(
-                  controller: _locationControler,
+                  controller: _locationController,
                   textCapitalization: TextCapitalization.sentences,
                   keyboardType: TextInputType.text,
                   decoration: textFieldDefaultDecoration(
@@ -176,7 +181,7 @@ class _EventRegisterState extends State<EventRegister> {
                   child: TextField(
                     readOnly: true,
                     onTap: () => _picEventStarkDate(),
-                    controller: _eventStartDate,
+                    controller: _eventStartDateController,
                     inputFormatters: [maskFormatter],
                     keyboardType: TextInputType.number,
                     decoration: textFieldDefaultDecoration(
@@ -189,9 +194,8 @@ class _EventRegisterState extends State<EventRegister> {
                   padding: EdgeInsets.only(top: 5, left: 10),
                   child: TextField(
                       readOnly: true,
-                      controller: _eventEndDate,
+                      controller: _eventEndDateController,
                       onTap: () => _pickEventEndDate(),
-                      inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
                       decoration: textFieldDefaultDecoration(
                           AppLocalizations.of(context)!.fim +
@@ -205,7 +209,7 @@ class _EventRegisterState extends State<EventRegister> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: TextField(
-                        controller: _obsEvent,
+                        controller: _obsEventController,
                         keyboardType: TextInputType.multiline,
                         textCapitalization: TextCapitalization.sentences,
                         maxLines: 5,
@@ -257,7 +261,7 @@ class _EventRegisterState extends State<EventRegister> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
                 child: Text(
-                  AppLocalizations.of(context)!.registrarEvento,
+                  _textButton!,
                   style: (TextStyle(color: Colors.white, fontSize: 20)),
                 ),
                 onPressed: () {
@@ -277,24 +281,30 @@ class _EventRegisterState extends State<EventRegister> {
             ? _descBaseEventAtual
             : _descBaseEvent;
 
-    eEvent e = new eEvent(null, _descBaseEvent, _locationControler.text,
-        _eventStartDate.text, _eventEndDate.text, _obsEvent.text, null, _done);
+    eEvent e = new eEvent(
+        null,
+        _descBaseEvent,
+        _locationController.text,
+        _eventStartDateController.text,
+        _eventEndDateController.text,
+        _obsEventController.text,
+        null,
+        _done);
+    if (checkFields()) {
+      if (event != null) {
+        try {
+          e.codEvent = event!.id;
+          e.done = _done;
+          e.registrationDate = event![DbData.COLUMN_REGISTRATION_DATE];
+          update(e);
 
-    if (event != null) {
-      try {
-        e.codEvent = event!.id;
-        e.done = _done;
-        e.registrationDate = event![DbData.COLUMN_REGISTRATION_DATE];
-        update(e);
-
-        Navigator.pop(context);
-        Utils.showToast("Evento Atualizado", APP_SUCCESS_BACKGROUND);
-      } catch (e) {
-        Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar,
-            APP_ERROR_BACKGROUND);
-      }
-    } else {
-      if (checkFields()) {
+          Navigator.pop(context);
+          Utils.showToast("Evento Atualizado", APP_SUCCESS_BACKGROUND);
+        } catch (e) {
+          Utils.showToast(AppLocalizations.of(context)!.erroAoAtualizar,
+              APP_ERROR_BACKGROUND);
+        }
+      } else {
         try {
           e.registrationDate = Timestamp.now();
           insert(e);
@@ -315,18 +325,18 @@ class _EventRegisterState extends State<EventRegister> {
       return false;
     }
 
-    if (!Utils.hasValue(_locationControler.text)) {
+    if (!Utils.hasValue(_locationController.text)) {
       Utils.showDialogBox("É necessário informar o local do evento!", context);
       return false;
     }
 
-    if (!Utils.hasValue(_eventStartDate.text)) {
+    if (!Utils.hasValue(_eventStartDateController.text)) {
       Utils.showDialogBox(
           "É necessário informar a data de início do evento!", context);
       return false;
     }
 
-    if (!Utils.hasValue(_eventEndDate.text)) {
+    if (!Utils.hasValue(_eventEndDateController.text)) {
       Utils.showDialogBox(
           "É necessário informar a data final do evento!", context);
       return false;
@@ -367,20 +377,35 @@ class _EventRegisterState extends State<EventRegister> {
             firstDate: DateTime.now(),
             lastDate: DateTime(3000))
         .then((value) => {
-              _eventStartDate.text = Utils.getFormatedStringFromDateTime(
-                  value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!
+              checkDates(value),
             });
   }
 
-  void _pickEventEndDate(){
+  void _pickEventEndDate() {
     showDatePicker(
-        context: context,
-        initialDate: Utils.getDateTimeFromString(_eventStartDate.text),
-        firstDate:  Utils.getDateTimeFromString(_eventStartDate.text),
-        lastDate: DateTime(3000))
+            context: context,
+            initialDate:
+                Utils.getDateTimeFromString(_eventStartDateController.text),
+            firstDate:
+                Utils.getDateTimeFromString(_eventStartDateController.text),
+            lastDate: DateTime(3000))
         .then((value) => {
-          _eventEndDate.text = Utils.getFormatedStringFromDateTime(
-              value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!
-        });
+              _eventEndDateController.text =
+                  Utils.getFormatedStringFromDateTime(
+                      value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!
+            });
+  }
+
+  checkDates(DateTime? value) {
+    print("checando datas");
+    _eventStartDateController.text = Utils.getFormatedStringFromDateTime(
+        value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!;
+
+    DateTime endDate =
+        Utils.getDateTimeFromString(_eventEndDateController.text);
+
+    if (value.millisecondsSinceEpoch > endDate.millisecondsSinceEpoch) {
+      _eventEndDateController.text = "";
     }
+  }
 }

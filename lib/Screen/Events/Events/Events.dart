@@ -169,7 +169,7 @@ class _EventsState extends State<Events> {
                                               DismissDirection.startToEnd) {
                                             Navigator.pushNamed(
                                                 context, cRoutes.EVENT_REGISTER,
-                                                arguments: event);
+                                                arguments: {"event": event,"edit": true});
                                             return false;
                                           } else {
                                             return await showDialog(

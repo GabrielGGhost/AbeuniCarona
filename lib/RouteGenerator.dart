@@ -49,9 +49,11 @@ class RouteGenerator {
             builder: (_) => VehicleRegister(args as DocumentSnapshot));
       case cRoutes.EVENTS:
         return MaterialPageRoute(builder: (_) => Events());
-      case cRoutes.EVENT_REGISTER:
+      case cRoutes.EVENT_REGISTER:{
+        Map<String, dynamic> values = args as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (_) => EventRegister(args as DocumentSnapshot));
+            builder: (_) => EventRegister(values['event'], values['edit']));
+      }
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(
             builder: (_) => EventBaseRegister(args as DocumentSnapshot));
