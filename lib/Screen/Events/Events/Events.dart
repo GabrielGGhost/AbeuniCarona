@@ -9,6 +9,7 @@ import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -143,16 +144,16 @@ class _EventsState extends State<Events> {
                                                   children: [
                                                     Spacer(),
                                                     Text(
-                                                      event[DbData
-                                                          .COLUMN_START_DATE],
+                                                      Utils.getStringDateFromTimestamp(event[DbData
+                                                          .COLUMN_START_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
                                                       style: TextStyle(
                                                           color: Colors.grey,
                                                           fontSize: 11),
                                                     ),
                                                     Text(" - "),
                                                     Text(
-                                                      event[DbData
-                                                          .COLUMN_END_DATE],
+                                                      Utils.getStringDateFromTimestamp(event[DbData
+                                                          .COLUMN_END_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
                                                       style: TextStyle(
                                                           color: Colors.grey,
                                                           fontSize: 11),

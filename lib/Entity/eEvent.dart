@@ -6,8 +6,8 @@ class eEvent {
   String? _codEvent;
   String? _codBaseEvent;
   String? _location;
-  String? _dateEventStart;
-  String? _dateEventEnd;
+  Timestamp? _dateEventStart;
+  Timestamp? _dateEventEnd;
   String? _obsEvent;
   Timestamp? _registrationDate;
   bool? _done;
@@ -49,8 +49,8 @@ class eEvent {
   String get codEvent => _codEvent!;
   String get location => _location!;
   String get obsEvent => _obsEvent!;
-  String get dateEventEnd => _dateEventEnd!;
-  String get dateEventStart => _dateEventStart!;
+  Timestamp get dateEventEnd => _dateEventEnd!;
+  Timestamp get dateEventStart => _dateEventStart!;
   String get codBaseEvent => _codBaseEvent!;
   Timestamp get registrationDate => _registrationDate!;
   String get descBaseEvent => _codBaseEvent!;
@@ -62,10 +62,10 @@ class eEvent {
   set obsEvent(String value) {
     _obsEvent = value;
   }
-  set dateEventEnd(String value) {
+  set dateEventEnd(Timestamp value) {
     _dateEventEnd = value;
   }
-  set dateEventStart(String value) {
+  set dateEventStart(Timestamp value) {
     _dateEventStart = value;
   }
   set location(String value) {

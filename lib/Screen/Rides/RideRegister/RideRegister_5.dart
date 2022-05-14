@@ -157,9 +157,9 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                           children: <TextSpan>[
                                             TextSpan(
                                                 text:
-                                                    ride.event.dateEventStart +
+                                                    ride.event.dateEventStart.toString() +
                                                         " - " +
-                                                        ride.event.dateEventEnd,
+                                                        ride.event.dateEventEnd.toString(),
                                                 style: TextStyle(
                                                     color: APP_SUB_TEXT)),
                                           ],

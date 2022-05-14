@@ -50,9 +50,14 @@ class RouteGenerator {
       case cRoutes.EVENTS:
         return MaterialPageRoute(builder: (_) => Events());
       case cRoutes.EVENT_REGISTER:{
-        Map<String, dynamic> values = args as Map<String, dynamic>;
-        return MaterialPageRoute(
-            builder: (_) => EventRegister(values['event'], values['edit']));
+        if(args == null){
+          return MaterialPageRoute(
+              builder: (_) => EventRegister(null, false));
+        } else {
+          Map<String, dynamic> values = args as Map<String, dynamic>;
+          return MaterialPageRoute(
+              builder: (_) => EventRegister(values['event'], values['edit']));
+        }
       }
       case cRoutes.EVENT_BASE_REGISTER:
         return MaterialPageRoute(

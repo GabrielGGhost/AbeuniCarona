@@ -302,11 +302,30 @@ class Utils {
     return getFormatedStringFromDateTime(date, format);
   }
 
-  static getDateTimeFromString(String date) {
+  static DateTime getDateTimeFromString(String date) {
     String day = date.toString().substring(0, 2);
     String month = date.toString().substring(3, 5);
     String year = date.toString().substring(6, 10);
 
     return DateTime.parse(year + "-" + month + "-" + day);
+  }
+
+  static Timestamp timestampFromDate(DateTime value) {
+    return Timestamp.fromDate(getDateTimeFromString(value.toString()));
+
+  }
+
+  static String? getFormattedStringFromTimestamp(Timestamp timestamp, String format) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+    return getFormatedStringFromDateTime(dateTime, cDate.FORMAT_SLASH_DD_MM_YYYY);
+  }
+
+  static Timestamp? getTimestampFromString(String text) {
+    DateTime dateTime = getDateTimeFromString(text);
+    return getTimestampFromDate(dateTime);
+  }
+
+  static Timestamp? getTimestampFromDate(DateTime dateTime) {
+    return Timestamp.fromMillisecondsSinceEpoch(dateTime.millisecondsSinceEpoch);
   }
 }

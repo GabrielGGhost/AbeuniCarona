@@ -61,8 +61,11 @@ class _EventRegisterState extends State<EventRegister> {
 
     if (event != null && loaded == false) {
       _locationController.text = event![DbData.COLUMN_LOCATION];
-      _eventStartDateController.text = event![DbData.COLUMN_START_DATE];
-      _eventEndDateController.text = event![DbData.COLUMN_END_DATE];
+      _eventStartDateController.text = Utils.getFormattedStringFromTimestamp(
+          event![DbData.COLUMN_START_DATE],
+          cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM)!;
+      _eventEndDateController.text = Utils.getFormattedStringFromTimestamp(
+          event![DbData.COLUMN_END_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM)!;
       _obsEventController.text = event![DbData.COLUMN_OBS];
       _descBaseEventAtual = event![DbData.COLUMN_COD_BASE_EVENT];
 
@@ -280,17 +283,16 @@ class _EventRegisterState extends State<EventRegister> {
         _descBaseEventAtual != null && _descBaseEventAtual!.length > 0
             ? _descBaseEventAtual
             : _descBaseEvent;
-
-    eEvent e = new eEvent(
-        null,
-        _descBaseEvent,
-        _locationController.text,
-        _eventStartDateController.text,
-        _eventEndDateController.text,
-        _obsEventController.text,
-        null,
-        _done);
     if (checkFields()) {
+      eEvent e = new eEvent(
+          null,
+          _descBaseEvent,
+          _locationController.text,
+          Utils.getTimestampFromString(_eventStartDateController.text),
+          Utils.getTimestampFromString(_eventEndDateController.text),
+          _obsEventController.text,
+          null,
+          _done);
       if (event != null) {
         try {
           e.codEvent = event!.id;
@@ -371,9 +373,14 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void _picEventStarkDate() {
+    DateTime dateNow = DateTime.now();
+
+    if(Utils.hasValue(_eventStartDateController.text))
+      dateNow = Utils.getDateTimeFromString(_eventStartDateController.text);
+
     showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
+            initialDate: dateNow,
             firstDate: DateTime.now(),
             lastDate: DateTime(3000))
         .then((value) => {
@@ -382,10 +389,14 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void _pickEventEndDate() {
+    DateTime dateNow = Utils.getDateTimeFromString(_eventStartDateController.text);
+
+    if (Utils.hasValue(_eventEndDateController.text))
+      dateNow = Utils.getDateTimeFromString(_eventEndDateController.text);
+
     showDatePicker(
             context: context,
-            initialDate:
-                Utils.getDateTimeFromString(_eventStartDateController.text),
+            initialDate: dateNow,
             firstDate:
                 Utils.getDateTimeFromString(_eventStartDateController.text),
             lastDate: DateTime(3000))
@@ -397,7 +408,6 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   checkDates(DateTime? value) {
-    print("checando datas");
     _eventStartDateController.text = Utils.getFormatedStringFromDateTime(
         value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!;
 

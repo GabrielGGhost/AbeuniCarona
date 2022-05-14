@@ -115,9 +115,9 @@ class _SchedulingState extends State<Scheduling> {
                           ),
                           children: [
                         TextSpan(
-                            text: ride.event.dateEventStart +
+                            text: ride.event.dateEventStart.toString() +
                                 " - " +
-                                ride.event.dateEventEnd,
+                                ride.event.dateEventEnd.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 color: Colors.grey))
