@@ -140,6 +140,47 @@ class _EventsState extends State<Events> {
                                                     ],
                                                   ),
                                                 ),
+                                                Padding(
+                                                  padding:
+                                                  EdgeInsets.only(top: 5),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "Por: ",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.bold),
+                                                      ),
+                                                      Text(
+                                                        "",
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 11),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                  EdgeInsets.only(top: 5),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "Registrado: ",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                        fontWeight: FontWeight.bold),
+                                                      ),
+                                                      Text(
+                                                          Utils.getStringDateFromTimestamp(event[DbData
+                                                              .COLUMN_START_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 11),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                                 Row(
                                                   children: [
                                                     Spacer(),
