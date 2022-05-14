@@ -151,12 +151,22 @@ class _EventsState extends State<Events> {
                                                             fontSize: 12,
                                                             fontWeight: FontWeight.bold),
                                                       ),
-                                                      Text(
-                                                        "",
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 11),
-                                                      ),
+                                                      FutureBuilder(
+                                                        future: getUserName(event[DbData.COLUMN_USER_ID]),
+                                                        builder: (context, snapshot) {
+                                                          if (!snapshot.hasData) {
+                                                            return Text("Falha ao buscar motorista",
+                                                                style: TextStyle(fontWeight: FontWeight.bold));
+                                                          } else if (snapshot.hasError) {
+                                                            return Text(snapshot.error.toString(),
+                                                                style: TextStyle(fontWeight: FontWeight.bold));
+                                                          } else {
+                                                            return Text(snapshot.data.toString(),
+                                                                style: TextStyle(color: Colors.grey));
+                                                          }
+                                                        },
+                                                      )
+
                                                     ],
                                                   ),
                                                 ),
@@ -338,5 +348,11 @@ class _EventsState extends State<Events> {
     final data = result.data() as Map;
 
     return data[DbData.COLUMN_NAME];
+  }
+
+  Future<String> getUserName(String driverId) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final result = await db.collection(DbData.TABLE_USER).doc(driverId).get();
+    return result[DbData.COLUMN_USERNAME];
   }
 }

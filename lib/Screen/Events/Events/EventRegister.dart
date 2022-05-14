@@ -5,6 +5,7 @@ import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _EventRegisterState extends State<EventRegister> {
   String? _descBaseEvent;
   String? _descBaseEventAtual;
   String? _textButton;
+  String? _idLoggedUser;
 
   TextEditingController _locationController = TextEditingController();
   TextEditingController _eventStartDateController = TextEditingController();
@@ -49,6 +51,7 @@ class _EventRegisterState extends State<EventRegister> {
   bool edit = false;
   @override
   void initState() {
+    _getUserData();
     super.initState();
   }
 
@@ -298,6 +301,7 @@ class _EventRegisterState extends State<EventRegister> {
           e.codEvent = event!.id;
           e.done = _done;
           e.registrationDate = event![DbData.COLUMN_REGISTRATION_DATE];
+          e.userId = event![DbData.COLUMN_USER_ID];
           update(e);
 
           Navigator.pop(context);
@@ -309,6 +313,7 @@ class _EventRegisterState extends State<EventRegister> {
       } else {
         try {
           e.registrationDate = Timestamp.now();
+          e.userId = _idLoggedUser!;
           insert(e);
           Navigator.pop(context);
           Utils.showToast(
@@ -375,7 +380,7 @@ class _EventRegisterState extends State<EventRegister> {
   void _picEventStarkDate() {
     DateTime dateNow = DateTime.now();
 
-    if(Utils.hasValue(_eventStartDateController.text))
+    if (Utils.hasValue(_eventStartDateController.text))
       dateNow = Utils.getDateTimeFromString(_eventStartDateController.text);
 
     showDatePicker(
@@ -389,7 +394,8 @@ class _EventRegisterState extends State<EventRegister> {
   }
 
   void _pickEventEndDate() {
-    DateTime dateNow = Utils.getDateTimeFromString(_eventStartDateController.text);
+    DateTime dateNow =
+        Utils.getDateTimeFromString(_eventStartDateController.text);
 
     if (Utils.hasValue(_eventEndDateController.text))
       dateNow = Utils.getDateTimeFromString(_eventEndDateController.text);
@@ -418,4 +424,14 @@ class _EventRegisterState extends State<EventRegister> {
       _eventEndDateController.text = "";
     }
   }
+
+  void _getUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? usuarioLogado = await auth.currentUser;
+
+    if (usuarioLogado != null) {
+      _idLoggedUser = usuarioLogado.uid;
+    }
+  }
+
 }

@@ -3,14 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class eEvent {
 
+  bool? _done;
   String? _codEvent;
   String? _codBaseEvent;
   String? _location;
+  String? _userId;
+  String? _obsEvent;
   Timestamp? _dateEventStart;
   Timestamp? _dateEventEnd;
-  String? _obsEvent;
   Timestamp? _registrationDate;
-  bool? _done;
+
+
+  set userId(String value) {
+    _userId = value;
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -21,6 +27,7 @@ class eEvent {
       DbData.COLUMN_OBS: this._obsEvent,
       DbData.COLUMN_REGISTRATION_DATE: this._registrationDate,
       DbData.COLUMN_DONE: this._done,
+      DbData.COLUMN_USER_ID: this.userId
     };
   }
 
@@ -32,6 +39,7 @@ class eEvent {
       this._obsEvent = event[DbData.COLUMN_OBS];
       this._registrationDate = event[DbData.COLUMN_REGISTRATION_DATE];
       this._done = event[DbData.COLUMN_DONE];
+      this._userId = event[DbData.COLUMN_USER_ID];
   }
 
   eEvent.empty();
@@ -46,15 +54,16 @@ class eEvent {
       this._registrationDate,
       this._done);
 
+  bool get done => _done!;
   String get codEvent => _codEvent!;
   String get location => _location!;
+  String get userId => _userId!;
   String get obsEvent => _obsEvent!;
+  String get descBaseEvent => _codBaseEvent!;
+  Timestamp get registrationDate => _registrationDate!;
   Timestamp get dateEventEnd => _dateEventEnd!;
   Timestamp get dateEventStart => _dateEventStart!;
   String get codBaseEvent => _codBaseEvent!;
-  Timestamp get registrationDate => _registrationDate!;
-  String get descBaseEvent => _codBaseEvent!;
-  bool get done => _done!;
 
   set codEvent(String value) {
     _codEvent = value;
