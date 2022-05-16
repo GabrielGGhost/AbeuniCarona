@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'eRide.dart';
 
@@ -8,14 +9,14 @@ class eScheduling {
   String? _partakerId;
   String? _reservedSeats;
   String? _reservedLugagges;
-  String? _registrationDate;
+  Timestamp? _registrationDate;
 
   String get uid => _uid;
   String get partakerId => _partakerId!;
   String get rideId => _rideId!;
   String get reservedSeats => _reservedSeats!;
   String get reservedLugagges => _reservedLugagges!;
-  String get registrationDate => _registrationDate!;
+  Timestamp get registrationDate => _registrationDate!;
 
   eScheduling.full(this._rideId, this._partakerId, this._reservedSeats,
       this._reservedLugagges);
@@ -46,7 +47,7 @@ class eScheduling {
     _reservedLugagges = value;
   }
 
-  set registrationDate(String value) {
+  set registrationDate(Timestamp value) {
     _registrationDate = value;
   }
   set uid(String value) {

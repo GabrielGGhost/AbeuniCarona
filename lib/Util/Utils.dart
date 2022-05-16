@@ -110,14 +110,12 @@ class Utils {
     return formattedDate;
   }
 
-
   /*
   * Recebe: Um parâmetro do formato de data desejado, caso nulo, usa o formato dd/MM/yyyy
   * Retorna: Uma data no formato recebido ou no formato padrão
   * */
   static String? getDateTimeNow([String? format]) {
-
-    if(format == null){
+    if (format == null) {
       format = cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM;
     }
 
@@ -247,7 +245,7 @@ class Utils {
     Retorna: Se a data é válida
   */
   static bool isDateValid(String date) {
-    if(date.isEmpty || date.length != 10){
+    if (date.isEmpty || date.length != 10) {
       return false;
     }
     if (date.indexOf("/") == 2) {
@@ -277,10 +275,10 @@ class Utils {
   }
 
   static String getSafeNumber(String value) {
-    try{
+    try {
       int number = int.parse(value);
       return number.toString();
-    } catch(e){
+    } catch (e) {
       return "0";
     }
   }
@@ -312,12 +310,14 @@ class Utils {
 
   static Timestamp timestampFromDate(DateTime value) {
     return Timestamp.fromDate(getDateTimeFromString(value.toString()));
-
   }
 
-  static String? getFormattedStringFromTimestamp(Timestamp timestamp, String format) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
-    return getFormatedStringFromDateTime(dateTime, cDate.FORMAT_SLASH_DD_MM_YYYY);
+  static String? getFormattedStringFromTimestamp(
+      Timestamp timestamp, String format) {
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+    return getFormatedStringFromDateTime(
+        dateTime, cDate.FORMAT_SLASH_DD_MM_YYYY);
   }
 
   static Timestamp? getTimestampFromString(String text) {
@@ -326,6 +326,46 @@ class Utils {
   }
 
   static Timestamp? getTimestampFromDate(DateTime dateTime) {
-    return Timestamp.fromMillisecondsSinceEpoch(dateTime.millisecondsSinceEpoch);
+    return Timestamp.fromMillisecondsSinceEpoch(
+        dateTime.millisecondsSinceEpoch);
+  }
+
+  static String getStringTimeFromInts(int hour, int minute) {
+    String minuteS = minute.toString();
+    String hourS = hour.toString();
+
+    if (minute < 10) minuteS = "0" + minute.toString();
+
+    if (hour < 10) hourS = "0" + hour.toString();
+
+    return hourS + ":" + minuteS;
+  }
+
+  static bool isReturnDateValid(String departureDate, String departureTime,
+      String returnDate, String returnTime) {
+    Timestamp tDepartureDate = getTimestampFromString(departureDate)!;
+    Timestamp tReturnDate = getTimestampFromString(returnDate)!;
+
+    if (tDepartureDate.millisecondsSinceEpoch >
+        tReturnDate.millisecondsSinceEpoch) return false;
+
+    final arrayDepartureTime = departureTime.split(":");
+    final arrayReturnTime = returnTime.split(":");
+
+     int iDepartureHour = int.parse(arrayDepartureTime[0]);
+    int intReturnHour = int.parse(arrayReturnTime[0]);
+
+    int iDepartureMinute = int.parse(arrayDepartureTime[1]);
+    int intReturnMinute = int.parse(arrayReturnTime[1]);
+
+    if (iDepartureHour > intReturnHour) return false;
+
+    if (iDepartureHour == intReturnHour) {
+      if(iDepartureMinute > intReturnMinute){
+        return false;
+      }
+    }
+
+    return true;
   }
 }

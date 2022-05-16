@@ -42,7 +42,6 @@ class _RideRegister_2State extends State<RideRegister_2> {
     });
   }
 
-
   @override
   void initState() {
     _addListenerBorrowedVehicles();
@@ -112,115 +111,110 @@ class _RideRegister_2State extends State<RideRegister_2> {
                                           onTap: () {
                                             nextStep(vehicle, ride, edit);
                                           },
-                                          child: Card(
-                                            child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 15,
-                                                    horizontal: 10),
-                                                child: Column(
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 0, horizontal: 10),
+                                            child: Column(
+                                              children: [
+                                                Row(
                                                   children: [
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          vehicle[DbData
-                                                              .COLUMN_MODEL],
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 18),
-                                                        ),
-                                                        Text(" - "),
-                                                        Text(
-                                                          vehicle[DbData
-                                                              .COLUMN_SIGN],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  APP_HINT_TEXT_FIELD,
-                                                              fontSize: 16),
-                                                        ),
-                                                      ],
+                                                    Text(
+                                                      vehicle[
+                                                          DbData.COLUMN_MODEL],
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .assentos,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        Text(": "),
-                                                        Text(
-                                                          vehicle[DbData
-                                                                      .COLUMN_SEATS] !=
-                                                                  ""
-                                                              ? vehicle[DbData
-                                                                  .COLUMN_SEATS]
-                                                              : AppLocalizations
-                                                                      .of(context)!
-                                                                  .naoInformado,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  APP_HINT_TEXT_FIELD),
-                                                        )
-                                                      ],
+                                                    Text(" - "),
+                                                    Text(
+                                                      vehicle[
+                                                          DbData.COLUMN_SIGN],
+                                                      style: TextStyle(
+                                                          color:
+                                                              APP_HINT_TEXT_FIELD,
+                                                          fontSize: 16),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .malas,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        Text(": "),
-                                                        Text(
-                                                          vehicle[DbData
-                                                                      .COLUMN_LUGGAGE_SPACES] !=
-                                                                  ""
-                                                              ? vehicle[DbData
-                                                                  .COLUMN_LUGGAGE_SPACES]
-                                                              : AppLocalizations
-                                                                      .of(context)!
-                                                                  .naoInformado,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  APP_HINT_TEXT_FIELD),
-                                                        )
-                                                      ],
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .assentos,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          AppLocalizations.of(
+                                                    Text(": "),
+                                                    Text(
+                                                      vehicle[DbData
+                                                                  .COLUMN_SEATS] !=
+                                                              ""
+                                                          ? vehicle[DbData
+                                                              .COLUMN_SEATS]
+                                                          : AppLocalizations.of(
                                                                   context)!
-                                                              .registro,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        Text(": "),
-                                                        Text(
-                                                          Utils.getDateFromBD(
-                                                              vehicle[DbData
-                                                                  .COLUMN_REGISTRATION_DATE],
-                                                              cDate
-                                                                  .FORMAT_SLASH_DD_MM_YYYY_KK_MM),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  APP_HINT_TEXT_FIELD),
-                                                        )
-                                                      ],
+                                                              .naoInformado,
+                                                      style: TextStyle(
+                                                          color:
+                                                              APP_HINT_TEXT_FIELD),
                                                     )
                                                   ],
-                                                )),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .malas,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(": "),
+                                                    Text(
+                                                      vehicle[DbData
+                                                                  .COLUMN_LUGGAGE_SPACES] !=
+                                                              ""
+                                                          ? vehicle[DbData
+                                                              .COLUMN_LUGGAGE_SPACES]
+                                                          : AppLocalizations.of(
+                                                                  context)!
+                                                              .naoInformado,
+                                                      style: TextStyle(
+                                                          color:
+                                                              APP_HINT_TEXT_FIELD),
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .registro,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Text(": "),
+                                                    Text(
+                                                      Utils.getStringDateFromTimestamp(
+                                                          vehicle[DbData
+                                                              .COLUMN_REGISTRATION_DATE],
+                                                          cDate
+                                                              .FORMAT_SLASH_DD_MM_YYYY_KK_MM)!,
+                                                      style: TextStyle(
+                                                          color:
+                                                              APP_HINT_TEXT_FIELD),
+                                                    )
+                                                  ],
+                                                ),
+                                                Divider()
+                                              ],
+                                            ),
                                           ),
                                         );
                                       })

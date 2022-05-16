@@ -9,6 +9,7 @@ import 'package:abeuni_carona/Screen/Events/Events/EventRegister.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,7 +34,10 @@ class _RideRegister_1State extends State<RideRegister_1> {
   final baseEvents = db.collection(DbData.TABLE_BASE_EVENT).get();
 
   Future<Stream<QuerySnapshot<Object?>>?> _addListenerActiveEvents() async {
-    final activeEvents = db.collection(DbData.TABLE_EVENT).where(DbData.COLUMN_ACTIVE, isEqualTo: true).snapshots();
+    final activeEvents = db
+        .collection(DbData.TABLE_EVENT)
+        .where(DbData.COLUMN_ACTIVE, isEqualTo: true)
+        .snapshots();
 
     activeEvents.listen((data) {
       _controllerActiveEvents.add(data);
@@ -120,8 +124,7 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                               events[index];
 
                                           return GestureDetector(
-                                            child: Card(
-                                              child: Padding(
+                                            child: Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 15,
                                                       horizontal: 10),
@@ -129,14 +132,35 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          Text(
-                                                            event[DbData
-                                                                .COLUMN_EVENT_DESC_BASE_EVENT],
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 18),
+                                                          FutureBuilder(
+                                                            future: getBaseEventName(event[DbData
+                                                      .COLUMN_COD_BASE_EVENT]),
+                                                              builder: (_, snapshot){
+                                                                if (snapshot
+                                                                    .hasError) {
+                                                                  return Text(
+                                                                      "Erro ao carregar dados",
+                                                                      style: TextStyle(
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                          color: Colors
+                                                                              .grey));
+                                                                } else if (!snapshot
+                                                                    .hasData) {
+                                                                  return Text("Evento Excluído");
+                                                                } else {
+                                                                  return Text(
+                                                                    snapshot.data
+                                                                        .toString(),
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                        fontSize: 18),
+                                                                  );
+                                                                }
+                                                              }
                                                           ),
                                                         ],
                                                       ),
@@ -146,29 +170,32 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                                 top: 5),
                                                         child: Row(
                                                           children: [
-                                                            Text(
-                                                              "Local: ",
-                                                              style: TextStyle(
-                                                                  fontSize: 12),
-                                                            ),
-                                                            Text(" - "),
-                                                            Text(
-                                                              event[DbData
-                                                                  .COLUMN_LOCATION],
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 11),
-                                                            ),
+                                                            Expanded(
+                                                                child: Text.rich(TextSpan(
+                                                                    text:
+                                                                        "Local: ",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                    children: [
+                                                                  TextSpan(
+                                                                      text: event[
+                                                                          DbData
+                                                                              .COLUMN_LOCATION],
+                                                                      style: TextStyle(
+                                                                          color: APP_SUB_TEXT,
+                                                                            fontWeight:
+                                                                            FontWeight.normal),
+                                                                      )
+                                                                ])))
                                                           ],
                                                         ),
                                                       ),
                                                       Row(
                                                         children: [
                                                           Spacer(),
-                                                          Text(
-                                                            event[DbData
-                                                                .COLUMN_START_DATE],
+                                                          Text(Utils.getStringDateFromTimestamp(event[DbData
+                                                              .COLUMN_START_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
                                                             style: TextStyle(
                                                                 color:
                                                                     Colors.grey,
@@ -176,8 +203,8 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                           ),
                                                           Text(" - "),
                                                           Text(
-                                                            event[DbData
-                                                                .COLUMN_END_DATE],
+                                                            Utils.getStringDateFromTimestamp(event[DbData
+                                                                    .COLUMN_END_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
                                                             style: TextStyle(
                                                                 color:
                                                                     Colors.grey,
@@ -185,9 +212,9 @@ class _RideRegister_1State extends State<RideRegister_1> {
                                                           ),
                                                         ],
                                                       ),
+                                                      Divider()
                                                     ],
                                                   )),
-                                            ),
                                             onTap: () {
                                               nextStep(event);
                                             },
@@ -232,5 +259,14 @@ class _RideRegister_1State extends State<RideRegister_1> {
     } else {
       Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2, arguments: ride);
     }
+  }
+
+  Future<String?> getBaseEventName(codBaseEvent) async {
+    DocumentSnapshot result =
+    await db.collection(DbData.TABLE_BASE_EVENT).doc(codBaseEvent).get();
+
+    final data = result.data() as Map;
+
+    return data[DbData.COLUMN_NAME];
   }
 }

@@ -124,66 +124,94 @@ class _EventsState extends State<Events> {
                                                       EdgeInsets.only(top: 5),
                                                   child: Row(
                                                     children: [
-                                                      Text(
-                                                        "Local: ",
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      Text(" - "),
-                                                      Text(
-                                                        event[DbData
-                                                            .COLUMN_LOCATION],
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 11),
-                                                      ),
+                                                      Expanded(
+                                                          child: Text.rich(
+                                                        TextSpan(
+                                                            text: "Local: ",
+                                                            style: TextStyle(
+                                                                fontSize: 12),
+                                                            children: [
+                                                              TextSpan(
+                                                                  text: event[DbData
+                                                                      .COLUMN_LOCATION],
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontSize:
+                                                                          11))
+                                                            ]),
+                                                      )),
                                                     ],
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding:
-                                                  EdgeInsets.only(top: 5),
+                                                      EdgeInsets.only(top: 5),
                                                   child: Row(
                                                     children: [
                                                       Text(
                                                         "Por: ",
                                                         style: TextStyle(
                                                             fontSize: 12,
-                                                            fontWeight: FontWeight.bold),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                       FutureBuilder(
-                                                        future: getUserName(event[DbData.COLUMN_USER_ID]),
-                                                        builder: (context, snapshot) {
-                                                          if (!snapshot.hasData) {
-                                                            return Text("Falha ao buscar motorista",
-                                                                style: TextStyle(fontWeight: FontWeight.bold));
-                                                          } else if (snapshot.hasError) {
-                                                            return Text(snapshot.error.toString(),
-                                                                style: TextStyle(fontWeight: FontWeight.bold));
+                                                        future: getUserName(
+                                                            event[DbData
+                                                                .COLUMN_USER_ID]),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          if (!snapshot
+                                                              .hasData) {
+                                                            return Text(
+                                                                "Falha ao buscar motorista",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold));
+                                                          } else if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                                snapshot.error
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold));
                                                           } else {
-                                                            return Text(snapshot.data.toString(),
-                                                                style: TextStyle(color: Colors.grey));
+                                                            return Text(
+                                                                snapshot.data
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey));
                                                           }
                                                         },
                                                       )
-
                                                     ],
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding:
-                                                  EdgeInsets.only(top: 5),
+                                                      EdgeInsets.only(top: 5),
                                                   child: Row(
                                                     children: [
                                                       Text(
                                                         "Registrado: ",
                                                         style: TextStyle(
                                                             fontSize: 12,
-                                                        fontWeight: FontWeight.bold),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                       Text(
-                                                          Utils.getStringDateFromTimestamp(event[DbData
-                                                              .COLUMN_START_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
+                                                        Utils.getStringDateFromTimestamp(
+                                                            event[DbData
+                                                                .COLUMN_START_DATE],
+                                                            cDate
+                                                                .FORMAT_SLASH_DD_MM_YYYY)!,
                                                         style: TextStyle(
                                                             color: Colors.grey,
                                                             fontSize: 11),
@@ -195,16 +223,22 @@ class _EventsState extends State<Events> {
                                                   children: [
                                                     Spacer(),
                                                     Text(
-                                                      Utils.getStringDateFromTimestamp(event[DbData
-                                                          .COLUMN_START_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
+                                                      Utils.getStringDateFromTimestamp(
+                                                          event[DbData
+                                                              .COLUMN_START_DATE],
+                                                          cDate
+                                                              .FORMAT_SLASH_DD_MM_YYYY)!,
                                                       style: TextStyle(
                                                           color: Colors.grey,
                                                           fontSize: 11),
                                                     ),
                                                     Text(" - "),
                                                     Text(
-                                                      Utils.getStringDateFromTimestamp(event[DbData
-                                                          .COLUMN_END_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
+                                                      Utils.getStringDateFromTimestamp(
+                                                          event[DbData
+                                                              .COLUMN_END_DATE],
+                                                          cDate
+                                                              .FORMAT_SLASH_DD_MM_YYYY)!,
                                                       style: TextStyle(
                                                           color: Colors.grey,
                                                           fontSize: 11),
@@ -221,7 +255,10 @@ class _EventsState extends State<Events> {
                                               DismissDirection.startToEnd) {
                                             Navigator.pushNamed(
                                                 context, cRoutes.EVENT_REGISTER,
-                                                arguments: {"event": event,"edit": true});
+                                                arguments: {
+                                                  "event": event,
+                                                  "edit": true
+                                                });
                                             return false;
                                           } else {
                                             return await showDialog(

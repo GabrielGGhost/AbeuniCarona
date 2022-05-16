@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'eEvent.dart';
 
 class eRide {
-  String? _uid;
-  String get uid => _uid!;
+  String _uid = "";
+  String get uid => _uid;
   eEvent? _event;
   eVehicle? _vehicle;
   String? _departureAddress;

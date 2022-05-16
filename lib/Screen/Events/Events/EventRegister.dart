@@ -434,4 +434,9 @@ class _EventRegisterState extends State<EventRegister> {
     }
   }
 
+  Future _findAllRidesByEvent(String? codEvent){
+    Future a = db.collection(DbData.TABLE_RIDE).where(DbData.COLUMN_COD_BASE_EVENT) as Future;
+
+    return a;
+  }
 }

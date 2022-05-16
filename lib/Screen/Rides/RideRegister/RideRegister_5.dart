@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 import 'RideRegister_4.dart';
 
@@ -42,6 +43,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
   @override
   Widget build(BuildContext context) {
     ride = widget.ride;
+    print("RIDE AQUI" + ride.toString());
     edit = widget.edit;
     String textButton = "Registrar Carona";
 
@@ -96,9 +98,26 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15)),
-                                    Text(ride.event.descBaseEvent,
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 15)),
+                                    FutureBuilder(
+                                        future: getBaseEventName(
+                                            ride.event.codBaseEvent),
+                                        builder: (_, snapshot) {
+                                          if (snapshot.hasError) {
+                                            return Text(
+                                                "Erro ao carregar dados",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey));
+                                          } else if (!snapshot.hasData) {
+                                            return Text("Evento Excluído");
+                                          } else {
+                                            return Text(
+                                              snapshot.data.toString(),
+                                              style: TextStyle(
+                                                  color: APP_SUB_TEXT),
+                                            );
+                                          }
+                                        }),
                                   ]),
                                   Row(children: [
                                     Expanded(
@@ -134,7 +153,11 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             color: Colors.black,
                                           ),
                                           children: <TextSpan>[
-                                            TextSpan(text: 'Obs.: '),
+                                            TextSpan(
+                                                text: 'Obs.: ',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             TextSpan(
                                                 text: ride.event.obsEvent,
                                                 style: TextStyle(
@@ -148,18 +171,22 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                     Expanded(
                                       child: RichText(
                                         text: TextSpan(
-                                          // Note: Styles for TextSpans must be explicitly defined.
-                                          // Child text spans will inherit styles from parent
                                           style: const TextStyle(
                                             fontSize: 14.0,
                                             color: Colors.black,
                                           ),
                                           children: <TextSpan>[
                                             TextSpan(
-                                                text:
-                                                    ride.event.dateEventStart.toString() +
-                                                        " - " +
-                                                        ride.event.dateEventEnd.toString(),
+                                                text: Utils.getStringDateFromTimestamp(
+                                                        ride.event
+                                                            .dateEventStart,
+                                                        cDate
+                                                            .FORMAT_SLASH_DD_MM_YYYY)! +
+                                                    " - " +
+                                                    Utils.getStringDateFromTimestamp(
+                                                        ride.event.dateEventEnd,
+                                                        cDate
+                                                            .FORMAT_SLASH_DD_MM_YYYY)!,
                                                 style: TextStyle(
                                                     color: APP_SUB_TEXT)),
                                           ],
@@ -446,65 +473,75 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                     },
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: ElevatedButton(
-                                    style: TextButton.styleFrom(
-                                        backgroundColor: APP_ERROR_BACKGROUND,
-                                        padding:
-                                            EdgeInsets.fromLTRB(28, 16, 28, 16),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30))),
-                                    child: Text(
-                                      "Cancelar Carona",
-                                      style: (TextStyle(
-                                          color: Colors.white, fontSize: 20)),
-                                    ),
-                                    onPressed: () {
-                                      print("CLICADO CANCELAR");
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .confirmarExclusao),
-                                              content: Text(
-                                                  "Tem certeza que deseja excluir esta carona?"),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                    onPressed: () {
-                                                      finishRide();
-                                                      Navigator.of(context)
-                                                          .pop(true);
-                                                    },
-                                                    child: Text(
+                                ride.uid != ""
+                                    ? Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: ElevatedButton(
+                                          style: TextButton.styleFrom(
+                                              backgroundColor:
+                                                  APP_ERROR_BACKGROUND,
+                                              padding: EdgeInsets.fromLTRB(
+                                                  28, 16, 28, 16),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30))),
+                                          child: Text(
+                                            "Cancelar Carona",
+                                            style: (TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20)),
+                                          ),
+                                          onPressed: () {
+                                            print("CLICADO CANCELAR");
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text(
                                                         AppLocalizations.of(
                                                                 context)!
-                                                            .tenhoCerteza)),
-                                                TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(context)
-                                                            .pop(false),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(5),
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .cancelar,
-                                                        style: TextStyle(
-                                                          color: APP_MAIN_TEXT,
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ],
-                                            );
-                                          });
-                                    },
-                                  ),
-                                ),
+                                                            .confirmarExclusao),
+                                                    content: Text(
+                                                        "Tem certeza que deseja excluir esta carona?"),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            finishRide();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(true);
+                                                          },
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .tenhoCerteza)),
+                                                      TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop(false),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .cancelar,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    APP_MAIN_TEXT,
+                                                              ),
+                                                            ),
+                                                          )),
+                                                    ],
+                                                  );
+                                                });
+                                          },
+                                        ),
+                                      )
+                                    : Container(),
                               ],
                             ),
                           )
@@ -613,5 +650,14 @@ class _RideRegister_5State extends State<RideRegister_5> {
           .doc(doc.id)
           .update({DbData.COLUMN_SITUATION: cSituation.RIDE_CANCELLED});
     }
+  }
+
+  Future<String?> getBaseEventName(codBaseEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_BASE_EVENT).doc(codBaseEvent).get();
+
+    final data = result.data() as Map;
+
+    return data[DbData.COLUMN_NAME];
   }
 }

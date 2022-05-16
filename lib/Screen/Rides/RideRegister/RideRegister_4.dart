@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class RideRegister_4 extends StatefulWidget {
   eRide ride;
@@ -87,7 +88,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 40),
+                padding: EdgeInsets.only(top: 10),
                 child: RichText(
                   text: TextSpan(
                       style: TextStyle(fontSize: 18, color: Colors.black),
@@ -103,8 +104,20 @@ class _RideRegister_4State extends State<RideRegister_4> {
                       ]),
                 ),
               ),
+              Row(
+                children: [
+                  Padding(
+                    padding:
+                    EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Dados de Partida",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: 10),
                 child: TextField(
                   controller: _departureAddressController,
                   keyboardType: TextInputType.text,
@@ -131,7 +144,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
                         padding:
                             EdgeInsets.only(top: 20, right: 10, bottom: 10),
                         child: Text(
-                          "Data de saída*",
+                          "Data *",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -139,9 +152,13 @@ class _RideRegister_4State extends State<RideRegister_4> {
                         padding: EdgeInsets.only(right: 10),
                         child: TextField(
                           controller: _departureDateController,
+                          readOnly: true,
                           keyboardType: TextInputType.datetime,
                           focusNode: _departureDateFocus,
                           textAlign: TextAlign.center,
+                          onTap: () {
+                            _pickDepartureDate();
+                          },
                           inputFormatters: [dateFormat],
                           decoration: InputDecoration(
                               contentPadding:
@@ -171,6 +188,10 @@ class _RideRegister_4State extends State<RideRegister_4> {
                         padding: EdgeInsets.only(right: 10),
                         child: TextField(
                           controller: _departureTimeController,
+                          readOnly: true,
+                          onTap: () {
+                            _pickDepartureTime();
+                          },
                           keyboardType: TextInputType.datetime,
                           focusNode: _departureTimeFocus,
                           textAlign: TextAlign.center,
@@ -189,8 +210,20 @@ class _RideRegister_4State extends State<RideRegister_4> {
                   )),
                 ],
               ),
+              Row(
+                children: [
+                  Padding(
+                    padding:
+                    EdgeInsets.only(top: 40),
+                    child: Text(
+                      "Dados de Retorno",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
               Padding(
-                padding: EdgeInsets.only(top: 50),
+                padding: EdgeInsets.only(top: 10),
                 child: TextField(
                   controller: _returnAddressController,
                   keyboardType: TextInputType.text,
@@ -234,6 +267,10 @@ class _RideRegister_4State extends State<RideRegister_4> {
                         padding: EdgeInsets.only(right: 10),
                         child: TextField(
                           controller: _returnDateController,
+                          readOnly: true,
+                          onTap: () {
+                            _pickReturnDate();
+                          },
                           keyboardType: TextInputType.datetime,
                           focusNode: _returnDateFocus,
                           textAlign: TextAlign.center,
@@ -266,6 +303,10 @@ class _RideRegister_4State extends State<RideRegister_4> {
                         padding: EdgeInsets.only(right: 10),
                         child: TextField(
                           controller: _returnTimeController,
+                          readOnly: true,
+                          onTap: () {
+                            _pickReturnTime();
+                          },
                           keyboardType: TextInputType.datetime,
                           focusNode: _returnTimeFocus,
                           textAlign: TextAlign.center,
@@ -378,4 +419,85 @@ class _RideRegister_4State extends State<RideRegister_4> {
   }
 
   void _changeReturnLabels() {}
+
+  void _pickDepartureDate() {
+    DateTime dateNow = DateTime.now();
+
+    if (Utils.hasValue(_departureDateController.text))
+      dateNow = Utils.getDateTimeFromString(_departureDateController.text);
+
+    showDatePicker(
+            context: context,
+            initialDate: dateNow,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(3000))
+        .then((value) => {checkDates(value), _checkTimes()});
+  }
+
+  void _pickReturnDate() {
+    DateTime dateNow =
+        Utils.getDateTimeFromString(_departureDateController.text);
+
+    if (Utils.hasValue(_returnDateController.text))
+      dateNow = Utils.getDateTimeFromString(_returnDateController.text);
+
+    showDatePicker(
+            context: context,
+            initialDate: dateNow,
+            firstDate:
+                Utils.getDateTimeFromString(_departureDateController.text),
+            lastDate: DateTime(3000))
+        .then((value) => {
+              _returnDateController.text = Utils.getFormatedStringFromDateTime(
+                  value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!,
+              _checkTimes()
+            });
+  }
+
+  checkDates(DateTime? value) {
+    print("definindo valores");
+    _departureDateController.text = Utils.getFormatedStringFromDateTime(
+        value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!;
+
+    DateTime endDate = Utils.getDateTimeFromString(_returnDateController.text);
+
+    if (value.millisecondsSinceEpoch > endDate.millisecondsSinceEpoch) {
+      _returnDateController.text = "";
+    }
+  }
+
+  void _pickDepartureTime() {
+    TimeOfDay time = TimeOfDay.now();
+
+    showTimePicker(context: context, initialTime: time).then((value) => {
+          _departureTimeController.text =
+              Utils.getStringTimeFromInts(value!.hour, value.minute),
+          _checkTimes()
+        });
+  }
+
+  void _pickReturnTime() {
+    TimeOfDay time = TimeOfDay.now();
+
+    showTimePicker(context: context, initialTime: time).then((value) => {
+          _returnTimeController.text =
+              Utils.getStringTimeFromInts(value!.hour, value.minute),
+          _checkTimes()
+        });
+  }
+
+  _checkTimes() {
+    if (Utils.hasValue(_departureDateController.text) &&
+        Utils.hasValue(_departureTimeController.text) &&
+        Utils.hasValue(_returnDateController.text) &&
+        Utils.hasValue(_returnTimeController.text)) {
+      if (!Utils.isReturnDateValid(
+          _departureDateController.text,
+          _departureTimeController.text,
+          _returnDateController.text,
+          _returnTimeController.text)) {
+        _returnTimeController.text = "";
+      }
+    }
+  }
 }

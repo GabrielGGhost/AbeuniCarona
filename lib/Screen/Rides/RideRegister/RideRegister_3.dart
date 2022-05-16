@@ -60,11 +60,11 @@ class _RideRegister_3State extends State<RideRegister_3> {
               ),
               Divider(),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: 0),
                 child: Row(
                   children: [
                     Text(
-                      "Cor:: ",
+                      "Cor: ",
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),

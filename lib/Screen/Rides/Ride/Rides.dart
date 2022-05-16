@@ -24,7 +24,7 @@ class _RidesState extends State<Rides> {
 
   String? _idLoggedUser;
 
-  Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
+  Stream<QuerySnapshot>? _addListenerRides() {
     final baseEvents = db.collection(DbData.TABLE_RIDE).snapshots();
 
     baseEvents.listen((data) {
@@ -34,7 +34,7 @@ class _RidesState extends State<Rides> {
 
   @override
   void initState() {
-    _addListenerBorrowedVehicles();
+    _addListenerRides();
     _getUserData();
     super.initState();
   }
@@ -89,7 +89,8 @@ class _RidesState extends State<Rides> {
                                           query.docs.toList();
 
                                       DocumentSnapshot ride = rides[index];
-
+                                      print("EXIBINDO");
+                                      print(ride.toString());
                                       bool edit =
                                           ride[DbData.COLUMN_DRIVER_ID] !=
                                                   null &&
@@ -107,16 +108,38 @@ class _RidesState extends State<Rides> {
                                               children: [
                                                 Row(
                                                   children: [
-                                                    Text(
-                                                      ride[
-                                                          DbData
-                                                              .COLUMN_EVENT][DbData
-                                                          .COLUMN_EVENT_DESC_BASE_EVENT],
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 18),
-                                                    ),
+                                                    FutureBuilder(
+                                                        future: getBaseEventName(ride[
+                                                            DbData
+                                                                .COLUMN_EVENT][DbData
+                                                            .COLUMN_COD_BASE_EVENT]),
+                                                        builder: (_, snapshot) {
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                                "Erro ao carregar dados",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .grey));
+                                                          } else if (!snapshot
+                                                              .hasData) {
+                                                            return Text(
+                                                                "Evento Excluído");
+                                                          } else {
+                                                            return Text(
+                                                              snapshot.data
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18),
+                                                            );
+                                                          }
+                                                        }),
                                                   ],
                                                 ),
                                                 Row(
@@ -185,11 +208,38 @@ class _RidesState extends State<Rides> {
                                                 Row(
                                                   children: [
                                                     Text("Motorista: "),
-                                                    Text(
-                                                      ride[DbData
-                                                          .COLUMN_DRIVER_NAME],
-                                                      style: TextStyle(
-                                                          color: APP_SUB_TEXT),
+                                                    FutureBuilder(
+                                                      future: getUserName(
+                                                          ride[DbData
+                                                              .COLUMN_DRIVER_ID]),
+                                                      builder: (context,
+                                                          snapshot) {
+                                                        if (!snapshot
+                                                            .hasData) {
+                                                          return Text(
+                                                            ride[DbData
+                                                                .COLUMN_DRIVER_NAME],
+                                                            style: TextStyle(
+                                                                color: APP_SUB_TEXT),
+                                                          );
+                                                        } else if (snapshot
+                                                            .hasError) {
+                                                          return Text(
+                                                              snapshot.error
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .bold));
+                                                        } else {
+                                                          return Text(
+                                                              snapshot.data
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey));
+                                                        }
+                                                      },
                                                     )
                                                   ],
                                                 ),
@@ -341,7 +391,7 @@ class _RidesState extends State<Rides> {
                                                   arguments: ride);
                                             }
 
-                                            _addListenerBorrowedVehicles();
+                                            _addListenerRides();
                                           },
                                         ),
                                         confirmDismiss: (d) async {
@@ -539,5 +589,20 @@ class _RidesState extends State<Rides> {
     }
 
     return totalReservedLuggages;
+  }
+
+  Future<String?> getBaseEventName(codBaseEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_BASE_EVENT).doc(codBaseEvent).get();
+
+    final data = result.data() as Map;
+
+    return data[DbData.COLUMN_NAME];
+  }
+
+  Future<String> getUserName(String driverId) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final result = await db.collection(DbData.TABLE_USER).doc(driverId).get();
+    return result[DbData.COLUMN_USERNAME] + " [ " + result[DbData.COLUMN_NICKNAME] + " ]";
   }
 }

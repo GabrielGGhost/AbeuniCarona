@@ -7,10 +7,9 @@ import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class Scheduling extends StatefulWidget {
   DocumentSnapshot ride;
@@ -31,6 +30,8 @@ class _SchedulingState extends State<Scheduling> {
   int editLuggages = 0;
   bool loadedSchedule = false;
   String _uid = "";
+  Timestamp? _registeredDate;
+
   TextEditingController _controllerSeats = TextEditingController();
   TextEditingController _controllerLuggages = TextEditingController();
 
@@ -59,8 +60,9 @@ class _SchedulingState extends State<Scheduling> {
   @override
   Widget build(BuildContext context) {
     ride.docToRide(widget.ride);
-    totalAvaliableSeats = int.parse(ride.vehicle.seats);
-    totalAvaliableLuggages = int.parse(ride.vehicle.luggageSpaces);
+    totalAvaliableSeats = int.parse(Utils.getSafeNumber(ride.vehicle.seats));
+    totalAvaliableLuggages =
+        int.parse(Utils.getSafeNumber(ride.vehicle.luggageSpaces));
     edit = false;
     return Scaffold(
       appBar: AppBar(
@@ -115,9 +117,13 @@ class _SchedulingState extends State<Scheduling> {
                           ),
                           children: [
                         TextSpan(
-                            text: ride.event.dateEventStart.toString() +
+                            text: Utils.getStringDateFromTimestamp(
+                                    ride.event.dateEventStart,
+                                    cDate.FORMAT_SLASH_DD_MM_YYYY)! +
                                 " - " +
-                                ride.event.dateEventEnd.toString(),
+                                Utils.getStringDateFromTimestamp(
+                                    ride.event.dateEventEnd,
+                                    cDate.FORMAT_SLASH_DD_MM_YYYY)!,
                             style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 color: Colors.grey))
@@ -300,8 +306,8 @@ class _SchedulingState extends State<Scheduling> {
                   FutureBuilder(
                       future: findAllSchedulingLuggagesByRide(ride),
                       builder: (_, snapshot) {
-                        int totalLuggages =
-                            int.parse(ride.vehicle.luggageSpaces);
+                        int totalLuggages = int.parse(
+                            Utils.getSafeNumber(ride.vehicle.luggageSpaces));
 
                         if (snapshot.hasError) {
                           return Text("Carregando...",
@@ -361,6 +367,7 @@ class _SchedulingState extends State<Scheduling> {
                             totalAvaliableLuggages += editLuggages;
 
                             _uid = result[DbData.COLUMN_UID];
+                            _registeredDate = result[DbData.COLUMN_REGISTRATION_DATE];
                             return Column(
                               children: [
                                 Padding(
@@ -641,13 +648,15 @@ class _SchedulingState extends State<Scheduling> {
       scheduling.uid = _uid;
 
       if (edit) {
+        scheduling.registrationDate =  _registeredDate!;
         update(scheduling);
         Utils.showToast("Atualizado", APP_SUCCESS_BACKGROUND);
       } else {
-        eSchedulingHistory hist = eSchedulingHistory.full(cSituation.RIDE_IN_PROGRESS, scheduling.rideId, _idLoggedUser);
+        eSchedulingHistory hist = eSchedulingHistory.full(
+            cSituation.RIDE_IN_PROGRESS, scheduling.rideId, _idLoggedUser);
 
         insertHistory(hist);
-        scheduling.registrationDate = Utils.getDateTimeNow()!;
+        scheduling.registrationDate = Timestamp.now();
         insert(scheduling);
         Utils.showToast("Registrado", APP_SUCCESS_BACKGROUND);
       }
@@ -669,7 +678,7 @@ class _SchedulingState extends State<Scheduling> {
       return false;
     }
 
-    if (totalAvaliableLuggages == 0 && _controllerLuggages.text != "0") {
+    if (totalAvaliableLuggages == 0 && (_controllerLuggages.text != "0" || _controllerLuggages.text.length == 0)) {
       Utils.showDialogBox("Bagagens lotadas!", context);
       _focusSeats!.requestFocus();
       return false;
@@ -761,7 +770,8 @@ class _SchedulingState extends State<Scheduling> {
       finalResult = {
         DbData.COLUMN_RESERVED_SEATS: seats.toString(),
         DbData.COLUMN_RESERVED_LUGGAGES: luggages.toString(),
-        DbData.COLUMN_UID: schedule.id
+        DbData.COLUMN_UID: schedule.id,
+        DbData.COLUMN_REGISTRATION_DATE: schedule[DbData.COLUMN_REGISTRATION_DATE]
       };
       break;
     }
@@ -771,6 +781,5 @@ class _SchedulingState extends State<Scheduling> {
 
   void insertHistory(eSchedulingHistory scheduling) {
     db.collection(DbData.TABLE_SCHEDULING_HISTORY).add(scheduling.toMap());
-
   }
 }
