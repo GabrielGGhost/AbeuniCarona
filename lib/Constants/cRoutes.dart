@@ -29,5 +29,5 @@ class cRoutes {
   static const RIDES = "rides";
   static const PARTAKER = "partaker";
   static const SCHEDULING = "scheduling";
-
+  static const SCHEDULING_HISTORY = "scheduling_history";
 }

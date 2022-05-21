@@ -4,6 +4,7 @@ import 'package:abeuni_carona/Screen/Events/Events/EventRegister.dart';
 import 'package:abeuni_carona/Screen/Events/Events/Events.dart';
 import 'package:abeuni_carona/Screen/Events/baseEvents/EventBase.dart';
 import 'package:abeuni_carona/Screen/Permission/Permission.dart';
+import 'package:abeuni_carona/Screen/Rides/History/History.dart';
 import 'package:abeuni_carona/Screen/Rides/Scheduling/Scheduling.dart';
 import 'package:abeuni_carona/Screen/Users/Perfil/userPerfil.dart';
 import 'package:abeuni_carona/Screen/Users/Register/RegisterUserPassword.dart';
@@ -149,6 +150,9 @@ class RouteGenerator {
       case cRoutes.SCHEDULING:
         return MaterialPageRoute(
             builder: (_) => Scheduling(args as DocumentSnapshot));
+      case cRoutes.SCHEDULING_HISTORY:
+        return MaterialPageRoute(
+            builder: (_) => History());
       default:
         _routeNotFound();
     }

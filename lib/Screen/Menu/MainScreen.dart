@@ -150,7 +150,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                     ),
                   ),
                   leading: Icon(Icons.watch_later_outlined),
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.pushNamed(context, cRoutes.SCHEDULING_HISTORY);
+                  },
                   subtitle: Text("Registro de suas viagens"),
                   horizontalTitleGap: 1,
                 ),

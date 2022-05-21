@@ -655,6 +655,7 @@ class _SchedulingState extends State<Scheduling> {
         eSchedulingHistory hist = eSchedulingHistory.full(
             cSituation.RIDE_IN_PROGRESS, scheduling.rideId, _idLoggedUser);
 
+        hist.registerDate = Timestamp.now();
         insertHistory(hist);
         scheduling.registrationDate = Timestamp.now();
         insert(scheduling);
