@@ -1,7 +1,10 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -16,6 +19,8 @@ class RideRegister_4 extends StatefulWidget {
   @override
   _RideRegister_4State createState() => _RideRegister_4State();
 }
+
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 class _RideRegister_4State extends State<RideRegister_4> {
   var timeFormat = new MaskTextInputFormatter(mask: '##:##');
@@ -59,10 +64,6 @@ class _RideRegister_4State extends State<RideRegister_4> {
     _returnTimeFocus!.dispose();
   }
 
-  //Labels de retorno
-  String lblDateReturn = "Data de retorno";
-  String lblTimeReturn = "Horário de retorno";
-
   @override
   Widget build(BuildContext context) {
     eRide? ride = widget.ride;
@@ -87,28 +88,41 @@ class _RideRegister_4State extends State<RideRegister_4> {
           padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: RichText(
-                  text: TextSpan(
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                      children: [
-                        TextSpan(
-                          text: "Localização do evento: ",
+              Row(
+                children: [
+                  Expanded(child: FutureBuilder(
+                    future: findEventByID(ride.codEvent),
+                      builder: (_, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text("Erro ao carregar dados",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                            text: ride.event.location,
-                            style: TextStyle(color: Colors.grey))
-                      ]),
-                ),
+                              fontWeight: FontWeight.bold, color: Colors.grey));
+                    } else if (!snapshot.hasData) {
+                      return Text("Evento Excluído");
+                    } else {
+                      eEvent event = snapshot.data as eEvent;
+                      return RichText(
+                        text: TextSpan(
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                            children: [
+                              TextSpan(
+                                text: "Localização do evento: ",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                  text: event.location,
+                                  style: TextStyle(color: Colors.grey))
+                            ]),
+                      );
+                    }
+                  }))
+                ],
               ),
               Row(
                 children: [
                   Padding(
-                    padding:
-                    EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.only(top: 20),
                     child: Text(
                       "Dados de Partida",
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -122,7 +136,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
                   controller: _departureAddressController,
                   keyboardType: TextInputType.text,
                   focusNode: _departureAddressFocus,
-                  textCapitalization: TextCapitalization.sentences,
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: "Localização de partida*",
@@ -138,83 +152,68 @@ class _RideRegister_4State extends State<RideRegister_4> {
                 children: [
                   Expanded(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 20, right: 10, bottom: 10),
-                        child: Text(
-                          "Data *",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          controller: _departureDateController,
-                          readOnly: true,
-                          keyboardType: TextInputType.datetime,
-                          focusNode: _departureDateFocus,
-                          textAlign: TextAlign.center,
-                          onTap: () {
-                            _pickDepartureDate();
-                          },
-                          inputFormatters: [dateFormat],
-                          decoration: InputDecoration(
-                              contentPadding:
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10, top: 10),
+                            child: TextField(
+                              controller: _departureDateController,
+                              readOnly: true,
+                              keyboardType: TextInputType.datetime,
+                              focusNode: _departureDateFocus,
+                              textAlign: TextAlign.center,
+                              onTap: () {
+                                _pickDepartureDate();
+                              },
+                              inputFormatters: [dateFormat],
+                              decoration: InputDecoration(
+                                  contentPadding:
                                   EdgeInsets.fromLTRB(32, 16, 32, 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      cStyles.RADIUS_BORDER_TEXT_FIELD))),
-                        ),
-                      ),
-                    ],
-                  )),
+                                  filled: true,
+                                  hintText: "Data",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                            ),
+                          ),
+                        ],
+                      )),
                   Expanded(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 20, right: 10, bottom: 10),
-                        child: Text(
-                          "Horário de saída*",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          controller: _departureTimeController,
-                          readOnly: true,
-                          onTap: () {
-                            _pickDepartureTime();
-                          },
-                          keyboardType: TextInputType.datetime,
-                          focusNode: _departureTimeFocus,
-                          textAlign: TextAlign.center,
-                          inputFormatters: [timeFormat],
-                          decoration: InputDecoration(
-                              contentPadding:
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10, top: 10),
+                            child: TextField(
+                              controller: _departureTimeController,
+                              readOnly: true,
+                              onTap: () {
+                                _pickDepartureTime();
+                              },
+                              keyboardType: TextInputType.datetime,
+                              focusNode: _departureTimeFocus,
+                              textAlign: TextAlign.center,
+                              inputFormatters: [timeFormat],
+                              decoration: InputDecoration(
+                                  contentPadding:
                                   EdgeInsets.fromLTRB(32, 16, 32, 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      cStyles.RADIUS_BORDER_TEXT_FIELD))),
-                        ),
-                      ),
-                    ],
-                  )),
+                                  filled: true,
+                                  hintText: "Horário",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                            ),
+                          ),
+                        ],
+                      )),
                 ],
               ),
               Row(
                 children: [
                   Padding(
-                    padding:
-                    EdgeInsets.only(top: 40),
+                    padding: EdgeInsets.only(top: 40),
                     child: Text(
                       "Dados de Retorno",
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -228,16 +227,7 @@ class _RideRegister_4State extends State<RideRegister_4> {
                   controller: _returnAddressController,
                   keyboardType: TextInputType.text,
                   focusNode: _returnAddressFocus,
-                  textCapitalization: TextCapitalization.sentences,
-                  onChanged: (valor) {
-                    if (valor.isEmpty) {
-                      lblDateReturn = "Data de retorno";
-                      lblTimeReturn = "Horário de retorno";
-                    } else {
-                      lblDateReturn = "Data de retorno*";
-                      lblTimeReturn = "Horário de retorno*";
-                    }
-                  },
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                       hintText: "Localização de retorno",
@@ -253,76 +243,62 @@ class _RideRegister_4State extends State<RideRegister_4> {
                 children: [
                   Expanded(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 20, right: 10, bottom: 10),
-                        child: Text(
-                          lblDateReturn,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          controller: _returnDateController,
-                          readOnly: true,
-                          onTap: () {
-                            _pickReturnDate();
-                          },
-                          keyboardType: TextInputType.datetime,
-                          focusNode: _returnDateFocus,
-                          textAlign: TextAlign.center,
-                          inputFormatters: [dateFormat],
-                          decoration: InputDecoration(
-                              contentPadding:
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10, top: 10),
+                            child: TextField(
+                              controller: _returnDateController,
+                              readOnly: true,
+                              onTap: () {
+                                _pickReturnDate();
+                              },
+                              keyboardType: TextInputType.datetime,
+                              focusNode: _returnDateFocus,
+                              textAlign: TextAlign.center,
+                              inputFormatters: [dateFormat],
+                              decoration: InputDecoration(
+                                  contentPadding:
                                   EdgeInsets.fromLTRB(32, 16, 32, 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      cStyles.RADIUS_BORDER_TEXT_FIELD))),
-                        ),
-                      ),
-                    ],
-                  )),
+                                  filled: true,
+                                  hintText: "Data",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                            ),
+                          ),
+                        ],
+                      )),
                   Expanded(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 20, right: 10, bottom: 10),
-                        child: Text(
-                          lblTimeReturn,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          controller: _returnTimeController,
-                          readOnly: true,
-                          onTap: () {
-                            _pickReturnTime();
-                          },
-                          keyboardType: TextInputType.datetime,
-                          focusNode: _returnTimeFocus,
-                          textAlign: TextAlign.center,
-                          inputFormatters: [timeFormat],
-                          decoration: InputDecoration(
-                              contentPadding:
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10, top: 10),
+                            child: TextField(
+                              controller: _returnTimeController,
+                              readOnly: true,
+                              onTap: () {
+                                _pickReturnTime();
+                              },
+                              keyboardType: TextInputType.datetime,
+                              focusNode: _returnTimeFocus,
+                              textAlign: TextAlign.center,
+                              inputFormatters: [timeFormat],
+                              decoration: InputDecoration(
+                                  contentPadding:
                                   EdgeInsets.fromLTRB(32, 16, 32, 16),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      cStyles.RADIUS_BORDER_TEXT_FIELD))),
-                        ),
-                      ),
-                    ],
-                  )),
+                                  filled: true,
+                                  hintText: "Horário",
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                            ),
+                          ),
+                        ],
+                      )),
                 ],
               )
             ],
@@ -499,5 +475,13 @@ class _RideRegister_4State extends State<RideRegister_4> {
         _returnTimeController.text = "";
       }
     }
+  }
+
+  Future<eEvent> findEventByID(codEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_EVENT).doc(codEvent).get();
+
+    eEvent event = eEvent.doc(result);
+    return event;
   }
 }

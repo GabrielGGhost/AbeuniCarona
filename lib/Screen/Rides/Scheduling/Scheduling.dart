@@ -1,8 +1,10 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cSituation.dart';
+import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Entity/eScheduling.dart';
 import 'package:abeuni_carona/Entity/eSchedulingHistory.dart';
+import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,539 +62,621 @@ class _SchedulingState extends State<Scheduling> {
   @override
   Widget build(BuildContext context) {
     ride.docToRide(widget.ride);
-    totalAvaliableSeats = int.parse(Utils.getSafeNumber(ride.vehicle.seats));
-    totalAvaliableLuggages =
-        int.parse(Utils.getSafeNumber(ride.vehicle.luggageSpaces));
+    totalAvaliableSeats = ride.qttSeats;
+    totalAvaliableLuggages = ride.qttLuggages;
     edit = false;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Agendamento"),
-        backgroundColor: APP_BAR_BACKGROUND_COLOR,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
+        appBar: AppBar(
+          title: Text("Agendamento"),
+          backgroundColor: APP_BAR_BACKGROUND_COLOR,
+        ),
+        body: SingleChildScrollView(
+            child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Detalhes do Evento ",
+              children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Detalhes do Evento ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: FutureBuilder(
+                        future: findEventByID(ride.codEvent),
+                        builder: (_, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Erro ao carregar dados",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey));
+                          } else if (!snapshot.hasData) {
+                            return Text("Veículo Excluído");
+                          } else {
+                            eEvent event = snapshot.data as eEvent;
+                            return Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Text.rich(TextSpan(
+                                            text: "Local: ",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                  text: event.location,
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.normal,
+                                                      color: Colors.grey))
+                                            ])))
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Text.rich(TextSpan(
+                                            text: "Data: ",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                  text: Utils.getStringDateFromTimestamp(
+                                                      event.dateEventStart,
+                                                      cDate
+                                                          .FORMAT_SLASH_DD_MM_YYYY)! +
+                                                      " - " +
+                                                      Utils.getStringDateFromTimestamp(
+                                                          event.dateEventEnd,
+                                                          cDate
+                                                              .FORMAT_SLASH_DD_MM_YYYY)!,
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.normal,
+                                                      color: Colors.grey))
+                                            ])))
+                                  ],
+                                ),
+                                event.location != ""
+                                    ? Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Text.rich(TextSpan(
+                                            text: "Obs: ",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                  text: event.obsEvent,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.normal,
+                                                      color: Colors.grey))
+                                            ])))
+                                  ],
+                                )
+                                    : Container(),
+                                Divider(),
+                              ],
+                            );
+                          }
+                        }))
+              ],
+            ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "Detalhes da Carona",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Row(
+                        children: [
+                          Text(
+                            "Motorista: ",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          FutureBuilder(
+                            future: getDriverName(ride.driverId),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return Text("Falha ao buscar motorista",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold));
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString(),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold));
+                              } else {
+                                return Text(snapshot.data.toString(),
+                                    style: TextStyle(color: Colors.grey));
+                              }
+                            },
+                          )
+                        ],
+                      ))
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Text.rich(TextSpan(
+                              text: "Partida: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                            TextSpan(
+                                text: ride.departureAddress,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey))
+                          ])))
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Text.rich(TextSpan(
+                              text: "Data: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                            TextSpan(
+                                text: ride.departureDate +
+                                    " - " +
+                                    ride.departureTime,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey))
+                          ])))
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Text.rich(TextSpan(
+                              text: "Registrado: ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                            TextSpan(
+                                text:
+                                    Utils.getStringDateFromTimestamp(ride.registerDate, cDate.FORMAT_SLASH_DD_MM_YYYY),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey))
+                          ])))
+                    ],
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      "Detalhes do Veículo",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: FutureBuilder(
+                            future: findVehicleByID(ride.codVehicle),
+                            builder: (_, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text("Erro ao carregar dados",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey));
+                              } else if (!snapshot.hasData) {
+                                return Text("Veículo Excluído");
+                              } else {
+                                eVehicle vehicle = snapshot.data as eVehicle;
+                                return Column(children: [
+                                  Row(
+                                    children: [
+                                      Text("Modelo: ",
+                                          style:
+                                          TextStyle(fontWeight: FontWeight.bold)),
+                                      Text(vehicle.model,
+                                          style: TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Cor: ",
+                                          style:
+                                          TextStyle(fontWeight: FontWeight.bold)),
+                                      Text(vehicle.color,
+                                          style: TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Vagas Remanescentes: ",
+                                          style:
+                                          TextStyle(fontWeight: FontWeight.bold)),
+                                      FutureBuilder(
+                                          future: findAllSchedulingSeatsByRide(ride),
+                                          builder: (_, snapshot) {
+                                            int totalSeats = ride.qttSeats;
+
+                                            if (snapshot.hasError) {
+                                              return Text("Carregando...",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.redAccent));
+                                            } else if (!snapshot.hasData) {
+                                              return Text("Carregando...",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.redAccent));
+                                            } else {
+                                              int reservedSeats =
+                                              int.parse(snapshot.data.toString());
+                                              totalAvaliableSeats = totalSeats -
+                                                  reservedSeats +
+                                                  editSeats;
+                                              return Text(
+                                                  totalAvaliableSeats.toString(),
+                                                  style:
+                                                  TextStyle(color: Colors.grey));
+                                            }
+                                          })
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Bagagens Remanescentes: ",
+                                          style:
+                                          TextStyle(fontWeight: FontWeight.bold)),
+                                      FutureBuilder(
+                                          future:
+                                          findAllSchedulingLuggagesByRide(ride),
+                                          builder: (_, snapshot) {
+                                            int totalLuggages = ride.qttLuggages;
+
+                                            if (snapshot.hasError) {
+                                              return Text("Carregando...",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.grey));
+                                            } else if (!snapshot.hasData) {
+                                              return Text("Erro ao carregar dados",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.redAccent));
+                                            } else {
+                                              int reservedLuggages =
+                                              int.parse(snapshot.data.toString());
+                                              totalAvaliableLuggages = totalLuggages -
+                                                  reservedLuggages +
+                                                  editLuggages;
+                                              return Text(
+                                                  totalAvaliableLuggages.toString(),
+                                                  style:
+                                                  TextStyle(color: Colors.grey));
+                                            }
+                                          }),
+                                    ],
+                                  ),
+                                ]);
+                              }
+                            })
+                    )
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Text.rich(TextSpan(
-                          text: "Local: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                        TextSpan(
-                            text: ride.event.location,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey))
-                      ])))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Text.rich(TextSpan(
-                          text: "Data: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                        TextSpan(
-                            text: Utils.getStringDateFromTimestamp(
-                                    ride.event.dateEventStart,
-                                    cDate.FORMAT_SLASH_DD_MM_YYYY)! +
-                                " - " +
-                                Utils.getStringDateFromTimestamp(
-                                    ride.event.dateEventEnd,
-                                    cDate.FORMAT_SLASH_DD_MM_YYYY)!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey))
-                      ])))
-                ],
-              ),
-              ride.event.location != ""
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: Text.rich(TextSpan(
-                                text: "Obs: ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                children: [
-                              TextSpan(
-                                  text: ride.event.obsEvent,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.grey))
-                            ])))
-                      ],
-                    )
-                  : Container(),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Text(
-                  "Detalhes da Carona",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Row(
+                  Divider(),
+                  Column(
                     children: [
-                      Text(
-                        "Motorista: ",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
                       FutureBuilder(
-                        future: getDriverName(ride.driverId),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Text("Falha ao buscar motorista",
-                                style: TextStyle(fontWeight: FontWeight.bold));
-                          } else if (snapshot.hasError) {
-                            return Text(snapshot.error.toString(),
-                                style: TextStyle(fontWeight: FontWeight.bold));
-                          } else {
-                            return Text(snapshot.data.toString(),
-                                style: TextStyle(color: Colors.grey));
-                          }
-                        },
-                      )
-                    ],
-                  ))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Text.rich(TextSpan(
-                          text: "Partida: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                        TextSpan(
-                            text: ride.departureAddress,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey))
-                      ])))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Text.rich(TextSpan(
-                          text: "Data: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                        TextSpan(
-                            text:
-                                ride.departureDate + " - " + ride.departureTime,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey))
-                      ])))
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Text.rich(TextSpan(
-                          text: "Registrado: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                        TextSpan(
-                            text: Utils.getDateTimeUntilNow(ride.registerDate),
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey))
-                      ])))
-                ],
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Text(
-                  "Detalhes do Veículo",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Text("Modelo: ",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(ride.vehicle.model,
-                      style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-              Row(
-                children: [
-                  Text("Cor: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(ride.vehicle.color,
-                      style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-              Row(
-                children: [
-                  Text("Vagas Remanescentes: ",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  FutureBuilder(
-                      future: findAllSchedulingSeatsByRide(ride),
-                      builder: (_, snapshot) {
-                        int totalSeats = int.parse(ride.vehicle.seats);
+                          future: _findRideSchedule(),
+                          builder: (_, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Text("Carregando...",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.redAccent));
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString(),
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold));
+                            } else {
+                              Map<String, dynamic> result =
+                                  snapshot.data as Map<String, dynamic>;
+                              if (result.length > 0) {
+                                edit = true;
+                                editSeats = int.parse(
+                                    result[DbData.COLUMN_RESERVED_SEATS]);
+                                editLuggages = int.parse(
+                                    result[DbData.COLUMN_RESERVED_LUGGAGES]);
+                                _uid = result[DbData.COLUMN_UID];
+                                if (!loadedSchedule) {
+                                  _controllerSeats.text = editSeats.toString();
+                                  _controllerLuggages.text =
+                                      editLuggages.toString();
+                                  loadedSchedule = true;
+                                }
+                                _seatsReserved = _controllerSeats.text;
+                                _lugaggeReserved = _controllerLuggages.text;
 
-                        if (snapshot.hasError) {
-                          return Text("Carregando...",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent));
-                        } else if (!snapshot.hasData) {
-                          return Text("Carregando...",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent));
-                        } else {
-                          int reservedSeats =
-                              int.parse(snapshot.data.toString());
-                          totalAvaliableSeats =
-                              totalSeats - reservedSeats + editSeats;
-                          return Text(totalAvaliableSeats.toString(),
-                              style: TextStyle(color: Colors.grey));
-                        }
-                      })
-                ],
-              ),
-              Row(
-                children: [
-                  Text("Bagagens Remanescentes: ",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  FutureBuilder(
-                      future: findAllSchedulingLuggagesByRide(ride),
-                      builder: (_, snapshot) {
-                        int totalLuggages = int.parse(
-                            Utils.getSafeNumber(ride.vehicle.luggageSpaces));
+                                totalAvaliableSeats += editSeats;
+                                totalAvaliableLuggages += editLuggages;
 
-                        if (snapshot.hasError) {
-                          return Text("Carregando...",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey));
-                        } else if (!snapshot.hasData) {
-                          return Text("Erro ao carregar dados",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent));
-                        } else {
-                          int reservedLuggages =
-                              int.parse(snapshot.data.toString());
-                          totalAvaliableLuggages =
-                              totalLuggages - reservedLuggages + editLuggages;
-                          return Text(totalAvaliableLuggages.toString(),
-                              style: TextStyle(color: Colors.grey));
-                        }
-                      }),
-                ],
-              ),
-              Divider(),
-              Column(
-                children: [
-                  FutureBuilder(
-                      future: _findRideSchedule(),
-                      builder: (_, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Text("Carregando...",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent));
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error.toString(),
-                              style: TextStyle(fontWeight: FontWeight.bold));
-                        } else {
-                          Map<String, dynamic> result =
-                              snapshot.data as Map<String, dynamic>;
-                          if (result.length > 0) {
-                            edit = true;
-                            editSeats =
-                                int.parse(result[DbData.COLUMN_RESERVED_SEATS]);
-                            editLuggages = int.parse(
-                                result[DbData.COLUMN_RESERVED_LUGGAGES]);
-                            _uid = result[DbData.COLUMN_UID];
-                            if (!loadedSchedule) {
-                              _controllerSeats.text = editSeats.toString();
-                              _controllerLuggages.text =
-                                  editLuggages.toString();
-                              loadedSchedule = true;
+                                _uid = result[DbData.COLUMN_UID];
+                                _registeredDate =
+                                    result[DbData.COLUMN_REGISTRATION_DATE];
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Text(
+                                        "Detalhes",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        _seatsReserved == "1"
+                                            ? Text(
+                                                "Reservar $_seatsReserved vaga*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold))
+                                            : Text(
+                                                "Reservar $_seatsReserved vagas*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                        Spacer(),
+                                        Expanded(
+                                            child: Container(
+                                                height: 35,
+                                                child: TextField(
+                                                  controller: _controllerSeats,
+                                                  focusNode: _focusSeats,
+                                                  textAlign: TextAlign.center,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      value = checkMaxSeats(
+                                                          value,
+                                                          totalAvaliableSeats);
+                                                      value =
+                                                          Utils.getSafeNumber(
+                                                              value);
+                                                      _seatsReserved = value;
+                                                    });
+                                                  },
+                                                )))
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        _lugaggeReserved == "1"
+                                            ? Text(
+                                                "Reservar $_lugaggeReserved vaga*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold))
+                                            : Text(
+                                                "Reservar $_lugaggeReserved vagas*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                        Spacer(),
+                                        Expanded(
+                                            child: Container(
+                                                height: 35,
+                                                child: TextField(
+                                                  controller:
+                                                      _controllerLuggages,
+                                                  focusNode: _focusLuggages,
+                                                  textAlign: TextAlign.center,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      value = checkMaxLuggages(
+                                                          value,
+                                                          totalAvaliableLuggages);
+                                                      value =
+                                                          Utils.getSafeNumber(
+                                                              value);
+                                                      _lugaggeReserved = value;
+                                                    });
+                                                  },
+                                                )))
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 20),
+                                          child: ElevatedButton(
+                                            style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    APP_BAR_BACKGROUND_COLOR,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    28, 16, 28, 16),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30))),
+                                            child: Text(
+                                              "Atualizar",
+                                              style: (TextStyle(
+                                                  color: APP_WHITE_FONT,
+                                                  fontSize: 20)),
+                                            ),
+                                            onPressed: () {
+                                              save();
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Text(
+                                        "Detalhes",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        _seatsReserved == "1"
+                                            ? Text(
+                                                "Reservar $_seatsReserved vaga*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold))
+                                            : Text(
+                                                "Reservar $_seatsReserved vagas*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                        Spacer(),
+                                        Expanded(
+                                            child: Container(
+                                                height: 35,
+                                                child: TextField(
+                                                  controller: _controllerSeats,
+                                                  focusNode: _focusSeats,
+                                                  textAlign: TextAlign.center,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      value = checkMaxSeats(
+                                                          value,
+                                                          totalAvaliableSeats);
+                                                      value =
+                                                          Utils.getSafeNumber(
+                                                              value);
+                                                      _seatsReserved = value;
+                                                    });
+                                                  },
+                                                )))
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        _lugaggeReserved == "1"
+                                            ? Text(
+                                                "Reservar $_lugaggeReserved vaga*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold))
+                                            : Text(
+                                                "Reservar $_lugaggeReserved vagas*: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                        Spacer(),
+                                        Expanded(
+                                            child: Container(
+                                                height: 35,
+                                                child: TextField(
+                                                  controller:
+                                                      _controllerLuggages,
+                                                  focusNode: _focusLuggages,
+                                                  textAlign: TextAlign.center,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      value = checkMaxLuggages(
+                                                          value,
+                                                          totalAvaliableLuggages);
+                                                      value =
+                                                          Utils.getSafeNumber(
+                                                              value);
+                                                      _lugaggeReserved = value;
+                                                    });
+                                                  },
+                                                )))
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 20),
+                                          child: ElevatedButton(
+                                            style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    APP_BAR_BACKGROUND_COLOR,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    28, 16, 28, 16),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30))),
+                                            child: Text(
+                                              "Agendar",
+                                              style: (TextStyle(
+                                                  color: APP_WHITE_FONT,
+                                                  fontSize: 20)),
+                                            ),
+                                            onPressed: () {
+                                              save();
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              }
                             }
-                            _seatsReserved = _controllerSeats.text;
-                            _lugaggeReserved = _controllerLuggages.text;
-
-                            totalAvaliableSeats += editSeats;
-                            totalAvaliableLuggages += editLuggages;
-
-                            _uid = result[DbData.COLUMN_UID];
-                            _registeredDate = result[DbData.COLUMN_REGISTRATION_DATE];
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    "Detalhes",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    _seatsReserved == "1"
-                                        ? Text(
-                                            "Reservar $_seatsReserved vaga*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))
-                                        : Text(
-                                            "Reservar $_seatsReserved vagas*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                    Spacer(),
-                                    Expanded(
-                                        child: Container(
-                                            height: 35,
-                                            child: TextField(
-                                              controller: _controllerSeats,
-                                              focusNode: _focusSeats,
-                                              textAlign: TextAlign.center,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  value = checkMaxSeats(value,
-                                                      totalAvaliableSeats);
-                                                  value = Utils.getSafeNumber(
-                                                      value);
-                                                  _seatsReserved = value;
-                                                });
-                                              },
-                                            )))
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    _lugaggeReserved == "1"
-                                        ? Text(
-                                            "Reservar $_lugaggeReserved vaga*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))
-                                        : Text(
-                                            "Reservar $_lugaggeReserved vagas*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                    Spacer(),
-                                    Expanded(
-                                        child: Container(
-                                            height: 35,
-                                            child: TextField(
-                                              controller: _controllerLuggages,
-                                              focusNode: _focusLuggages,
-                                              textAlign: TextAlign.center,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  value = checkMaxLuggages(
-                                                      value,
-                                                      totalAvaliableLuggages);
-                                                  value = Utils.getSafeNumber(
-                                                      value);
-                                                  _lugaggeReserved = value;
-                                                });
-                                              },
-                                            )))
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: ElevatedButton(
-                                        style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                APP_BAR_BACKGROUND_COLOR,
-                                            padding: EdgeInsets.fromLTRB(
-                                                28, 16, 28, 16),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30))),
-                                        child: Text(
-                                          "Atualizar",
-                                          style: (TextStyle(
-                                              color: APP_WHITE_FONT,
-                                              fontSize: 20)),
-                                        ),
-                                        onPressed: () {
-                                          save();
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    "Detalhes",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    _seatsReserved == "1"
-                                        ? Text(
-                                            "Reservar $_seatsReserved vaga*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))
-                                        : Text(
-                                            "Reservar $_seatsReserved vagas*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                    Spacer(),
-                                    Expanded(
-                                        child: Container(
-                                            height: 35,
-                                            child: TextField(
-                                              controller: _controllerSeats,
-                                              focusNode: _focusSeats,
-                                              textAlign: TextAlign.center,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  value = checkMaxSeats(value,
-                                                      totalAvaliableSeats);
-                                                  value = Utils.getSafeNumber(
-                                                      value);
-                                                  _seatsReserved = value;
-                                                });
-                                              },
-                                            )))
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    _lugaggeReserved == "1"
-                                        ? Text(
-                                            "Reservar $_lugaggeReserved vaga*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))
-                                        : Text(
-                                            "Reservar $_lugaggeReserved vagas*: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                    Spacer(),
-                                    Expanded(
-                                        child: Container(
-                                            height: 35,
-                                            child: TextField(
-                                              controller: _controllerLuggages,
-                                              focusNode: _focusLuggages,
-                                              textAlign: TextAlign.center,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  value = checkMaxLuggages(
-                                                      value,
-                                                      totalAvaliableLuggages);
-                                                  value = Utils.getSafeNumber(
-                                                      value);
-                                                  _lugaggeReserved = value;
-                                                });
-                                              },
-                                            )))
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: ElevatedButton(
-                                        style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                APP_BAR_BACKGROUND_COLOR,
-                                            padding: EdgeInsets.fromLTRB(
-                                                28, 16, 28, 16),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30))),
-                                        child: Text(
-                                          "Agendar",
-                                          style: (TextStyle(
-                                              color: APP_WHITE_FONT,
-                                              fontSize: 20)),
-                                        ),
-                                        onPressed: () {
-                                          save();
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            );
-                          }
-                        }
-                      })
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                          })
+                    ],
+                  ),
+          ]),
+        )));
   }
 
   Future<String> getDriverName(String driverId) async {
@@ -648,12 +732,12 @@ class _SchedulingState extends State<Scheduling> {
       scheduling.uid = _uid;
 
       if (edit) {
-        scheduling.registrationDate =  _registeredDate!;
+        scheduling.registrationDate = _registeredDate!;
         update(scheduling);
         Utils.showToast("Atualizado", APP_SUCCESS_BACKGROUND);
       } else {
         eSchedulingHistory hist = eSchedulingHistory.full(
-            cSituation.RIDE_IN_PROGRESS, scheduling.rideId, _idLoggedUser);
+            ride.situation, scheduling.rideId, _idLoggedUser);
 
         hist.registerDate = Timestamp.now();
         insertHistory(hist);
@@ -679,7 +763,9 @@ class _SchedulingState extends State<Scheduling> {
       return false;
     }
 
-    if (totalAvaliableLuggages == 0 && (_controllerLuggages.text != "0" || _controllerLuggages.text.length == 0)) {
+    if (totalAvaliableLuggages == 0 &&
+        (_controllerLuggages.text != "0" ||
+            _controllerLuggages.text.length == 0)) {
       Utils.showDialogBox("Bagagens lotadas!", context);
       _focusSeats!.requestFocus();
       return false;
@@ -695,6 +781,13 @@ class _SchedulingState extends State<Scheduling> {
     if (_seatsReserved == "0") {
       Utils.showDialogBox(
           "As vagas reservadas precisam ser de no mínimo 1!", context);
+      _focusSeats!.requestFocus();
+      return false;
+    }
+
+    if (totalAvaliableLuggages > 0 && int.parse(Utils.getSafeNumber(_controllerLuggages.text)) > totalAvaliableLuggages) {
+      Utils.showDialogBox(
+          "Bagageiro com espaço insuficiente!", context);
       _focusSeats!.requestFocus();
       return false;
     }
@@ -772,7 +865,8 @@ class _SchedulingState extends State<Scheduling> {
         DbData.COLUMN_RESERVED_SEATS: seats.toString(),
         DbData.COLUMN_RESERVED_LUGGAGES: luggages.toString(),
         DbData.COLUMN_UID: schedule.id,
-        DbData.COLUMN_REGISTRATION_DATE: schedule[DbData.COLUMN_REGISTRATION_DATE]
+        DbData.COLUMN_REGISTRATION_DATE:
+            schedule[DbData.COLUMN_REGISTRATION_DATE]
       };
       break;
     }
@@ -782,5 +876,22 @@ class _SchedulingState extends State<Scheduling> {
 
   void insertHistory(eSchedulingHistory scheduling) {
     db.collection(DbData.TABLE_SCHEDULING_HISTORY).add(scheduling.toMap());
+  }
+
+  Future<eEvent> findEventByID(codEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_EVENT).doc(codEvent).get();
+
+    eEvent event = eEvent.doc(result);
+    return event;
+  }
+
+  Future<eVehicle> findVehicleByID(String codVehicle) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_VEHICLE).doc(codVehicle).get();
+
+    eVehicle vehicle = eVehicle.doc(result);
+
+    return vehicle;
   }
 }

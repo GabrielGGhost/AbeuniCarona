@@ -168,8 +168,7 @@ class _HistoryState extends State<History> {
                                                                       .bold),
                                                               children: [
                                                                 TextSpan(
-                                                                    text: ride.event
-                                                                        .location,
+                                                                    text: "",
                                                                     style: TextStyle(
                                                                         color: Colors
                                                                             .grey))
@@ -187,7 +186,7 @@ class _HistoryState extends State<History> {
                                                         ),
                                                         FutureBuilder(
                                                             future: getBaseEventName(
-                                                            ride.event.codBaseEvent),
+                                                            ride.codEvent),
                                                             builder: (_, snapshot) {
                                                               if (snapshot
                                                                   .hasError) {

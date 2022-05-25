@@ -17,7 +17,6 @@ class eEventBase{
   bool get active => _active;
   Timestamp get registerDate => _registerDate!;
 
-
   toMap(){
     return {
       DbData.COLUMN_NAME : this._eventName,

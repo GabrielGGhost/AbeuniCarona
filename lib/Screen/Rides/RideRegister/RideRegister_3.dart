@@ -1,9 +1,11 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'RideRegister_4.dart';
@@ -17,6 +19,8 @@ class RideRegister_3 extends StatefulWidget {
   _RideRegister_3State createState() => _RideRegister_3State();
 }
 
+FirebaseFirestore db = FirebaseFirestore.instance;
+
 class _RideRegister_3State extends State<RideRegister_3> {
   TextEditingController _seatsController = TextEditingController();
   TextEditingController _luggageSpacesController = TextEditingController();
@@ -27,10 +31,9 @@ class _RideRegister_3State extends State<RideRegister_3> {
   Widget build(BuildContext context) {
     ride = widget.ride;
     edit = widget.edit;
-    eVehicle? vehicle = ride.vehicle;
 
-    _seatsController.text = vehicle.seats;
-    _luggageSpacesController.text = vehicle.luggageSpaces;
+    _seatsController.text = ride.qttSeats.toString();
+    _luggageSpacesController.text = ride.qttLuggages.toString();
 
     return Scaffold(
       appBar: AppBar(
@@ -42,57 +45,90 @@ class _RideRegister_3State extends State<RideRegister_3> {
           padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      "Placa: ",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      vehicle.sign,
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
-                    )
-                  ],
-                ),
+              Row(
+                children: [
+                  Expanded(
+                      child: FutureBuilder(
+                          future: findVehicleByID(ride.codVehicle),
+                          builder: (_, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("Erro ao carregar dados",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey));
+                            } else if (!snapshot.hasData) {
+                              return Text("Veículo Excluído");
+                            } else {
+                              Map<String, dynamic> vehicle =
+                              snapshot.data! as Map<String, dynamic>;
+
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 15),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Placa: ",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          vehicle[DbData.COLUMN_SIGN],
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Cor: ",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          vehicle[DbData.COLUMN_COLOR],
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Modelo: ",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          vehicle[DbData.COLUMN_MODEL],
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 18),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(),
+                                ],
+                              );
+                            }
+                          })
+                  ),
+
+                ],
               ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.only(top: 0),
-                child: Row(
-                  children: [
-                    Text(
-                      "Cor: ",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      vehicle.color,
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
-                    )
-                  ],
-                ),
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      "Modelo: ",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      vehicle.model,
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
-                    )
-                  ],
-                ),
-              ),
-              Divider(),
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextField(
@@ -135,7 +171,7 @@ class _RideRegister_3State extends State<RideRegister_3> {
             padding: EdgeInsets.zero,
             child: FloatingActionButton(
               onPressed: () {
-                nextStep(vehicle, ride);
+                nextStep(ride);
               },
               backgroundColor: APP_BAR_BACKGROUND_COLOR,
               child: Icon(
@@ -149,14 +185,22 @@ class _RideRegister_3State extends State<RideRegister_3> {
     );
   }
 
-  void nextStep(eVehicle vehicle, eRide ride) {
-    vehicle.seats = _seatsController.text;
-    vehicle.luggageSpaces = _luggageSpacesController.text;
-
-    ride.vehicle = vehicle;
+  void nextStep(eRide ride) {
+    ride.qttSeats = int.parse(Utils.getSafeNumber(_seatsController.text));
+    ride.qttLuggages =
+        int.parse(Utils.getSafeNumber(_luggageSpacesController.text));
 
     edit
         ? Navigator.pop(context, ride)
         : Navigator.pushNamed(context, cRoutes.REGISTER_RIDE4, arguments: ride);
+  }
+
+  Future<Map<String, dynamic>> findVehicleByID(codVehicle) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_VEHICLE).doc(codVehicle).get();
+
+    final data = result.data() as Map<String, dynamic>;
+
+    return data;
   }
 }

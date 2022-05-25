@@ -5,31 +5,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'eEvent.dart';
 
 class eRide {
+
   String _uid = "";
-  String get uid => _uid;
-  eEvent? _event;
-  eVehicle? _vehicle;
+  String? _codEvent;
+  String? _codVehicle;
   String? _departureAddress;
   String? _returnAddress;
   String? _departureDate;
   String? _returnDate;
   String? _departureTime;
   String? _returnTime;
-  String? _registerDate;
+  Timestamp? _registerDate;
   String? _driverId;
   String? _driverName;
+  int? _qttSeats;
+  int? _qttLuggages;
+  int? _situation;
 
-  eEvent get event => _event!;
-  eVehicle get vehicle => _vehicle!;
+  String get uid => _uid;
+  String get codEvent => _codEvent!;
+  String get codVehicle => _codVehicle!;
   String get departureAddress => _departureAddress!;
   String get returnAddress => _returnAddress!;
   String get departureDate => _departureDate!;
   String get returnDate => _returnDate!;
   String get departureTime => _departureTime!;
   String get returnTime => _returnTime!;
-  String get registerDate => _registerDate!;
+  Timestamp get registerDate => _registerDate!;
   String get driverId => _driverId!;
   String get driverName => _driverName!;
+  int get qttSeats => _qttSeats!;
+  int get qttLuggages => _qttLuggages!;
+  int get situation => _situation!;
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,8 +50,10 @@ class eRide {
       DbData.COLUMN_REGISTRATION_DATE: this.registerDate,
       DbData.COLUMN_DRIVER_ID: this.driverId,
       DbData.COLUMN_DRIVER_NAME: this.driverName,
-      DbData.COLUMN_EVENT: this.event.toMap(),
-      DbData.COLUMN_VEHICLE: this.vehicle.toMap()
+      DbData.COLUMN_COD_EVENT: this.codEvent,
+      DbData.COLUMN_COD_VEHICLE: this.codVehicle,
+      DbData.COLUMN_QTT_SEATS: this.qttSeats,
+      DbData.COLUMN_QTT_LUGGAGES: this.qttLuggages
     };
   }
 
@@ -58,26 +68,26 @@ class eRide {
     this.registerDate = ride[DbData.COLUMN_REGISTRATION_DATE];
     this.driverId = ride[DbData.COLUMN_DRIVER_ID];
     this.driverName = ride[DbData.COLUMN_DRIVER_NAME];
-    this.vehicle = eVehicle.empty();
-    this.vehicle.docToEntity(ride[DbData.COLUMN_VEHICLE]);
-    this.event = eEvent.empty();
-    this.event.docToEntity(ride[DbData.COLUMN_EVENT]);
+    this.codVehicle = ride[DbData.COLUMN_COD_VEHICLE];
+    this.codEvent = ride[DbData.COLUMN_COD_EVENT];
+    this.qttSeats = ride[DbData.COLUMN_QTT_SEATS];
+    this.qttLuggages = ride[DbData.COLUMN_QTT_LUGGAGES];
   }
 
   set uid(String value) {
     _uid = value;
   }
 
+  set codEvent(String value) {
+    _codEvent = value;
+  }
+
+  set codVehicle(String value) {
+    _codVehicle = value;
+  }
+
   set departureAddress(String value) {
     _departureAddress = value;
-  }
-
-  set event(eEvent value) {
-    _event = value;
-  }
-
-  set vehicle(eVehicle value) {
-    _vehicle = value;
   }
 
   set departureDate(String value) {
@@ -96,7 +106,7 @@ class eRide {
     _returnDate = value;
   }
 
-  set registerDate(String value) {
+  set registerDate(Timestamp value) {
     _registerDate = value;
   }
 
@@ -110,5 +120,15 @@ class eRide {
 
   set driverName(String value) {
     _driverName = value;
+  }
+  set qttLuggages(int value) {
+    _qttLuggages = value;
+  }
+
+  set qttSeats(int value) {
+    _qttSeats = value;
+  }
+  set situation(int value) {
+    _situation = value;
   }
 }

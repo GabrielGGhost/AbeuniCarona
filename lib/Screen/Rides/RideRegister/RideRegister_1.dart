@@ -125,96 +125,107 @@ class _RideRegister_1State extends State<RideRegister_1> {
 
                                           return GestureDetector(
                                             child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 15,
-                                                      horizontal: 10),
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          FutureBuilder(
-                                                            future: getBaseEventName(event[DbData
-                                                      .COLUMN_COD_BASE_EVENT]),
-                                                              builder: (_, snapshot){
-                                                                if (snapshot
-                                                                    .hasError) {
-                                                                  return Text(
-                                                                      "Erro ao carregar dados",
-                                                                      style: TextStyle(
-                                                                          fontWeight:
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                    horizontal: 10),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        FutureBuilder(
+                                                            future: getBaseEventName(
+                                                                event[DbData
+                                                                    .COLUMN_COD_BASE_EVENT]),
+                                                            builder:
+                                                                (_, snapshot) {
+                                                              if (snapshot
+                                                                  .hasError) {
+                                                                return Text(
+                                                                    "Erro ao carregar dados",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .grey));
+                                                              } else if (!snapshot
+                                                                  .hasData) {
+                                                                return Text(
+                                                                    "Evento Excluído");
+                                                              } else {
+                                                                return Text(
+                                                                  snapshot.data
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      fontWeight:
                                                                           FontWeight
                                                                               .bold,
-                                                                          color: Colors
-                                                                              .grey));
-                                                                } else if (!snapshot
-                                                                    .hasData) {
-                                                                  return Text("Evento Excluído");
-                                                                } else {
-                                                                  return Text(
-                                                                    snapshot.data
-                                                                        .toString(),
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                        fontSize: 18),
-                                                                  );
-                                                                }
+                                                                      fontSize:
+                                                                          18),
+                                                                );
                                                               }
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 5),
-                                                        child: Row(
-                                                          children: [
-                                                            Expanded(
-                                                                child: Text.rich(TextSpan(
-                                                                    text:
-                                                                        "Local: ",
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                    children: [
-                                                                  TextSpan(
-                                                                      text: event[
-                                                                          DbData
-                                                                              .COLUMN_LOCATION],
-                                                                      style: TextStyle(
-                                                                          color: APP_SUB_TEXT,
-                                                                            fontWeight:
-                                                                            FontWeight.normal),
-                                                                      )
-                                                                ])))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Row(
+                                                            }),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5),
+                                                      child: Row(
                                                         children: [
-                                                          Spacer(),
-                                                          Text(Utils.getStringDateFromTimestamp(event[DbData
-                                                              .COLUMN_START_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 11),
-                                                          ),
-                                                          Text(" - "),
-                                                          Text(
-                                                            Utils.getStringDateFromTimestamp(event[DbData
-                                                                    .COLUMN_END_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!,
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 11),
-                                                          ),
+                                                          Expanded(
+                                                              child: Text.rich(TextSpan(
+                                                                  text:
+                                                                      "Local: ",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                  children: [
+                                                                TextSpan(
+                                                                  text: event[DbData
+                                                                      .COLUMN_LOCATION],
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          APP_SUB_TEXT,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal),
+                                                                )
+                                                              ])))
                                                         ],
                                                       ),
-                                                      Divider()
-                                                    ],
-                                                  )),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Spacer(),
+                                                        Text(
+                                                          Utils.getStringDateFromTimestamp(
+                                                              event[DbData
+                                                                  .COLUMN_START_DATE],
+                                                              cDate
+                                                                  .FORMAT_SLASH_DD_MM_YYYY)!,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 11),
+                                                        ),
+                                                        Text(" - "),
+                                                        Text(
+                                                          Utils.getStringDateFromTimestamp(
+                                                              event[DbData
+                                                                  .COLUMN_END_DATE],
+                                                              cDate
+                                                                  .FORMAT_SLASH_DD_MM_YYYY)!,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 11),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Divider()
+                                                  ],
+                                                )),
                                             onTap: () {
                                               nextStep(event);
                                             },
@@ -246,24 +257,21 @@ class _RideRegister_1State extends State<RideRegister_1> {
                 ))));
   }
 
-  void nextStep(DocumentSnapshot<Object?> event) {
-    eEvent choosenEvent = eEvent.empty();
-    choosenEvent.docToEntity(event);
-
+  void nextStep(DocumentSnapshot event) {
     eRide ride = eRide();
-    ride.event = choosenEvent;
 
     if (edit) {
-      editRide!.event = choosenEvent;
+      editRide!.codEvent = event.id;
       Navigator.pop(context, editRide);
     } else {
+      ride.codEvent = event.id;
       Navigator.pushNamed(context, cRoutes.REGISTER_RIDE2, arguments: ride);
     }
   }
 
   Future<String?> getBaseEventName(codBaseEvent) async {
     DocumentSnapshot result =
-    await db.collection(DbData.TABLE_BASE_EVENT).doc(codBaseEvent).get();
+        await db.collection(DbData.TABLE_BASE_EVENT).doc(codBaseEvent).get();
 
     final data = result.data() as Map;
 

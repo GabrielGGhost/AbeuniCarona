@@ -2,9 +2,11 @@ import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cSituation.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
+import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Entity/eSchedulingHistory.dart';
 import 'package:abeuni_carona/Entity/eUser.dart';
+import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
 import 'package:abeuni_carona/Screen/Rides/RideRegister/RideRegister_2.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
@@ -94,106 +96,107 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                         )
                                       ]),
                                   Row(children: [
-                                    Text("Tipo: ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15)),
-                                    FutureBuilder(
-                                        future: getBaseEventName(
-                                            ride.event.codBaseEvent),
-                                        builder: (_, snapshot) {
-                                          if (snapshot.hasError) {
-                                            return Text(
-                                                "Erro ao carregar dados",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey));
-                                          } else if (!snapshot.hasData) {
-                                            return Text("Evento Excluído");
-                                          } else {
-                                            return Text(
-                                              snapshot.data.toString(),
-                                              style: TextStyle(
-                                                  color: APP_SUB_TEXT),
-                                            );
-                                          }
-                                        }),
-                                  ]),
-                                  Row(children: [
+                                    // Text("Tipo: ",
+                                    //     style: TextStyle(
+                                    //         fontWeight: FontWeight.bold,
+                                    //         fontSize: 15)),
                                     Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          // Note: Styles for TextSpans must be explicitly defined.
-                                          // Child text spans will inherit styles from parent
-                                          style: const TextStyle(
-                                            fontSize: 14.0,
-                                            color: Colors.black,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Localização: ',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: ride.event.location,
-                                                style: TextStyle(
-                                                    color: APP_SUB_TEXT)),
-                                          ],
-                                        ),
-                                      ),
+                                        child: FutureBuilder(
+                                            future: getEvent(
+                                                ride.codEvent),
+                                            builder: (_, snapshot) {
+                                              if (snapshot.hasError) {
+                                                return Text(
+                                                    "Erro ao carregar dados",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.grey));
+                                              } else if (!snapshot.hasData) {
+                                                return Text("Evento Excluído");
+                                              } else {
+                                                eEvent event = snapshot.data as eEvent;
+                                                return Column(
+                                                  children: [
+                                                    Row(children: [
+                                                      Expanded(
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                              style: const TextStyle(
+                                                                fontSize: 14.0,
+                                                                color: Colors.black,
+                                                              ),
+                                                              children: <TextSpan>[
+                                                                TextSpan(
+                                                                    text: 'Localização: ',
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                        FontWeight.bold)),
+                                                                TextSpan(
+                                                                    text: event.location,
+                                                                    style: TextStyle(
+                                                                        color: APP_SUB_TEXT)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                      ),
+                                                    ]),
+                                                    Row(children: [
+                                                      Expanded(
+                                                        child: RichText(
+                                                          text: TextSpan(
+                                                            style: const TextStyle(
+                                                              fontSize: 14.0,
+                                                              color: Colors.black,
+                                                            ),
+                                                            children: <TextSpan>[
+                                                              TextSpan(
+                                                                  text: 'Obs.: ',
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                      FontWeight.bold)),
+                                                              TextSpan(
+                                                                  text: event.obsEvent,
+                                                                  style: TextStyle(
+                                                                      color: APP_SUB_TEXT)),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ]),
+                                                    Row(children: [
+                                                      Expanded(
+                                                        child: RichText(
+                                                          text: TextSpan(
+                                                            style: const TextStyle(
+                                                              fontSize: 14.0,
+                                                              color: Colors.black,
+                                                            ),
+                                                            children: <TextSpan>[
+                                                              TextSpan(
+                                                                  text: Utils.getStringDateFromTimestamp(
+                                                                      event
+                                                                          .dateEventStart,
+                                                                      cDate
+                                                                          .FORMAT_SLASH_DD_MM_YYYY)! +
+                                                                      " - " +
+                                                                      Utils.getStringDateFromTimestamp(
+                                                                          event.dateEventEnd,
+                                                                          cDate
+                                                                              .FORMAT_SLASH_DD_MM_YYYY)!,
+                                                                  style: TextStyle(
+                                                                      color: APP_SUB_TEXT)),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ]),
+                                                  ],
+                                                );
+                                              }
+                                            })
                                     )
-                                  ]),
-                                  Row(children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            fontSize: 14.0,
-                                            color: Colors.black,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'Obs.: ',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextSpan(
-                                                text: ride.event.obsEvent,
-                                                style: TextStyle(
-                                                    color: APP_SUB_TEXT)),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]),
-                                  Row(children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            fontSize: 14.0,
-                                            color: Colors.black,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: Utils.getStringDateFromTimestamp(
-                                                        ride.event
-                                                            .dateEventStart,
-                                                        cDate
-                                                            .FORMAT_SLASH_DD_MM_YYYY)! +
-                                                    " - " +
-                                                    Utils.getStringDateFromTimestamp(
-                                                        ride.event.dateEventEnd,
-                                                        cDate
-                                                            .FORMAT_SLASH_DD_MM_YYYY)!,
-                                                style: TextStyle(
-                                                    color: APP_SUB_TEXT)),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]),
+                                    ,
+                                  ], ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -222,99 +225,142 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                       fontSize: 20),
                                 )
                               ]),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              children: [
-                                Row(children: [
-                                  Text("Placa: ",
+                          FutureBuilder(
+                              future: findVehicleByID(ride.codVehicle),
+                              builder: (_, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text(
+                                      "Erro ao carregar dados",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.vehicle.sign,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                  Spacer(),
-                                  Text("Modelo: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.vehicle.model,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                ]),
-                                Row(children: [
-                                  Text("Cor: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.vehicle.color,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                  Spacer(),
-                                ]),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      child: Text(
-                                        "Alterar",
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            decoration:
-                                                TextDecoration.underline),
-                                      ),
-                                      onTap: () => {_updateVehicle()},
-                                    ),
-                                  ],
-                                ),
-                                Divider(),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                          color: Colors.grey));
+                                } else if (!snapshot.hasData) {
+                                  return Text("Veículo Excluído");
+                                } else {
+                                  eVehicle vehicle = snapshot.data as eVehicle;
+
+                                  return Column(
                                     children: [
-                                      Text(
-                                        "Espaços",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      )
-                                    ]),
-                                Row(children: [
-                                  Text("Assentos: ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15)),
-                                  Text(ride.vehicle.seats,
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 15)),
-                                  Spacer(),
-                                  Row(children: [
-                                    Text("Bagagens: ",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15)),
-                                    Text(ride.vehicle.luggageSpaces,
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 15)),
-                                  ]),
-                                ]),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      child: Text(
-                                        "Alterar",
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            decoration:
-                                                TextDecoration.underline),
+                                      Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Row(children: [
+                                              Text("Placa: ",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold,
+                                                      fontSize: 15)),
+                                              Text(vehicle.sign,
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15)),
+                                              Spacer(),
+                                              Text("Modelo: ",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold,
+                                                      fontSize: 15)),
+                                              Text(vehicle.model,
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15)),
+                                            ]),
+                                            Row(children: [
+                                              Text("Cor: ",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold,
+                                                      fontSize: 15)),
+                                              Text(vehicle.color,
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15)),
+                                              Spacer(),
+                                            ]),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment
+                                                  .center,
+                                              children: [
+                                                GestureDetector(
+                                                  child: Text(
+                                                    "Alterar",
+                                                    style: TextStyle(
+                                                        color: Colors.blue,
+                                                        decoration:
+                                                        TextDecoration
+                                                            .underline),
+                                                  ),
+                                                  onTap: () =>
+                                                  {
+                                                    _updateVehicle()
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(),
+                                            Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .center,
+                                                children: [
+                                                  Text(
+                                                    "Espaços",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight
+                                                            .bold,
+                                                        fontSize: 20),
+                                                  )
+                                                ]),
+                                            Row(children: [
+                                              Text("Assentos: ",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold,
+                                                      fontSize: 15)),
+                                              Text(ride.qttSeats.toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15)),
+                                              Spacer(),
+                                              Row(children: [
+                                                Text("Bagagens: ",
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight
+                                                            .bold,
+                                                        fontSize: 15)),
+                                                Text(ride.qttLuggages.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 15)),
+                                              ]),
+                                            ]),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment
+                                                  .center,
+                                              children: [
+                                                GestureDetector(
+                                                  child: Text(
+                                                    "Alterar",
+                                                    style: TextStyle(
+                                                        color: Colors.blue,
+                                                        decoration:
+                                                        TextDecoration
+                                                            .underline),
+                                                  ),
+                                                  onTap: () =>
+                                                  {
+                                                    _updateVehicleNumbers()
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      onTap: () => {_updateVehicleNumbers()},
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                    ],
+                                  );
+                                }
+                              }
                           ),
                           Divider(),
                           Row(
@@ -566,7 +612,8 @@ class _RideRegister_5State extends State<RideRegister_5> {
       update(ride);
       Navigator.pop(context);
     } else {
-      ride.registerDate = Utils.getDateTimeNow()!;
+      ride.registerDate = Timestamp.now();
+      ride.situation = cSituation.RIDE_WAITING;
       insert(ride);
       Utils.showToast("Cadastrado com sucesso!", APP_SUCCESS_BACKGROUND);
       int count = 0;
@@ -659,5 +706,23 @@ class _RideRegister_5State extends State<RideRegister_5> {
     final data = result.data() as Map;
 
     return data[DbData.COLUMN_NAME];
+  }
+
+  Future<eEvent> getEvent(codBaseEvent) async {
+    DocumentSnapshot result =
+    await db.collection(DbData.TABLE_EVENT).doc(codBaseEvent).get();
+
+    eEvent event = eEvent.doc(result);
+
+    return event;
+  }
+
+  Future<eVehicle> findVehicleByID(String codVehicle) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_VEHICLE).doc(codVehicle).get();
+
+    eVehicle vehicle = eVehicle.doc(result);
+
+    return vehicle;
   }
 }

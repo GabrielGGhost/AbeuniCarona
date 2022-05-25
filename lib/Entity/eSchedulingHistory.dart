@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'eRide.dart';
 
 class eSchedulingHistory {
-  String? _situation;
+  int? _situation;
   String? _rideId;
   String? _userId;
   Timestamp? _registerDate;
@@ -24,7 +24,7 @@ class eSchedulingHistory {
   }
 
   String get rideId => _rideId!;
-  String get situation => _situation!;
+  int get situation => _situation!;
   String get userId => _userId!;
   Timestamp get registerDate => _registerDate!;
 
@@ -36,7 +36,7 @@ class eSchedulingHistory {
     _rideId = value;
   }
 
-  set situation(String value) {
+  set situation(int value) {
     _situation = value;
   }
 

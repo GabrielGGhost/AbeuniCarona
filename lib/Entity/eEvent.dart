@@ -44,6 +44,10 @@ class eEvent {
 
   eEvent.empty();
 
+  eEvent.doc(codEvent){
+    docToEntity(codEvent);
+  }
+
   eEvent(
       this._codEvent,
       this._codBaseEvent,

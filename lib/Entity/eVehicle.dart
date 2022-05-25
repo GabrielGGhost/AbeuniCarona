@@ -30,6 +30,10 @@ class eVehicle {
   eVehicle(this._id, this._sign, this._color, this._model, this._seats,
       this._luggageSpaces, this._registrationDate, this._idOwner, this._active);
 
+  eVehicle.doc(result){
+    docToEntity(result);
+  }
+
   Map<String, dynamic> toMap() {
     return {
       DbData.COLUMN_SIGN: this._sign,

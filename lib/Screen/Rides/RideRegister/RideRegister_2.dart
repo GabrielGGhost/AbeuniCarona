@@ -231,13 +231,15 @@ class _RideRegister_2State extends State<RideRegister_2> {
   }
 
   void nextStep(DocumentSnapshot vehicle, eRide ride, bool edit) {
-    eVehicle? v = eVehicle.empty();
-    v.docToEntity(vehicle);
 
-    ride.vehicle = v;
+    ride.codVehicle = vehicle.id;
 
+    ride.qttSeats =
+        int.parse(Utils.getSafeNumber(vehicle[DbData.COLUMN_SEATS]));
+    ride.qttLuggages =
+        int.parse(Utils.getSafeNumber(vehicle[DbData.COLUMN_LUGGAGE_SPACES]));
     edit
-        ? Navigator.pop(context, {'ride': ride, 'edit': true})
+        ? Navigator.pop(context, ride)
         : Navigator.pushNamed(context, cRoutes.REGISTER_RIDE3,
             arguments: {'ride': ride, 'edit': false});
   }

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
+import 'package:abeuni_carona/Entity/eVehicle.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class Rides extends StatefulWidget {
   @override
@@ -89,8 +92,6 @@ class _RidesState extends State<Rides> {
                                           query.docs.toList();
 
                                       DocumentSnapshot ride = rides[index];
-                                      print("EXIBINDO");
-                                      print(ride.toString());
                                       bool edit =
                                           ride[DbData.COLUMN_DRIVER_ID] !=
                                                   null &&
@@ -109,10 +110,9 @@ class _RidesState extends State<Rides> {
                                                 Row(
                                                   children: [
                                                     FutureBuilder(
-                                                        future: getBaseEventName(ride[
-                                                            DbData
-                                                                .COLUMN_EVENT][DbData
-                                                            .COLUMN_COD_BASE_EVENT]),
+                                                        future: getBaseEventNameFromEvent(
+                                                            ride[DbData
+                                                                .COLUMN_COD_EVENT]),
                                                         builder: (_, snapshot) {
                                                           if (snapshot
                                                               .hasError) {
@@ -127,7 +127,7 @@ class _RidesState extends State<Rides> {
                                                           } else if (!snapshot
                                                               .hasData) {
                                                             return Text(
-                                                                "Evento Excluído");
+                                                                "Evento Base Excluído");
                                                           } else {
                                                             return Text(
                                                               snapshot.data
@@ -145,27 +145,63 @@ class _RidesState extends State<Rides> {
                                                 Row(
                                                   children: [
                                                     Expanded(
-                                                        child: RichText(
-                                                      text: TextSpan(
-                                                        style: const TextStyle(
-                                                          fontSize: 14.0,
-                                                          color: Colors.black,
-                                                        ),
-                                                        children: <TextSpan>[
-                                                          TextSpan(
-                                                              text:
-                                                                  'Localização: '),
-                                                          TextSpan(
-                                                              text: ride[DbData
-                                                                      .COLUMN_EVENT]
-                                                                  [DbData
-                                                                      .COLUMN_LOCATION],
-                                                              style: TextStyle(
-                                                                  color:
-                                                                      APP_SUB_TEXT)),
-                                                        ],
+                                                      child: FutureBuilder(
+                                                        future: findEventByID(
+                                                            ride[DbData
+                                                                .COLUMN_COD_EVENT]),
+                                                        builder: (_, snapshot) {
+                                                          if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                                "Erro ao carregar dados",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .grey));
+                                                          } else if (!snapshot
+                                                              .hasData) {
+                                                            return Text(
+                                                                "Evento Base Excluído");
+                                                          } else {
+                                                            eEvent event =
+                                                                snapshot.data
+                                                                    as eEvent;
+                                                            return Column(
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Expanded(
+                                                                        child:
+                                                                            RichText(
+                                                                      text:
+                                                                          TextSpan(
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                        children: <
+                                                                            TextSpan>[
+                                                                          TextSpan(
+                                                                              text: 'Localização: '),
+                                                                          TextSpan(
+                                                                              text: event.location,
+                                                                              style: TextStyle(color: APP_SUB_TEXT)),
+                                                                        ],
+                                                                      ),
+                                                                    ))
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            );
+                                                          }
+                                                        },
                                                       ),
-                                                    )),
+                                                    ),
                                                   ],
                                                 ),
                                                 Row(
@@ -209,18 +245,18 @@ class _RidesState extends State<Rides> {
                                                   children: [
                                                     Text("Motorista: "),
                                                     FutureBuilder(
-                                                      future: getUserName(
-                                                          ride[DbData
+                                                      future: getUserName(ride[
+                                                          DbData
                                                               .COLUMN_DRIVER_ID]),
-                                                      builder: (context,
-                                                          snapshot) {
-                                                        if (!snapshot
-                                                            .hasData) {
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (!snapshot.hasData) {
                                                           return Text(
                                                             ride[DbData
                                                                 .COLUMN_DRIVER_NAME],
                                                             style: TextStyle(
-                                                                color: APP_SUB_TEXT),
+                                                                color:
+                                                                    APP_SUB_TEXT),
                                                           );
                                                         } else if (snapshot
                                                             .hasError) {
@@ -229,8 +265,8 @@ class _RidesState extends State<Rides> {
                                                                   .toString(),
                                                               style: TextStyle(
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .bold));
+                                                                      FontWeight
+                                                                          .bold));
                                                         } else {
                                                           return Text(
                                                               snapshot.data
@@ -251,12 +287,9 @@ class _RidesState extends State<Rides> {
                                                             findAllSchedulingSeatsByRide(
                                                                 ride.id),
                                                         builder: (_, snapshot) {
-                                                          int totalSeats = int.parse(
-                                                              Utils.getSafeNumber(ride[
-                                                                  DbData
-                                                                      .COLUMN_VEHICLE][DbData
-                                                                  .COLUMN_SEATS]));
-
+                                                          int totalSeats = ride[
+                                                              DbData
+                                                                  .COLUMN_QTT_SEATS];
                                                           if (snapshot
                                                               .hasError) {
                                                             return Text(
@@ -314,12 +347,8 @@ class _RidesState extends State<Rides> {
                                                                 ride.id),
                                                         builder: (_, snapshot) {
                                                           int totalLuggages =
-                                                              int.parse(Utils
-                                                                  .getSafeNumber(ride[
-                                                                      DbData
-                                                                          .COLUMN_VEHICLE][DbData
-                                                                      .COLUMN_LUGGAGE_SPACES]));
-
+                                                              ride[DbData
+                                                                  .COLUMN_QTT_LUGGAGES];
                                                           if (snapshot
                                                               .hasError) {
                                                             return Text(
@@ -370,10 +399,8 @@ class _RidesState extends State<Rides> {
                                                 ),
                                                 Row(
                                                   children: [
-                                                    Text("Registrado há : " +
-                                                        Utils.getDateTimeUntilNow(
-                                                            ride[DbData
-                                                                .COLUMN_REGISTRATION_DATE]))
+                                                    Text("Registrado: " +
+                                                            Utils.getFormattedStringFromTimestamp(ride[DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!)
                                                   ],
                                                 ),
                                                 Divider(),
@@ -600,9 +627,35 @@ class _RidesState extends State<Rides> {
     return data[DbData.COLUMN_NAME];
   }
 
+  Future<String?> getBaseEventNameFromEvent(codEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_EVENT).doc(codEvent).get();
+
+    eEvent event = eEvent.doc(result);
+
+    DocumentSnapshot result2 = await db
+        .collection(DbData.TABLE_BASE_EVENT)
+        .doc(event.codBaseEvent)
+        .get();
+
+    return result2[DbData.COLUMN_NAME];
+  }
+
   Future<String> getUserName(String driverId) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     final result = await db.collection(DbData.TABLE_USER).doc(driverId).get();
-    return result[DbData.COLUMN_USERNAME] + " [ " + result[DbData.COLUMN_NICKNAME] + " ]";
+    return result[DbData.COLUMN_USERNAME] +
+        " [ " +
+        result[DbData.COLUMN_NICKNAME] +
+        " ]";
+  }
+
+  findEventByID(codEvent) async {
+    DocumentSnapshot result =
+        await db.collection(DbData.TABLE_EVENT).doc(codEvent).get();
+
+    eEvent event = eEvent.doc(result);
+
+    return event;
   }
 }
