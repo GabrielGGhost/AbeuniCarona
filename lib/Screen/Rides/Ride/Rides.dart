@@ -28,7 +28,10 @@ class _RidesState extends State<Rides> {
   String? _idLoggedUser;
 
   Stream<QuerySnapshot>? _addListenerRides() {
-    final baseEvents = db.collection(DbData.TABLE_RIDE).snapshots();
+    final baseEvents = db
+        .collection(DbData.TABLE_RIDE)
+        .orderBy(DbData.COLUMN_REGISTRATION_DATE, descending: true)
+        .snapshots();
 
     baseEvents.listen((data) {
       _controllerBaseEvents.add(data);
@@ -400,38 +403,44 @@ class _RidesState extends State<Rides> {
                                                 Row(
                                                   children: [
                                                     Expanded(
-                                                        child:
-                                                        RichText(
-                                                          text:
+                                                        child: RichText(
+                                                      text: TextSpan(
+                                                        style: const TextStyle(
+                                                          fontSize: 14.0,
+                                                          color: Colors.black,
+                                                        ),
+                                                        children: <TextSpan>[
                                                           TextSpan(
-                                                            style:
-                                                            const TextStyle(
-                                                              fontSize:
-                                                              14.0,
-                                                              color:
-                                                              Colors.black,
-                                                            ),
-                                                            children: <
-                                                                TextSpan>[
-                                                              TextSpan(
-                                                                  text: 'Situação: ',
+                                                              text:
+                                                                  'Situação: ',
                                                               style: TextStyle(
-                                                                fontWeight: FontWeight.bold
-                                                              )),
-                                                              TextSpan(
-                                                                  text: Utils.getSituation(ride[DbData.COLUMN_SITUATION]),
-                                                                  style: TextStyle(
-                                                                      fontWeight: FontWeight.bold,
-                                                                      color: APP_SUB_TEXT)),
-                                                            ],
-                                                          ),
-                                                        ))
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          TextSpan(
+                                                              text: Utils
+                                                                  .getSituation(
+                                                                      ride[DbData
+                                                                          .COLUMN_SITUATION]),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color:
+                                                                      APP_SUB_TEXT)),
+                                                        ],
+                                                      ),
+                                                    ))
                                                   ],
                                                 ),
                                                 Row(
                                                   children: [
                                                     Text("Registrado: " +
-                                                            Utils.getFormattedStringFromTimestamp(ride[DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!)
+                                                        Utils.getFormattedStringFromTimestamp(
+                                                            ride[DbData
+                                                                .COLUMN_REGISTRATION_DATE],
+                                                            cDate
+                                                                .FORMAT_SLASH_DD_MM_YYYY)!)
                                                   ],
                                                 ),
                                                 Divider(),
@@ -439,11 +448,21 @@ class _RidesState extends State<Rides> {
                                             ),
                                           ),
                                           onTap: () async {
-                                            if (edit) {
+                                            if (edit &&
+                                                (ride[DbData.COLUMN_SITUATION] ==
+                                                        1 ||
+                                                    ride[DbData
+                                                            .COLUMN_SITUATION] ==
+                                                        3)) {
                                               await Navigator.pushNamed(
                                                   context, cRoutes.PARTAKER,
                                                   arguments: ride);
-                                            } else {
+                                            } else if (!edit &&
+                                                (ride[DbData.COLUMN_SITUATION] ==
+                                                        1 ||
+                                                    ride[DbData
+                                                            .COLUMN_SITUATION] ==
+                                                        3)) {
                                               await Navigator.pushNamed(
                                                   context, cRoutes.SCHEDULING,
                                                   arguments: ride);
@@ -473,90 +492,43 @@ class _RidesState extends State<Rides> {
                                             }
                                             return false;
                                           } else {
-                                            return edit
-                                                ? await showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .confirmarExclusao),
-                                                        content: Text(
-                                                            "Tem certeza que deseja excluir esta carona?"),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                delete(ride.id);
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(true);
-                                                              },
-                                                              child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .tenhoCerteza)),
-                                                          TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop(
-                                                                          false),
-                                                              child: Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(5),
-                                                                child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .cancelar,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color:
-                                                                        APP_MAIN_TEXT,
-                                                                  ),
-                                                                ),
-                                                              )),
-                                                        ],
-                                                      );
-                                                    },
-                                                  )
-                                                : null;
+                                            return null;
                                           }
                                         },
                                         key: Key(ride.id),
                                         background: edit
-                                            ? Container(
-                                                color: APP_EDIT_DISMISS,
-                                                child: Icon(Icons.edit),
-                                                alignment: Alignment.centerLeft,
-                                                padding:
-                                                    EdgeInsets.only(left: 15),
-                                                margin:
-                                                    EdgeInsets.only(bottom: 20),
-                                              )
-                                            : Container(
-                                                color: Colors.blueAccent,
-                                                child: Icon(Icons.timer),
-                                                alignment: Alignment.centerLeft,
-                                                padding:
-                                                    EdgeInsets.only(left: 15),
-                                                margin:
-                                                    EdgeInsets.only(bottom: 20),
-                                              ),
-                                        secondaryBackground: edit
-                                            ? Container(
-                                                color: APP_REMOVE_DISMISS,
-                                                child: Icon(Icons.delete),
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                padding:
-                                                    EdgeInsets.only(right: 15),
-                                                margin:
-                                                    EdgeInsets.only(bottom: 20),
-                                              )
-                                            : Container(),
+                                            ? (ride[DbData.COLUMN_SITUATION] ==
+                                                        1 ||
+                                                    ride[DbData
+                                                            .COLUMN_SITUATION] ==
+                                                        3)
+                                                ? Container(
+                                                    color: APP_EDIT_DISMISS,
+                                                    child: Icon(Icons.edit),
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    padding: EdgeInsets.only(
+                                                        left: 15),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 20),
+                                                  )
+                                                : Container()
+                                            : (ride[DbData.COLUMN_SITUATION] ==
+                                                        1 ||
+                                                    ride[DbData
+                                                            .COLUMN_SITUATION] ==
+                                                        3)
+                                                ? Container(
+                                                    color: Colors.blueAccent,
+                                                    child: Icon(Icons.timer),
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    padding: EdgeInsets.only(
+                                                        left: 15),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 20),
+                                                  )
+                                                : Container(),
                                       );
                                     });
                               } else {
@@ -594,18 +566,6 @@ class _RidesState extends State<Rides> {
         ),
       ),
     );
-  }
-
-  void delete(String id) {
-    try {
-      FirebaseFirestore db = FirebaseFirestore.instance;
-      db.collection(DbData.TABLE_RIDE).doc(id).delete();
-
-      Utils.showToast(
-          AppLocalizations.of(context)!.deletado, APP_SUCCESS_BACKGROUND);
-    } catch (e) {
-      Utils.showToast("Falha ao deletar carona!", APP_ERROR_BACKGROUND);
-    }
   }
 
   void _getUserData() async {

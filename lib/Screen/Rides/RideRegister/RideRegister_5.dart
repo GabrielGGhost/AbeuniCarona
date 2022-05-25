@@ -566,7 +566,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                                     actions: <Widget>[
                                                       TextButton(
                                                           onPressed: () {
-                                                            finishRide();
+                                                            cancelRide();
                                                             Navigator.of(
                                                                     context)
                                                                 .pop(true);
@@ -692,24 +692,14 @@ class _RideRegister_5State extends State<RideRegister_5> {
     db.collection(DbData.TABLE_RIDE).doc(ride.uid).update(ride.toMap());
   }
 
-  void finishRide() {
-    updateScheduleHistory();
+  void cancelRide() {
+    updateScheduleHistory(ride);
+    Utils.showToast("Carona cancelada com sucesso!");
+    Navigator.pop(context);
   }
 
-  void updateScheduleHistory() async {
-    QuerySnapshot<Map<String, dynamic>> result = await db
-        .collection(DbData.TABLE_SCHEDULING_HISTORY)
-        .where(DbData.COLUMN_RIDE_ID, isEqualTo: ride.uid)
-        .get();
-
-    final docs = result.docs;
-    print("CANCELANDO " + docs.length.toString() + " agendamentos");
-    for (var doc in docs) {
-      db
-          .collection(DbData.TABLE_SCHEDULING_HISTORY)
-          .doc(doc.id)
-          .update({DbData.COLUMN_SITUATION: cSituation.RIDE_CANCELLED});
-    }
+  void updateScheduleHistory(eRide ride) async {
+   db.collection(DbData.TABLE_RIDE).doc(ride.uid).update({DbData.COLUMN_SITUATION: cSituation.RIDE_CANCELLED});
   }
 
   Future<String?> getBaseEventName(codBaseEvent) async {
