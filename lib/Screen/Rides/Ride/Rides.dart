@@ -399,6 +399,37 @@ class _RidesState extends State<Rides> {
                                                 ),
                                                 Row(
                                                   children: [
+                                                    Expanded(
+                                                        child:
+                                                        RichText(
+                                                          text:
+                                                          TextSpan(
+                                                            style:
+                                                            const TextStyle(
+                                                              fontSize:
+                                                              14.0,
+                                                              color:
+                                                              Colors.black,
+                                                            ),
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                  text: 'Situação: ',
+                                                              style: TextStyle(
+                                                                fontWeight: FontWeight.bold
+                                                              )),
+                                                              TextSpan(
+                                                                  text: Utils.getSituation(ride[DbData.COLUMN_SITUATION]),
+                                                                  style: TextStyle(
+                                                                      fontWeight: FontWeight.bold,
+                                                                      color: APP_SUB_TEXT)),
+                                                            ],
+                                                          ),
+                                                        ))
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
                                                     Text("Registrado: " +
                                                             Utils.getFormattedStringFromTimestamp(ride[DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!)
                                                   ],

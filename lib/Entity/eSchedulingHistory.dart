@@ -43,5 +43,4 @@ class eSchedulingHistory {
   set registerDate(Timestamp value) {
     _registerDate = value;
   }
-
 }

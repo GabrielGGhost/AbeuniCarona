@@ -53,7 +53,8 @@ class eRide {
       DbData.COLUMN_COD_EVENT: this.codEvent,
       DbData.COLUMN_COD_VEHICLE: this.codVehicle,
       DbData.COLUMN_QTT_SEATS: this.qttSeats,
-      DbData.COLUMN_QTT_LUGGAGES: this.qttLuggages
+      DbData.COLUMN_QTT_LUGGAGES: this.qttLuggages,
+      DbData.COLUMN_SITUATION: this.situation
     };
   }
 
@@ -72,6 +73,7 @@ class eRide {
     this.codEvent = ride[DbData.COLUMN_COD_EVENT];
     this.qttSeats = ride[DbData.COLUMN_QTT_SEATS];
     this.qttLuggages = ride[DbData.COLUMN_QTT_LUGGAGES];
+    this.situation =  ride[DbData.COLUMN_SITUATION];
   }
 
   set uid(String value) {

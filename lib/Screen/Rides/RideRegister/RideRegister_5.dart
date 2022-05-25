@@ -45,7 +45,6 @@ class _RideRegister_5State extends State<RideRegister_5> {
   @override
   Widget build(BuildContext context) {
     ride = widget.ride;
-    print("RIDE AQUI" + ride.toString());
     edit = widget.edit;
     String textButton = "Registrar Carona";
 
@@ -95,108 +94,127 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                               fontSize: 20),
                                         )
                                       ]),
-                                  Row(children: [
-                                    // Text("Tipo: ",
-                                    //     style: TextStyle(
-                                    //         fontWeight: FontWeight.bold,
-                                    //         fontSize: 15)),
-                                    Expanded(
-                                        child: FutureBuilder(
-                                            future: getEvent(
-                                                ride.codEvent),
-                                            builder: (_, snapshot) {
-                                              if (snapshot.hasError) {
-                                                return Text(
-                                                    "Erro ao carregar dados",
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.grey));
-                                              } else if (!snapshot.hasData) {
-                                                return Text("Evento Excluído");
-                                              } else {
-                                                eEvent event = snapshot.data as eEvent;
-                                                return Column(
-                                                  children: [
-                                                    Row(children: [
-                                                      Expanded(
+                                  Row(
+                                    children: [
+                                      // Text("Tipo: ",
+                                      //     style: TextStyle(
+                                      //         fontWeight: FontWeight.bold,
+                                      //         fontSize: 15)),
+                                      Expanded(
+                                          child: FutureBuilder(
+                                              future: getEvent(ride.codEvent),
+                                              builder: (_, snapshot) {
+                                                if (snapshot.hasError) {
+                                                  return Text(
+                                                      "Erro ao carregar dados",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.grey));
+                                                } else if (!snapshot.hasData) {
+                                                  return Text(
+                                                      "Evento Excluído");
+                                                } else {
+                                                  eEvent event =
+                                                      snapshot.data as eEvent;
+                                                  return Column(
+                                                    children: [
+                                                      Row(children: [
+                                                        Expanded(
                                                           child: RichText(
                                                             text: TextSpan(
-                                                              style: const TextStyle(
+                                                              style:
+                                                                  const TextStyle(
                                                                 fontSize: 14.0,
-                                                                color: Colors.black,
+                                                                color: Colors
+                                                                    .black,
                                                               ),
-                                                              children: <TextSpan>[
+                                                              children: <
+                                                                  TextSpan>[
                                                                 TextSpan(
-                                                                    text: 'Localização: ',
+                                                                    text:
+                                                                        'Localização: ',
                                                                     style: TextStyle(
                                                                         fontWeight:
-                                                                        FontWeight.bold)),
+                                                                            FontWeight.bold)),
                                                                 TextSpan(
-                                                                    text: event.location,
+                                                                    text: event
+                                                                        .location,
                                                                     style: TextStyle(
-                                                                        color: APP_SUB_TEXT)),
+                                                                        color:
+                                                                            APP_SUB_TEXT)),
                                                               ],
                                                             ),
                                                           ),
-                                                      ),
-                                                    ]),
-                                                    Row(children: [
-                                                      Expanded(
-                                                        child: RichText(
-                                                          text: TextSpan(
-                                                            style: const TextStyle(
-                                                              fontSize: 14.0,
-                                                              color: Colors.black,
-                                                            ),
-                                                            children: <TextSpan>[
-                                                              TextSpan(
-                                                                  text: 'Obs.: ',
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                      FontWeight.bold)),
-                                                              TextSpan(
-                                                                  text: event.obsEvent,
-                                                                  style: TextStyle(
-                                                                      color: APP_SUB_TEXT)),
-                                                            ],
-                                                          ),
                                                         ),
-                                                      )
-                                                    ]),
-                                                    Row(children: [
-                                                      Expanded(
-                                                        child: RichText(
-                                                          text: TextSpan(
-                                                            style: const TextStyle(
-                                                              fontSize: 14.0,
-                                                              color: Colors.black,
+                                                      ]),
+                                                      Row(children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14.0,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                              children: <
+                                                                  TextSpan>[
+                                                                TextSpan(
+                                                                    text:
+                                                                        'Obs.: ',
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold)),
+                                                                TextSpan(
+                                                                    text: event
+                                                                        .obsEvent,
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            APP_SUB_TEXT)),
+                                                              ],
                                                             ),
-                                                            children: <TextSpan>[
-                                                              TextSpan(
-                                                                  text: Utils.getStringDateFromTimestamp(
-                                                                      event
-                                                                          .dateEventStart,
-                                                                      cDate
-                                                                          .FORMAT_SLASH_DD_MM_YYYY)! +
-                                                                      " - " +
-                                                                      Utils.getStringDateFromTimestamp(
-                                                                          event.dateEventEnd,
-                                                                          cDate
-                                                                              .FORMAT_SLASH_DD_MM_YYYY)!,
-                                                                  style: TextStyle(
-                                                                      color: APP_SUB_TEXT)),
-                                                            ],
                                                           ),
-                                                        ),
-                                                      )
-                                                    ]),
-                                                  ],
-                                                );
-                                              }
-                                            })
-                                    )
-                                    ,
-                                  ], ),
+                                                        )
+                                                      ]),
+                                                      Row(children: [
+                                                        Expanded(
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14.0,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                              children: <
+                                                                  TextSpan>[
+                                                                TextSpan(
+                                                                    text: Utils.getStringDateFromTimestamp(
+                                                                            event
+                                                                                .dateEventStart,
+                                                                            cDate
+                                                                                .FORMAT_SLASH_DD_MM_YYYY)! +
+                                                                        " - " +
+                                                                        Utils.getStringDateFromTimestamp(
+                                                                            event
+                                                                                .dateEventEnd,
+                                                                            cDate
+                                                                                .FORMAT_SLASH_DD_MM_YYYY)!,
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            APP_SUB_TEXT)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ]),
+                                                    ],
+                                                  );
+                                                }
+                                              })),
+                                    ],
+                                  ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -229,8 +247,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                               future: findVehicleByID(ride.codVehicle),
                               builder: (_, snapshot) {
                                 if (snapshot.hasError) {
-                                  return Text(
-                                      "Erro ao carregar dados",
+                                  return Text("Erro ao carregar dados",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey));
@@ -248,8 +265,8 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             Row(children: [
                                               Text("Placa: ",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight
-                                                          .bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15)),
                                               Text(vehicle.sign,
                                                   style: TextStyle(
@@ -258,8 +275,8 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                               Spacer(),
                                               Text("Modelo: ",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight
-                                                          .bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15)),
                                               Text(vehicle.model,
                                                   style: TextStyle(
@@ -269,8 +286,8 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                             Row(children: [
                                               Text("Cor: ",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight
-                                                          .bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15)),
                                               Text(vehicle.color,
                                                   style: TextStyle(
@@ -279,8 +296,8 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                               Spacer(),
                                             ]),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment
-                                                  .center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 GestureDetector(
                                                   child: Text(
@@ -288,34 +305,32 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                                     style: TextStyle(
                                                         color: Colors.blue,
                                                         decoration:
-                                                        TextDecoration
-                                                            .underline),
+                                                            TextDecoration
+                                                                .underline),
                                                   ),
                                                   onTap: () =>
-                                                  {
-                                                    _updateVehicle()
-                                                  },
+                                                      {_updateVehicle()},
                                                 ),
                                               ],
                                             ),
                                             Divider(),
                                             Row(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     "Espaços",
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight
-                                                            .bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         fontSize: 20),
                                                   )
                                                 ]),
                                             Row(children: [
                                               Text("Assentos: ",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight
-                                                          .bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15)),
                                               Text(ride.qttSeats.toString(),
                                                   style: TextStyle(
@@ -325,18 +340,19 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                               Row(children: [
                                                 Text("Bagagens: ",
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight
-                                                            .bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         fontSize: 15)),
-                                                Text(ride.qttLuggages.toString(),
+                                                Text(
+                                                    ride.qttLuggages.toString(),
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontSize: 15)),
                                               ]),
                                             ]),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment
-                                                  .center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 GestureDetector(
                                                   child: Text(
@@ -344,13 +360,11 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                                     style: TextStyle(
                                                         color: Colors.blue,
                                                         decoration:
-                                                        TextDecoration
-                                                            .underline),
+                                                            TextDecoration
+                                                                .underline),
                                                   ),
                                                   onTap: () =>
-                                                  {
-                                                    _updateVehicleNumbers()
-                                                  },
+                                                      {_updateVehicleNumbers()},
                                                 ),
                                               ],
                                             ),
@@ -360,8 +374,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                     ],
                                   );
                                 }
-                              }
-                          ),
+                              }),
                           Divider(),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -710,7 +723,7 @@ class _RideRegister_5State extends State<RideRegister_5> {
 
   Future<eEvent> getEvent(codBaseEvent) async {
     DocumentSnapshot result =
-    await db.collection(DbData.TABLE_EVENT).doc(codBaseEvent).get();
+        await db.collection(DbData.TABLE_EVENT).doc(codBaseEvent).get();
 
     eEvent event = eEvent.doc(result);
 

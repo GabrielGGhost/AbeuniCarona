@@ -368,4 +368,31 @@ class Utils {
 
     return true;
   }
+
+  static String getSituation(int situacao) {
+    String retorno = "Não encontrada";
+
+    switch(situacao){
+      case 0:
+        retorno = "CANCELADO";
+        break;
+      case 1:
+        retorno = "EM AGUARDO";
+        break;
+      case 2:
+          retorno = "EM PROGRESSO";
+          break;
+      case 3:
+        retorno = "NO DESTINO";
+        break;
+      case 4:
+        retorno = "RETORNANDO";
+        break;
+      case 5:
+        retorno = "CONCLUÍDO";
+        break;
+    }
+
+    return retorno;
+  }
 }
