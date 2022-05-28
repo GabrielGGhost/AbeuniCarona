@@ -1,4 +1,5 @@
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:abeuni_carona/Constants/cSituation.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
@@ -6,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class Partaker extends StatefulWidget {
   DocumentSnapshot ride;
@@ -17,10 +19,12 @@ class Partaker extends StatefulWidget {
 
 class _partakerState extends State<Partaker> {
   eRide? ride = eRide();
+
   @override
   Widget build(BuildContext context) {
     ride!.docToRide(widget.ride);
-    print("CARREGANDO BUILD");
+    String? lblButton = getLblButton();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Participantes"),
@@ -32,6 +36,28 @@ class _partakerState extends State<Partaker> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            padding: EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                        child: Text(
+                          lblButton!,
+                          style: (TextStyle(color: Colors.white, fontSize: 20)),
+                        ),
+                        onPressed: () {
+                          nextRideStep();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection(DbData.TABLE_SCHEDULING)
@@ -134,14 +160,14 @@ class _partakerState extends State<Partaker> {
                                           ),
                                           Row(
                                             children: [
-                                              Text("Vagas Reservadas: ",
+                                              Text("Vagas: ",
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold)),
                                               Text(schedule[DbData
                                                   .COLUMN_RESERVED_SEATS]),
                                               Spacer(),
-                                              Text("Bagagens Reservadas: ",
+                                              Text("Bagagens: ",
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold)),
@@ -157,9 +183,11 @@ class _partakerState extends State<Partaker> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text(Utils.getDateTimeUntilNow(
+                                              Text(Utils.getFormattedStringFromTimestamp(
                                                   schedule[DbData
-                                                      .COLUMN_REGISTRATION_DATE]))
+                                                      .COLUMN_REGISTRATION_DATE],
+                                                  cDate
+                                                      .FORMAT_SLASH_DD_MM_YYYY)!)
                                             ],
                                           ),
                                           Divider()
@@ -223,7 +251,29 @@ class _partakerState extends State<Partaker> {
                                 });
                           }
                       }
-                    })
+                    }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ride!.situation == 1
+                        ? ElevatedButton(
+                      style: TextButton.styleFrom(
+                          backgroundColor: APP_ERROR_BACKGROUND,
+                          padding: EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30))),
+                      child: Text(
+                        "Cancelar ",
+                        style: (TextStyle(
+                            color: Colors.white, fontSize: 20)),
+                      ),
+                      onPressed: () {
+                        cancel();
+                      },
+                    )
+                        : Container(),
+                  ],
+                )
               ],
             ),
           ),
@@ -249,4 +299,66 @@ class _partakerState extends State<Partaker> {
       Utils.showToast("Falha ao deletar agendamento!", APP_ERROR_BACKGROUND);
     }
   }
+
+  void nextRideStep() {
+    ride!.situation++;
+    updateRide(ride);
+    String? message = getMessageFromSituation(ride!.situation);
+    Utils.showToast(message!, APP_SUCCESS_BACKGROUND);
+    Navigator.pop(context);
+  }
+
+  String? getLblButton() {
+    int situation = ride!.situation;
+    if (situation == 0) return cSituation.RIDE_CANCELLED_DESC;
+
+    switch (situation) {
+      case 1:
+        return "Iniciar Carona";
+      case 2:
+        return "Finalizar chegada";
+      case 3:
+        return "Iniciar Retorno";
+      case 4:
+        return "Finalizar carona";
+      case 5:
+        return "Finalizado";
+    }
+  }
+
+  void updateRide(eRide? ride) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection(DbData.TABLE_RIDE).doc(ride!.uid).update({DbData.COLUMN_SITUATION: ride.situation});
+  }
+
+  String? getMessageFromSituation(int situation) {
+    int situation = ride!.situation;
+    if (situation == 0) return cSituation.RIDE_CANCELLED_DESC;
+
+    switch (situation) {
+      case 2:
+        return "Carona Iniciada";
+      case 3:
+        return "Chegado ao Destino";
+      case 4:
+        return "Retornando";
+      case 5:
+        return "Carona finalizada";
+    }
+  }
+
+  void cancel() {
+
+    ride!.situation = cSituation.RIDE_CANCELLED;
+    cancelRide(ride);
+    Utils.showToast("Carona cancelada", APP_SUCCESS_BACKGROUND);
+    Navigator.pop(context);
+  }
+
+  void cancelRide(eRide? ride) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection(DbData.TABLE_RIDE).doc(ride!.uid).update({DbData.COLUMN_SITUATION: ride.situation});
+  }
+
+
 }
