@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Constants/cDate.dart';
 
 class MyRides extends StatefulWidget {
   const MyRides({Key? key}) : super(key: key);
@@ -342,9 +343,9 @@ class _MyRidesState extends State<MyRides> {
                                       Row(
                                         children: [
                                           Text("Registrado há : " +
-                                              Utils.getDateTimeUntilNow(ride[
+                                              Utils.getFormattedStringFromTimestamp(ride[
                                                   DbData
-                                                      .COLUMN_REGISTRATION_DATE]))
+                                                      .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY)!)
                                         ],
                                       ),
                                       Divider(),
