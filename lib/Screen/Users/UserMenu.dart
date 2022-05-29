@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:abeuni_carona/Constants/cPermission.dart';
 import 'package:abeuni_carona/Entity/eUser.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
@@ -13,6 +14,9 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'dart:async';
 
 class UserMenu extends StatefulWidget {
+  List<String> permissions;
+  UserMenu(this.permissions);
+
   @override
   _UserMenuState createState() => _UserMenuState();
 }
@@ -24,7 +28,7 @@ class _UserMenuState extends State<UserMenu> {
   String usersLength = "";
 
   FocusNode? _passowrdFocus;
-
+  List<String>? permissions;
 
   @override
   void initState() {
@@ -38,10 +42,10 @@ class _UserMenuState extends State<UserMenu> {
 
     _passowrdFocus!.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
-
+    permissions = widget.permissions;
 
 
     return Scaffold(
@@ -67,6 +71,7 @@ class _UserMenuState extends State<UserMenu> {
                     );
                   },
                 ),
+                Utils.checkPermission(cPermission.REGISTER_APPROVE_USERS, permissions!) ?
                 ListTile(
                   leading: Icon(Icons.check),
                   title: Text('Aprovar requisições'),
@@ -76,7 +81,7 @@ class _UserMenuState extends State<UserMenu> {
                         cRoutes.USER_REQUESTS
                     );
                   },
-                ),
+                ) : Container(),
               ],
             ),
       )),

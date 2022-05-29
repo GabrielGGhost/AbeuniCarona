@@ -129,7 +129,7 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => RegisterUserPassword(args as eUser));
       case cRoutes.USER_MENU:
-        return MaterialPageRoute(builder: (_) => UserMenu());
+        return MaterialPageRoute(builder: (_) => UserMenu(args as List<String>));
       case cRoutes.USER_REQUESTS:
         return MaterialPageRoute(builder: (_) => userRequests());
       case cRoutes.SEND_EMAIL_NEW_USER:
@@ -146,7 +146,7 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => Partaker(args as DocumentSnapshot));
       case cRoutes.RIDES:
-        return MaterialPageRoute(builder: (_) => Rides());
+        return MaterialPageRoute(builder: (_) => Rides(args as List<String>));
       case cRoutes.SCHEDULING:
         return MaterialPageRoute(
             builder: (_) => Scheduling(args as DocumentSnapshot));

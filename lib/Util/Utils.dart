@@ -395,4 +395,8 @@ class Utils {
 
     return retorno;
   }
+
+  static bool checkPermission(String permission, List<String> permissions) {
+    return permissions.contains(permission);
+  }
 }

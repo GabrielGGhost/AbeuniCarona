@@ -1,7 +1,13 @@
+import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
+import 'package:abeuni_carona/Constants/cPermission.dart';
+import 'package:abeuni_carona/Entity/ePermission.dart';
 import 'package:abeuni_carona/Screen/Menu/MyRides.dart';
 import 'package:abeuni_carona/Screen/Rides/Ride/Rides.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
+import 'package:abeuni_carona/Util/Utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,7 +20,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
 
   TabController? _tabController;
-
 
   @override
   void initState() {
@@ -70,129 +75,152 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         ),
       ),
       drawer: Drawer(
-        child: Padding(
-            padding: EdgeInsets.only(top: 50),
-            child: ListView(
-              children: [
-                ListTile(
-                  title: Text(
-                    "Meus Veículos",
-                    style: TextStyle(
-                        fontSize: 15
+        child: FutureBuilder(
+          future: findAllUserPermission(),
+          builder: (_, snapshot) {
+
+            if(!snapshot.hasData){
+              return Text("Carregando...");
+            } else if(snapshot.hasError){
+              return Text("Erro ao carregar dados");
+            }
+
+            List<String> permissions = snapshot.data as List<String>;
+
+            return Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: ListView(
+                  children: [
+                    Utils.checkPermission(cPermission.REGISTER_BASE_EVENT, permissions) ?
+                    ListTile(
+                      title: Text(
+                        "Meus Veículos",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.car_rental),
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context,
+                            cRoutes.VEHICLES
+                        );
+                      },
+                      subtitle: Text("Cadastre seus veículos para usar em suas viagens"),
+                      horizontalTitleGap: 1,
+                    ) : Container(),
+                    ListTile(
+                      title: Text(
+                        "Caronas",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.electric_car),
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context,
+                            cRoutes.RIDES,
+                            arguments: permissions
+                        );
+                      },
+                      subtitle: Text("Programe uma carona."),
+                      horizontalTitleGap: 1,
                     ),
-                  ),
-                  leading: Icon(Icons.car_rental),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.VEHICLES
-                    );
-                  },
-                  subtitle: Text("Cadastre seus veículos para usar em suas viagens"),
-                  horizontalTitleGap: 1,
-                ),
-                ListTile(
-                  title: Text(
-                    "Caronas",
-                    style: TextStyle(
-                        fontSize: 15
+                    Utils.checkPermission(cPermission.REGISTER_BASE_EVENT, permissions) ?
+                    ListTile(
+                      title: Text(
+                        "Eventos Base",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.model_training),
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context,
+                            cRoutes.EVENT_BASE
+                        );
+                      },
+                      subtitle: Text("Gerencie os eventos ativos."),
+                      horizontalTitleGap: 1,
+                    ) : Container(),
+                    Utils.checkPermission(cPermission.REGISTER_BASE_EVENT, permissions) ?
+                    ListTile(
+                      title: Text(
+                        "Eventos Ativos",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.stream),
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context,
+                            cRoutes.EVENTS
+                        );
+                      },
+                      subtitle: Text("Gerencie os eventos ativos."),
+                      horizontalTitleGap: 1,
+                    ) : Container(),
+                    ListTile(
+                      title: Text(
+                        "Histórico de viagens",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.watch_later_outlined),
+                      onTap: (){
+                        Navigator.pushNamed(context, cRoutes.SCHEDULING_HISTORY);
+                      },
+                      subtitle: Text("Registro de suas viagens"),
+                      horizontalTitleGap: 1,
                     ),
-                  ),
-                  leading: Icon(Icons.electric_car),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.RIDES
-                    );
-                  },
-                  subtitle: Text("Programe uma carona."),
-                  horizontalTitleGap: 1,
-                ),
-                ListTile(
-                  title: Text(
-                    "Eventos Base",
-                    style: TextStyle(
-                        fontSize: 15
-                    ),
-                  ),
-                  leading: Icon(Icons.model_training),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.EVENT_BASE
-                    );
-                  },
-                  subtitle: Text("Gerencie os eventos ativos."),
-                  horizontalTitleGap: 1,
-                ),
-                ListTile(
-                  title: Text(
-                    "Eventos Ativos",
-                    style: TextStyle(
-                        fontSize: 15
-                    ),
-                  ),
-                  leading: Icon(Icons.stream),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.EVENTS
-                    );
-                  },
-                  subtitle: Text("Gerencie os eventos ativos."),
-                  horizontalTitleGap: 1,
-                ),
-                ListTile(
-                  title: Text(
-                    "Histórico de viagens",
-                    style: TextStyle(
-                        fontSize: 15
-                    ),
-                  ),
-                  leading: Icon(Icons.watch_later_outlined),
-                  onTap: (){
-                    Navigator.pushNamed(context, cRoutes.SCHEDULING_HISTORY);
-                  },
-                  subtitle: Text("Registro de suas viagens"),
-                  horizontalTitleGap: 1,
-                ),
-                ListTile(
-                  title: Text(
-                    "Permissões",
-                    style: TextStyle(
-                        fontSize: 15
-                    ),
-                  ),
-                  leading: Icon(Icons.vpn_key_outlined),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.PERMISSION
-                    );
-                  },
-                  subtitle: Text("Gerencie as permissões dos usuários."),
-                  horizontalTitleGap: 1,
-                ),
-                ListTile(
-                  title: Text(
-                    "Usuários",
-                    style: TextStyle(
-                        fontSize: 15
-                    ),
-                  ),
-                  leading: Icon(Icons.electric_car),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.USER_MENU
-                    );
-                  },
-                  subtitle: Text("Programe uma carona."),
-                  horizontalTitleGap: 1,
-                ),
-              ],
-            )
-        ),
+                    Utils.checkPermission(cPermission.REGISTER_PERMISSION, permissions) ?
+                    ListTile(
+                      title: Text(
+                        "Permissões",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.vpn_key_outlined),
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context,
+                            cRoutes.PERMISSION
+                        );
+                      },
+                      subtitle: Text("Gerencie as permissões dos usuários."),
+                      horizontalTitleGap: 1,
+                    ) : Container(),
+                    Utils.checkPermission(cPermission.REGISTER_WATCH_USERS, permissions) ?
+                    ListTile(
+                      title: Text(
+                        "Usuários",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),
+                      ),
+                      leading: Icon(Icons.electric_car),
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context,
+                            cRoutes.USER_MENU,
+                            arguments: permissions
+                        );
+                      },
+                      subtitle: Text("Gerencia usuáruis."),
+                      horizontalTitleGap: 1,
+                    ) : Container(),
+                  ],
+                )
+            );
+          },
+        )
+
+        ,
       ),
       body: TabBarView(
         controller: _tabController,
@@ -224,5 +252,21 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         ],
       ),
     );
+  }
+
+  Future<List<String>> findAllUserPermission() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    List<String> permisisons = [];
+
+    QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore.instance.collection(DbData.TABLE_USER).doc(user!.uid).collection(DbData.TABLE_PERMISSION).get();
+
+    var docs = result.docs;
+
+    for(var doc in docs){
+      permisisons.add(doc.id.toString());
+    }
+
+    return permisisons;
   }
 }

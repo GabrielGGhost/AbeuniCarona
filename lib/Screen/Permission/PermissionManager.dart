@@ -166,11 +166,8 @@ class _PermissionManagerState extends State<PermissionManager> {
                                                                       Row(
                                                                         children: [
                                                                           Expanded(
-                                                                              child: Text.rich(TextSpan(text: "Nome: ", style: TextStyle(fontWeight: FontWeight.bold), children: [
-                                                                            TextSpan(
-                                                                                text: permission.idPermission,
-                                                                                style: TextStyle(fontWeight: FontWeight.normal))
-                                                                          ]))),
+                                                                              child: Text(permission.name, style: TextStyle(fontWeight: FontWeight.bold)
+                                                                          )),
                                                                         ],
                                                                       ),
                                                                       Row(

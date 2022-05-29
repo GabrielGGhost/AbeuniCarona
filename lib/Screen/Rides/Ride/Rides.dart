@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:abeuni_carona/Constants/DbData.dart';
+import 'package:abeuni_carona/Constants/cPermission.dart';
 import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
 import 'package:abeuni_carona/Entity/eRide.dart';
@@ -16,6 +17,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:abeuni_carona/Constants/cDate.dart';
 
 class Rides extends StatefulWidget {
+  List<String> permissions = [];
+  Rides(this.permissions);
+
   @override
   _RidesState createState() => _RidesState();
 }
@@ -26,6 +30,7 @@ class _RidesState extends State<Rides> {
   final _controllerBaseEvents = StreamController<QuerySnapshot>.broadcast();
 
   String? _idLoggedUser;
+  List<String> permissions = [];
 
   Stream<QuerySnapshot>? _addListenerRides() {
     final baseEvents = db
@@ -47,6 +52,7 @@ class _RidesState extends State<Rides> {
 
   @override
   Widget build(BuildContext context) {
+    permissions = widget.permissions;
     return Scaffold(
       appBar: AppBar(
         title: Text("Caronas"),
@@ -555,7 +561,7 @@ class _RidesState extends State<Rides> {
                       })
                 ],
               ))),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Utils.checkPermission(cPermission.REGISTER_RIDE, permissions) ? FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, cRoutes.REGISTER_RIDE1);
         },
@@ -564,7 +570,7 @@ class _RidesState extends State<Rides> {
           Icons.add,
           color: APP_WHITE_FONT,
         ),
-      ),
+      ) : Container(),
     );
   }
 
