@@ -17,18 +17,14 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
-
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-        vsync: this,
-        length: 3,
-        initialIndex: 1
-    );
+    _tabController = TabController(vsync: this, length: 3, initialIndex: 1);
   }
 
   @override
@@ -40,16 +36,13 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         centerTitle: true,
         actions: [
           Padding(
-              padding: EdgeInsets.only(right: 15),
-              child: IconButton(
-                  onPressed: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.CONFIGURATIONS
-                    );
-                  },
-                  icon: Icon(Icons.account_circle, size: 35),
-              ),
+            padding: EdgeInsets.only(right: 15),
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, cRoutes.CONFIGURATIONS);
+              },
+              icon: Icon(Icons.account_circle, size: 35),
+            ),
           )
         ],
         bottom: TabBar(
@@ -66,10 +59,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
             ),
             Tab(
               child: Text(
-                  "Minhas\nCarona",
-                  textAlign: TextAlign.center,
+                "Minhas\nCarona",
+                textAlign: TextAlign.center,
               ),
-
             ),
           ],
         ),
@@ -78,10 +70,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         child: FutureBuilder(
           future: findAllUserPermission(),
           builder: (_, snapshot) {
-
-            if(!snapshot.hasData){
+            if (!snapshot.hasData) {
               return Text("Carregando...");
-            } else if(snapshot.hasError){
+            } else if (snapshot.hasError) {
               return Text("Erro ao carregar dados");
             }
 
@@ -91,164 +82,163 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                 padding: EdgeInsets.only(top: 50),
                 child: ListView(
                   children: [
-                    Utils.checkPermission(cPermission.REGISTER_BASE_EVENT, permissions) ?
-                    ListTile(
-                      title: Text(
-                        "Meus Veículos",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
-                      ),
-                      leading: Icon(Icons.car_rental),
-                      onTap: (){
-                        Navigator.pushNamed(
-                            context,
-                            cRoutes.VEHICLES
-                        );
-                      },
-                      subtitle: Text("Cadastre seus veículos para usar em suas viagens"),
-                      horizontalTitleGap: 1,
-                    ) : Container(),
+                    Utils.checkPermission(
+                            cPermission.REGISTER_BASE_EVENT, permissions)
+                        ? ListTile(
+                            title: Text(
+                              "Meus Veículos",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            leading: Icon(Icons.car_rental),
+                            onTap: () {
+                              Navigator.pushNamed(context, cRoutes.VEHICLES);
+                            },
+                            subtitle: Text(
+                                "Cadastre seus veículos para usar em suas viagens"),
+                            horizontalTitleGap: 1,
+                          )
+                        : Container(),
                     ListTile(
                       title: Text(
                         "Caronas",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
+                        style: TextStyle(fontSize: 15),
                       ),
                       leading: Icon(Icons.electric_car),
-                      onTap: (){
-                        Navigator.pushNamed(
-                            context,
-                            cRoutes.RIDES,
-                            arguments: permissions
-                        );
+                      onTap: () {
+                        Navigator.pushNamed(context, cRoutes.RIDES,
+                            arguments: permissions);
                       },
                       subtitle: Text("Programe uma carona."),
                       horizontalTitleGap: 1,
                     ),
-                    Utils.checkPermission(cPermission.REGISTER_BASE_EVENT, permissions) ?
-                    ListTile(
-                      title: Text(
-                        "Eventos Base",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
-                      ),
-                      leading: Icon(Icons.model_training),
-                      onTap: (){
-                        Navigator.pushNamed(
-                            context,
-                            cRoutes.EVENT_BASE
-                        );
-                      },
-                      subtitle: Text("Gerencie os eventos ativos."),
-                      horizontalTitleGap: 1,
-                    ) : Container(),
-                    Utils.checkPermission(cPermission.REGISTER_BASE_EVENT, permissions) ?
-                    ListTile(
-                      title: Text(
-                        "Eventos Ativos",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
-                      ),
-                      leading: Icon(Icons.stream),
-                      onTap: (){
-                        Navigator.pushNamed(
-                            context,
-                            cRoutes.EVENTS
-                        );
-                      },
-                      subtitle: Text("Gerencie os eventos ativos."),
-                      horizontalTitleGap: 1,
-                    ) : Container(),
+                    Utils.checkPermission(
+                            cPermission.REGISTER_BASE_EVENT, permissions)
+                        ? ListTile(
+                            title: Text(
+                              "Eventos Base",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            leading: Icon(Icons.model_training),
+                            onTap: () {
+                              Navigator.pushNamed(context, cRoutes.EVENT_BASE);
+                            },
+                            subtitle: Text("Gerencie os eventos ativos."),
+                            horizontalTitleGap: 1,
+                          )
+                        : Container(),
+                    Utils.checkPermission(
+                            cPermission.REGISTER_BASE_EVENT, permissions)
+                        ? ListTile(
+                            title: Text(
+                              "Eventos Ativos",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            leading: Icon(Icons.stream),
+                            onTap: () {
+                              Navigator.pushNamed(context, cRoutes.EVENTS);
+                            },
+                            subtitle: Text("Gerencie os eventos ativos."),
+                            horizontalTitleGap: 1,
+                          )
+                        : Container(),
                     ListTile(
                       title: Text(
                         "Histórico de viagens",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
+                        style: TextStyle(fontSize: 15),
                       ),
                       leading: Icon(Icons.watch_later_outlined),
-                      onTap: (){
-                        Navigator.pushNamed(context, cRoutes.SCHEDULING_HISTORY);
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, cRoutes.SCHEDULING_HISTORY);
                       },
                       subtitle: Text("Registro de suas viagens"),
                       horizontalTitleGap: 1,
                     ),
-                    Utils.checkPermission(cPermission.REGISTER_PERMISSION, permissions) ?
-                    ListTile(
-                      title: Text(
-                        "Permissões",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
-                      ),
-                      leading: Icon(Icons.vpn_key_outlined),
-                      onTap: (){
-                        Navigator.pushNamed(
-                            context,
-                            cRoutes.PERMISSION
-                        );
-                      },
-                      subtitle: Text("Gerencie as permissões dos usuários."),
-                      horizontalTitleGap: 1,
-                    ) : Container(),
-                    Utils.checkPermission(cPermission.REGISTER_WATCH_USERS, permissions) ?
-                    ListTile(
-                      title: Text(
-                        "Usuários",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),
-                      ),
-                      leading: Icon(Icons.electric_car),
-                      onTap: (){
-                        Navigator.pushNamed(
-                            context,
-                            cRoutes.USER_MENU,
-                            arguments: permissions
-                        );
-                      },
-                      subtitle: Text("Gerencia usuáruis."),
-                      horizontalTitleGap: 1,
-                    ) : Container(),
-                  ],
-                )
-            );
-          },
-        )
+                    Utils.checkPermission(
+                            cPermission.REGISTER_PERMISSION, permissions)
+                        ? ListTile(
+                            title: Text(
+                              "Permissões",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            leading: Icon(Icons.vpn_key_outlined),
+                            onTap: () {
+                              Navigator.pushNamed(context, cRoutes.PERMISSION);
+                            },
+                            subtitle:
+                                Text("Gerencie as permissões dos usuários."),
+                            horizontalTitleGap: 1,
+                          )
+                        : Container(),
+                    Utils.checkPermission(
+                            cPermission.REGISTER_WATCH_USERS, permissions)
+                        ? ListTile(
+                            title: Text(
+                              "Usuários",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            leading: Icon(Icons.electric_car),
+                            trailing: FutureBuilder(
+                              future: findAllUserRequests(),
+                              builder: (_, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Container();
+                                } else if (snapshot.hasError) {
+                                  return Text("Erro ao carregar dados");
+                                }
 
-        ,
+                                return Container(
+                                    margin: EdgeInsets.all(10),
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      snapshot.data.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: APP_BAR_BACKGROUND_COLOR,
+                                      shape: BoxShape.circle,
+                                    ));
+                              },
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(context, cRoutes.USER_MENU,
+                                  arguments: permissions);
+                            },
+                            subtitle: Text("Gerencia usuáruis."),
+                            horizontalTitleGap: 1,
+                          )
+                        : Container(),
+                  ],
+                ));
+          },
+        ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
           Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Não há caronas\ndisponíveis para agendar",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              )
-          ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Não há caronas\ndisponíveis para agendar",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          )),
           Text(""),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MyRides()
-              ],
-            )
-          )
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [MyRides()],
+          ))
         ],
       ),
     );
@@ -259,14 +249,29 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     User? user = auth.currentUser;
     List<String> permisisons = [];
 
-    QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore.instance.collection(DbData.TABLE_USER).doc(user!.uid).collection(DbData.TABLE_PERMISSION).get();
+    QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore
+        .instance
+        .collection(DbData.TABLE_USER)
+        .doc(user!.uid)
+        .collection(DbData.TABLE_PERMISSION)
+        .get();
 
     var docs = result.docs;
 
-    for(var doc in docs){
+    for (var doc in docs) {
       permisisons.add(doc.id.toString());
     }
 
     return permisisons;
+  }
+
+  Future<int> findAllUserRequests() async {
+    QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore
+        .instance
+        .collection(DbData.TABLE_USER)
+        .where(DbData.COLUMN_APPROVED, isEqualTo: "0")
+        .get();
+
+    return result.docs.length;
   }
 }

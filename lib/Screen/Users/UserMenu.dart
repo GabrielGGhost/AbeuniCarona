@@ -42,11 +42,10 @@ class _UserMenuState extends State<UserMenu> {
 
     _passowrdFocus!.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     permissions = widget.permissions;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -57,33 +56,54 @@ class _UserMenuState extends State<UserMenu> {
           child: Padding(
         padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
         child: ListView(
-              scrollDirection: Axis.vertical,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                ListTile(
-                  leading: Icon(Icons.supervised_user_circle),
-                  title: Text('Visualizar usuários'),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.USERS_LIST
-                    );
-                  },
-                ),
-                Utils.checkPermission(cPermission.REGISTER_APPROVE_USERS, permissions!) ?
-                ListTile(
-                  leading: Icon(Icons.check),
-                  title: Text('Aprovar requisições'),
-                  onTap: (){
-                    Navigator.pushNamed(
-                        context,
-                        cRoutes.USER_REQUESTS
-                    );
-                  },
-                ) : Container(),
-              ],
+          scrollDirection: Axis.vertical,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              leading: Icon(Icons.supervised_user_circle),
+              title: Text('Visualizar usuários'),
+              onTap: () {
+                Navigator.pushNamed(context, cRoutes.USERS_LIST);
+              },
             ),
+            Utils.checkPermission(
+                    cPermission.REGISTER_APPROVE_USERS, permissions!)
+                ? ListTile(
+                    leading: Icon(Icons.check),
+                    title: Text('Aprovar requisições'),
+                    trailing: FutureBuilder(
+                      future: findAllUserRequests(),
+                      builder: (_, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container();
+                        } else if (snapshot.hasError) {
+                          return Text("Erro ao carregar dados");
+                        }
+
+                        return Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(8),
+                            child: Text(
+                              snapshot.data.toString(),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            decoration: BoxDecoration(
+                              color: APP_BAR_BACKGROUND_COLOR,
+                              shape: BoxShape.circle,
+                            ));
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, cRoutes.USER_REQUESTS);
+                    },
+                  )
+                : Container(),
+          ],
+        ),
       )),
     );
   }
@@ -92,10 +112,7 @@ class _UserMenuState extends State<UserMenu> {
     try {
       insert(user);
       Utils.showToast("Usuário registrado", APP_SUCCESS_BACKGROUND);
-      Navigator.popUntil(
-          context,
-          ModalRoute.withName("")
-      );
+      Navigator.popUntil(context, ModalRoute.withName(""));
     } catch (e) {
       Utils.showToast(
           AppLocalizations.of(context)!.erroAoAtualizar, APP_ERROR_BACKGROUND);
@@ -109,5 +126,14 @@ class _UserMenuState extends State<UserMenu> {
   bool checkFields() {
     return true;
   }
-}
 
+  Future<int> findAllUserRequests() async {
+    QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore
+        .instance
+        .collection(DbData.TABLE_USER)
+        .where(DbData.COLUMN_APPROVED, isEqualTo: "0")
+        .get();
+
+    return result.docs.length;
+  }
+}
