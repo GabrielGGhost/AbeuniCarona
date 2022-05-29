@@ -80,7 +80,9 @@ class _UserMenuState extends State<UserMenu> {
                         } else if (snapshot.hasError) {
                           return Text("Erro ao carregar dados");
                         }
-
+                        if(snapshot.data.toString() == "0"){
+                          return Text("");
+                        }
                         return Container(
                             margin: EdgeInsets.all(10),
                             padding: EdgeInsets.all(8),

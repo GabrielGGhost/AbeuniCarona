@@ -266,8 +266,8 @@ class _userRequestDetailState extends State<userRequestDetail> {
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             TextSpan(
-                                                text: event[DbData
-                                                    .COLUMN_REGISTRATION_DATE],
+                                                text: Utils.getStringDateFromTimestamp(event[DbData
+                                                    .COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM) ,
                                                 style: TextStyle(
                                                     color: Colors.grey))
                                           ]),
