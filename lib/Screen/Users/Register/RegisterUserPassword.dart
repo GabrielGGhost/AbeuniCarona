@@ -33,6 +33,7 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
   TextEditingController _passwordController = TextEditingController();
 
   FocusNode? _passowrdFocus;
+  bool _hidePassword = true;
 
   @override
   void initState() {
@@ -44,7 +45,6 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
   @override
   void dispose() {
     super.dispose();
-
     _passowrdFocus!.dispose();
   }
 
@@ -66,12 +66,21 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
               padding: EdgeInsets.only(top: 20),
               child: TextField(
                 controller: _passwordController,
-                keyboardType: TextInputType.visiblePassword,
+                obscureText: _hidePassword,
                 focusNode: _passowrdFocus,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
                     hintText: "Senha" + AppLocalizations.of(context)!.obr,
                     filled: true,
+                    suffixIcon: IconButton(
+                      onPressed: () => {
+                        setState(() {
+                          print(_hidePassword);
+                          _hidePassword = !_hidePassword;
+                        })
+                      },
+                      icon: Icon(Icons.remove_red_eye),
+                    ),
                     fillColor: APP_TEXT_FIELD_BACKGROUND,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(radiusBorder!))),
@@ -142,11 +151,7 @@ class _RegisterUserPasswordState extends State<RegisterUserPassword> {
         }
       });
 
-      Navigator.pushNamed(
-          context,
-          cRoutes.SEND_EMAIL_NEW_USER
-      );
-
+      Navigator.pushNamed(context, cRoutes.SEND_EMAIL_NEW_USER);
     }).catchError((error) {
       Utils.showAuthError(error.code, context);
     });

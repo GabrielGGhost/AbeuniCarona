@@ -14,7 +14,7 @@ class eUser {
   String? _nickName;
   String? _picturePath;
   List<ePhone>? _phoneNumbers;
-  String? _registrationDate;
+  Timestamp? _registrationDate;
   XFile? _file;
   String? _approved;
   String? _role;
@@ -47,7 +47,7 @@ class eUser {
       DbData.COLUMN_CPF: getSafeString(this.cpf),
       DbData.COLUMN_NICKNAME: getSafeString(this.nickName),
       DbData.COLUMN_PICTURE_PATH: getSafeString(this.picturePath),
-      DbData.COLUMN_REGISTRATION_DATE: getSafeString(this.registrationDate),
+      DbData.COLUMN_REGISTRATION_DATE: this.registrationDate,
       DbData.COLUMN_EMAIL: getSafeString(this.email),
       DbData.COLUMN_APPROVED: getSafeString(this.approved),
       DbData.COLUMN_ROLE: getSafeString(this.role),
@@ -66,7 +66,7 @@ class eUser {
   String get picturePath => _picturePath!;
   String get cpf => _cpf!;
   List<ePhone> get phoneNumbers => _phoneNumbers!;
-  String get registrationDate => _registrationDate!;
+  Timestamp get registrationDate => _registrationDate!;
   XFile get file => _file!;
   String get role => _role!;
   String get approved => _approved!;
@@ -102,7 +102,7 @@ class eUser {
     _phoneNumbers = value;
   }
 
-  set registrationDate(String value) {
+  set registrationDate(Timestamp value) {
     _registrationDate = value;
   }
 

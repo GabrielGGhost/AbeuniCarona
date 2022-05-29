@@ -19,6 +19,8 @@ class RegisterUser extends StatefulWidget {
   _RegisterUserState createState() => _RegisterUserState();
 }
 
+enum PhoneType { cellphone, home }
+
 class _RegisterUserState extends State<RegisterUser> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -42,10 +44,11 @@ class _RegisterUserState extends State<RegisterUser> {
   FocusNode? _nickNameFocus;
   FocusNode? _departmentFocus;
 
-  var timeFormat = new MaskTextInputFormatter(mask: 'HH:mm');
-  var dateFormat = new MaskTextInputFormatter(mask: 'dd/MM/yyyy');
+  var phoneFormat = new MaskTextInputFormatter(mask: '(##) #####-####');
+  var cpfFormat = new MaskTextInputFormatter(mask: '###.###.###-##');
+  var dateFormat = new MaskTextInputFormatter(mask: '##/##/####');
 
-  String _idLoggedUser = "";
+  PhoneType? _phoneType = PhoneType.cellphone;
 
   @override
   void initState() {
@@ -57,7 +60,6 @@ class _RegisterUserState extends State<RegisterUser> {
     _birthDateFocus = FocusNode();
     _nickNameFocus = FocusNode();
     _departmentFocus = FocusNode();
-    _getUserData();
     super.initState();
   }
 
@@ -87,136 +89,199 @@ class _RegisterUserState extends State<RegisterUser> {
         padding: EdgeInsets.all(cStyles.PADDING_DEFAULT_SCREEN),
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: _userNameControler,
-                autofocus: true,
-                focusNode: _userNameFocus,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: AppLocalizations.of(context)!.nomeCompleto +
-                        AppLocalizations.of(context)!.obr,
-                    filled: true,
-                    fillColor: APP_TEXT_FIELD_BACKGROUND,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(radiusBorder!))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: _emailControler,
-                autofocus: true,
-                focusNode: _emailFocus,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: AppLocalizations.of(context)!.email +
-                        AppLocalizations.of(context)!.obr,
-                    filled: true,
-                    fillColor: APP_TEXT_FIELD_BACKGROUND,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(radiusBorder!))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: _nickNameController,
-                keyboardType: TextInputType.text,
-                focusNode: _nickNameFocus,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: AppLocalizations.of(context)!.apelido +
-                        AppLocalizations.of(context)!.obr,
-                    filled: true,
-                    fillColor: APP_TEXT_FIELD_BACKGROUND,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(radiusBorder!))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: TextField(
-                controller: _phoneNumberController,
-                keyboardType: TextInputType.text,
-                focusNode: _phoneNumberFocus,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: AppLocalizations.of(context)!.telefone +
-                        AppLocalizations.of(context)!.obr,
-                    filled: true,
-                    fillColor: APP_TEXT_FIELD_BACKGROUND,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(radiusBorder!))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: TextField(
-                controller: _birthDateController,
-                keyboardType: TextInputType.datetime,
-                textAlign: TextAlign.center,
-                focusNode: _birthDateFocus,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    filled: true,
-                    hintText: "Data de nascimento*",
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                            cStyles.RADIUS_BORDER_TEXT_FIELD))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: TextField(
-                controller: _cpfController,
-                keyboardType: TextInputType.number,
-                focusNode: _cpfFocus,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    filled: true,
-                    hintText: "CPF*",
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                            cStyles.RADIUS_BORDER_TEXT_FIELD))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: TextField(
-                controller: _departmentController,
-                keyboardType: TextInputType.text,
-                focusNode: _departmentFocus,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    filled: true,
-                    hintText: "Departamento*",
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                            cStyles.RADIUS_BORDER_TEXT_FIELD))),
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.registro,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: TextField(
+                      controller: _userNameControler,
+                      autofocus: true,
+                      focusNode: _userNameFocus,
+                      textCapitalization: TextCapitalization.words,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                          hintText: AppLocalizations.of(context)!.nomeCompleto +
+                              AppLocalizations.of(context)!.obr,
+                          filled: true,
+                          fillColor: APP_TEXT_FIELD_BACKGROUND,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(radiusBorder!))),
                     ),
-                    Text(": "),
-                    Text(
-                      _registration!,
-                      style: TextStyle(color: APP_SUB_TEXT),
-                    )
-                  ],
+                  ),
+                )
+              ],
+            ),
+            Row(children: [
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: TextField(
+                  controller: _emailControler,
+                  autofocus: true,
+                  focusNode: _emailFocus,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      hintText: AppLocalizations.of(context)!.email +
+                          AppLocalizations.of(context)!.obr,
+                      filled: true,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(radiusBorder!))),
+                ),
+              ))
+            ]),
+            Row(children: [
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: TextField(
+                  controller: _nickNameController,
+                  textCapitalization: TextCapitalization.words,
+                  keyboardType: TextInputType.text,
+                  focusNode: _nickNameFocus,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      hintText: AppLocalizations.of(context)!.apelido +
+                          AppLocalizations.of(context)!.obr,
+                      filled: true,
+                      fillColor: APP_TEXT_FIELD_BACKGROUND,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(radiusBorder!))),
+                ),
+              ))
+            ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: TextField(
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.number,
+                    focusNode: _phoneNumberFocus,
+                    inputFormatters: [phoneFormat],
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                        hintText: AppLocalizations.of(context)!.telefone +
+                            AppLocalizations.of(context)!.obr,
+                        filled: true,
+                        fillColor: APP_TEXT_FIELD_BACKGROUND,
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(radiusBorder!))),
+                  ),
                 )),
+                Column(children: [
+                  Row(
+                    children: [
+                      Radio<PhoneType>(
+                          value: PhoneType.cellphone,
+                          groupValue: _phoneType,
+                          onChanged: (PhoneType? value) {
+                            setState(() {
+                              _phoneType = value;
+                              phoneFormat = new MaskTextInputFormatter(
+                                  mask: '(##) #####-####');
+                              _phoneNumberController.clear();
+                            });
+                          }),
+                      Icon(
+                        Icons.phone_android,
+                        color: APP_BAR_BACKGROUND_COLOR,
+                        size: 26.0,
+                      ),
+                    ],
+                  ),
+                  Row(children: [
+                    Radio<PhoneType>(
+                        value: PhoneType.home,
+                        groupValue: _phoneType,
+                        onChanged: (PhoneType? value) {
+                          setState(() {
+                            _phoneType = value;
+                            phoneFormat = new MaskTextInputFormatter(
+                                mask: '(##) ####-####');
+                            _phoneNumberController.clear();
+                          });
+                        }),
+                    Icon(
+                      Icons.house,
+                      color: APP_BAR_BACKGROUND_COLOR,
+                      size: 26.0,
+                    ),
+                  ]),
+                ])
+              ],
+            ),
+            Row(children: [
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: TextField(
+                  controller: _birthDateController,
+                  keyboardType: TextInputType.datetime,
+                  textAlign: TextAlign.center,
+                  focusNode: _birthDateFocus,
+                  readOnly: true,
+                  inputFormatters: [dateFormat],
+                  onTap: () {
+                    pickBirthDate();
+                  },
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      filled: true,
+                      hintText: "Data de nascimento*",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                              cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                ),
+              ))
+            ]),
+            Row(children: [
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: TextField(
+                  controller: _cpfController,
+                  keyboardType: TextInputType.number,
+                  focusNode: _cpfFocus,
+                  inputFormatters: [cpfFormat],
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      filled: true,
+                      hintText: "CPF*",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                              cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                ),
+              ))
+            ]),
+            Row(children: [
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: TextField(
+                  controller: _departmentController,
+                  keyboardType: TextInputType.text,
+                  focusNode: _departmentFocus,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      filled: true,
+                      hintText: "Departamento*",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                              cStyles.RADIUS_BORDER_TEXT_FIELD))),
+                ),
+              ))
+            ]),
             Padding(
               padding: EdgeInsets.all(20),
               child: ElevatedButton(
@@ -250,7 +315,7 @@ class _RegisterUserState extends State<RegisterUser> {
         _nickNameController.text.trim(),
         _departmentController.text.trim(),
         "",
-        _registration,
+        Timestamp.now(),
         "0",
         "0",
         "",
@@ -292,25 +357,30 @@ class _RegisterUserState extends State<RegisterUser> {
     }
 
     if (!hasValue(_phoneNumberController.text.trim())) {
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeOTelefoneDoUsuario, context);
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeOTelefoneDoUsuario, context);
       _phoneNumberFocus!.requestFocus();
       return false;
     }
 
     if (!hasValue(_birthDateController.text.trim())) {
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeADataDeNascimentoDoUsuario, context);
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeADataDeNascimentoDoUsuario,
+          context);
       _birthDateFocus!.requestFocus();
       return false;
     }
 
     if (!hasValue(_cpfController.text.trim())) {
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeOCpfDoUsuario, context);
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeOCpfDoUsuario, context);
       _cpfFocus!.requestFocus();
       return false;
     }
 
     if (!hasValue(_departmentController.text.trim())) {
-      Utils.showDialogBox(AppLocalizations.of(context)!.informeODepartamentoDoUsuario, context);
+      Utils.showDialogBox(
+          AppLocalizations.of(context)!.informeODepartamentoDoUsuario, context);
       _departmentFocus!.requestFocus();
       return false;
     }
@@ -324,12 +394,20 @@ class _RegisterUserState extends State<RegisterUser> {
     return Utils.hasValue(str);
   }
 
-  void _getUserData() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? usuarioLogado = await auth.currentUser;
+  void pickBirthDate() {
+    DateTime dateNow = DateTime.now();
 
-    if (usuarioLogado != null) {
-      _idLoggedUser = usuarioLogado.uid;
-    }
+    if (Utils.hasValue(_birthDateController.text))
+      dateNow = Utils.getDateTimeFromString(_birthDateController.text);
+
+    showDatePicker(
+            context: context,
+            initialDate: dateNow,
+            firstDate: DateTime(0),
+            lastDate: DateTime(3000))
+        .then((value) => {
+              _birthDateController.text = Utils.getFormatedStringFromDateTime(
+                  value!, cDate.FORMAT_SLASH_DD_MM_YYYY)!
+            });
   }
 }
