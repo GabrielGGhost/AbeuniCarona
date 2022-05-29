@@ -284,16 +284,16 @@ class _EventRegisterState extends State<EventRegister> {
   void save() {
     _descBaseEvent =
         _descBaseEventAtual != null && _descBaseEventAtual!.length > 0
-            ? _descBaseEventAtual
-            : _descBaseEvent;
+            ? _descBaseEventAtual!.trim()
+            : _descBaseEvent!.trim();
     if (checkFields()) {
       eEvent e = new eEvent(
           null,
-          _descBaseEvent,
-          _locationController.text,
-          Utils.getTimestampFromString(_eventStartDateController.text),
-          Utils.getTimestampFromString(_eventEndDateController.text),
-          _obsEventController.text,
+          _descBaseEvent!.trim(),
+          _locationController.text.trim(),
+          Utils.getTimestampFromString(_eventStartDateController.text.trim()),
+          Utils.getTimestampFromString(_eventEndDateController.text.trim()),
+          _obsEventController.text.trim(),
           null,
           _done);
       if (event != null) {

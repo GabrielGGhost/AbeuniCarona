@@ -463,15 +463,15 @@ class _RideRegister_4State extends State<RideRegister_4> {
   }
 
   _checkTimes() {
-    if (Utils.hasValue(_departureDateController.text) &&
-        Utils.hasValue(_departureTimeController.text) &&
-        Utils.hasValue(_returnDateController.text) &&
-        Utils.hasValue(_returnTimeController.text)) {
+    if (Utils.hasValue(_departureDateController.text.trim()) &&
+        Utils.hasValue(_departureTimeController.text.trim()) &&
+        Utils.hasValue(_returnDateController.text.trim()) &&
+        Utils.hasValue(_returnTimeController.text.trim())) {
       if (!Utils.isReturnDateValid(
-          _departureDateController.text,
-          _departureTimeController.text,
-          _returnDateController.text,
-          _returnTimeController.text)) {
+          _departureDateController.text.trim(),
+          _departureTimeController.text.trim(),
+          _returnDateController.text.trim(),
+          _returnTimeController.text.trim())) {
         _returnTimeController.text = "";
       }
     }

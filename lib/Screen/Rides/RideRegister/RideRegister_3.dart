@@ -186,9 +186,9 @@ class _RideRegister_3State extends State<RideRegister_3> {
   }
 
   void nextStep(eRide ride) {
-    ride.qttSeats = int.parse(Utils.getSafeNumber(_seatsController.text));
+    ride.qttSeats = int.parse(Utils.getSafeNumber(_seatsController.text.trim()));
     ride.qttLuggages =
-        int.parse(Utils.getSafeNumber(_luggageSpacesController.text));
+        int.parse(Utils.getSafeNumber(_luggageSpacesController.text.trim()));
 
     edit
         ? Navigator.pop(context, ride)

@@ -248,11 +248,11 @@ class _VehicleRegisterState extends State<VehicleRegister> {
   void saveVehicle() {
     eVehicle v = eVehicle(
         null,
-        _signController.text,
-        _colorController.text,
-        _modelController.text,
-        _seatsController.text,
-        _luggageController.text,
+        _signController.text.trim(),
+        _colorController.text.trim(),
+        _modelController.text.trim(),
+        _seatsController.text.trim(),
+        _luggageController.text.trim(),
         Timestamp.now(),
         _idLoggedUser,
         _active);

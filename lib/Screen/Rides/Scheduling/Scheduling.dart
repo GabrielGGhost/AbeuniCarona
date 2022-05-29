@@ -728,7 +728,7 @@ class _SchedulingState extends State<Scheduling> {
   void save() {
     if (checkFields()) {
       eScheduling scheduling = eScheduling.full(
-          ride.uid, _idLoggedUser, _seatsReserved, _lugaggeReserved);
+          ride.uid, _idLoggedUser, _seatsReserved!.trim(), _lugaggeReserved!.trim());
       scheduling.uid = _uid;
 
       if (edit) {

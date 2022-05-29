@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:abeuni_carona/Constants/cRoutes.dart';
@@ -12,14 +13,12 @@ class SendEmailNewUser extends StatefulWidget {
 }
 
 class _SendEmailNewUserState extends State<SendEmailNewUser> {
-
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user;
   Timer? timer;
 
   @override
   void initState() {
-
     user = auth.currentUser;
     user!.sendEmailVerification();
 
@@ -36,7 +35,7 @@ class _SendEmailNewUserState extends State<SendEmailNewUser> {
     super.dispose();
     user = auth.currentUser;
 
-    if(!user!.emailVerified){
+    if (!user!.emailVerified) {
       user!.delete();
     }
   }
@@ -45,10 +44,14 @@ class _SendEmailNewUserState extends State<SendEmailNewUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "Um e-mail de verificação foi enviado para ${user!.email} o e-mail informado.\nAo validar o e-mail, você será levado para a tela de login.\n NÃO sair desta tela, se sair sem validar o e-mail seu cadastro será cancelado."
-          )
+              "Um e-mail de verificação foi enviado para ${user!.email} o e-mail informado.\nAo validar o e-mail, você será levado para a tela de login.\n NÃO sair desta tela, se sair sem validar o e-mail seu cadastro será cancelado.",
+          style: TextStyle(
+            color: APP_SUB_TEXT
+          ),)
         ],
       ),
     );
@@ -58,12 +61,9 @@ class _SendEmailNewUserState extends State<SendEmailNewUser> {
     user = auth.currentUser;
     await user!.reload();
 
-    if(user!.emailVerified){
+    if (user!.emailVerified) {
       timer!.cancel();
-      Navigator.pushNamed(
-          context,
-          cRoutes.LOGIN
-      );
+      Navigator.pushNamed(context, cRoutes.LOGIN);
     }
   }
 }

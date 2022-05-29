@@ -242,13 +242,13 @@ class _RegisterUserState extends State<RegisterUser> {
 
   void saveUser() {
     eUser u = eUser.full(
-        _userNameControler.text,
-        _emailControler.text,
-        _phoneNumberController.text,
-        _birthDateController.text,
-        _cpfController.text,
-        _nickNameController.text,
-        _departmentController.text,
+        _userNameControler.text.trim(),
+        _emailControler.text.trim(),
+        _phoneNumberController.text.trim(),
+        _birthDateController.text.trim(),
+        _cpfController.text.trim(),
+        _nickNameController.text.trim(),
+        _departmentController.text.trim(),
         "",
         _registration,
         "0",

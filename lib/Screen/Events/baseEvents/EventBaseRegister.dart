@@ -181,8 +181,8 @@ class _EventBaseRegisterState extends State<EventBaseRegister> {
 
   void save() {
     eEventBase base = eEventBase(_id,
-                                _eventNameController.text,
-                                _obsEventController.text,
+                                _eventNameController.text.trim(),
+                                _obsEventController.text.trim(),
                                 _active!);
 
     if(eventBase != null){
