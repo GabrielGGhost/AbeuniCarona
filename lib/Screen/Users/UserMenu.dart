@@ -76,7 +76,7 @@ class _UserMenuState extends State<UserMenu> {
                       future: findAllUserRequests(),
                       builder: (_, snapshot) {
                         if (!snapshot.hasData) {
-                          return Container();
+                          return Text("");
                         } else if (snapshot.hasError) {
                           return Text("Erro ao carregar dados");
                         }

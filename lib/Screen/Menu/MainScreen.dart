@@ -182,7 +182,7 @@ class _MainScreenState extends State<MainScreen>
                               future: findAllUserRequests(),
                               builder: (_, snapshot) {
                                 if (!snapshot.hasData) {
-                                  return Container();
+                                  return Text("");
                                 } else if (snapshot.hasError) {
                                   return Text("Erro ao carregar dados");
                                 }
@@ -207,7 +207,7 @@ class _MainScreenState extends State<MainScreen>
                               Navigator.pushNamed(context, cRoutes.USER_MENU,
                                   arguments: permissions);
                             },
-                            subtitle: Text("Gerencia usuáruis."),
+                            subtitle: Text("Gerencia usuários."),
                             horizontalTitleGap: 1,
                           )
                         : Container(),
@@ -272,6 +272,8 @@ class _MainScreenState extends State<MainScreen>
         .where(DbData.COLUMN_APPROVED, isEqualTo: "0")
         .get();
 
-    return result.docs.length;
+    int length = result.docs.length;
+
+    return length;
   }
 }
