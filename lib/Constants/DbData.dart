@@ -10,6 +10,7 @@ class DbData {
   static const TABLE_RIDE = "ride";
   static const TABLE_SCHEDULING = "scheduling";
   static const TABLE_SCHEDULING_HISTORY = "schedulingHistory";
+  static const TABLE_PERMISSION  = "permission";
 
   static const COLUMN_SIGN = "sign";
   static const COLUMN_SEATS = "seats";
@@ -62,5 +63,6 @@ class DbData {
   static const COLUMN_COD_VEHICLE = "cod_vehicle";
   static const COLUMN_QTT_SEATS = "qtt_seats";
   static const COLUMN_QTT_LUGGAGES = "qtt_luggages";
-
+  static const COLUMN_DESCRIPTION = "description";
+  static const COLUMN_ID_PERMISSION = "id_permission";
 }

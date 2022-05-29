@@ -69,7 +69,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Permission());
       case cRoutes.PERMISSION_MANAGER:
         return MaterialPageRoute(
-            builder: (_) => PermissionManager(args as eUser));
+            builder: (_) => PermissionManager(args as DocumentSnapshot));
       case cRoutes.REGISTER_RIDE1:
         if (args == null) {
           return MaterialPageRoute(builder: (_) => RideRegister_1(null, false));

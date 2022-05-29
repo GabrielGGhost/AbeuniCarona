@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 
 class eUser {
+  String? _uid;
   String? _userName;
   String? _email;
   String? _phoneNumber;
@@ -38,15 +39,6 @@ class eUser {
       this._idUserApprover,
       this._userApprovalDate);
 
-  static List<eUser> getUsers() {
-    return <eUser>[
-      // eUser.full("1", "Fábio Roberto Evangelista", "", "", "", []),
-      // eUser.full("2", "Gabriel Carnelós Seara", "", "", "", []),
-      // eUser.full("3", "Gabriel Santos Artioli", "", "", "", []),
-      // eUser.full("4", "Gustava Miranda Negrini", "", "", "", []),
-    ];
-  }
-
   Map<String, dynamic> toMap() {
     return {
       DbData.COLUMN_USERNAME: getSafeString(this.userName),
@@ -65,6 +57,7 @@ class eUser {
     };
   }
 
+  String get uid => _uid!;
   String get birthDate => _birthDate!;
   String get nickName => _nickName!;
   String get email => _email!;
@@ -80,6 +73,10 @@ class eUser {
   String get idUserApprover => _idUserApprover!;
   String get userApprovalDate => _userApprovalDate!;
   String get department => _department!;
+
+  set uid(String value) {
+    _uid = value;
+  }
 
   set phoneNumber(String value) {
     _phoneNumber = value;
@@ -145,7 +142,8 @@ class eUser {
     return Utils.getSafeString(string);
   }
 
-  void docToUser(DocumentSnapshot<Map<String, dynamic>> docUser) {
+  void docToUser(docUser) {
+    this.uid = docUser.id;
     this.userName = docUser[DbData.COLUMN_USERNAME];
     this.phoneNumber = docUser[DbData.COLUMN_PHONE_NUMBER];
     this.birthDate = docUser[DbData.COLUMN_BIRTH_DATE];

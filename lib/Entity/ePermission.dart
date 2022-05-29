@@ -1,31 +1,34 @@
 class ePermission {
 
-  String? _idPermissions;
-  String? _descPermission;
-  bool _active;
+  String? _idPermission;
+  String? _name;
+  String? _desc;
+  bool? _active;
 
-  ePermission(this._idPermissions, this._descPermission, this._active);
+  ePermission.empty();
+  ePermission(this._idPermission, this._name, this._desc, this._active);
 
-  static List<ePermission> getPermissions(){
-    return <ePermission> [
-      ePermission("1", "Permite gerenciar permissões", true),
-      ePermission("2", "Permite cadastrar eventos bases", false),
-      ePermission("3", "Permite cadastrar eventos", false),
-      ePermission("4", "Permite realizar caronas", true),
-    ];
+  String get idPermission => _idPermission!;
+  String get name => _name!;
+  String get desc => _desc!;
+  bool get active => _active!;
+
+  set idPermission(String value) {
+    _idPermission = value;
   }
-
-  String get idPermissions => _idPermissions!;
-  String get descPermission => _descPermission!;
-  bool get active => _active;
-
-  set idPermissions(String value) {
-    _idPermissions = value;
+  set name(String value) {
+    _name = value;
   }
-  set descPermission(String value) {
-    _descPermission = value;
+  set desc(String value) {
+    _desc = value;
   }
   set active(bool value) {
     _active = value;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+
+    };
   }
 }
