@@ -407,8 +407,6 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                         Expanded(
                                           child: RichText(
                                             text: TextSpan(
-                                              // Note: Styles for TextSpans must be explicitly defined.
-                                              // Child text spans will inherit styles from parent
                                               style: const TextStyle(
                                                 fontSize: 14.0,
                                                 color: Colors.black,
@@ -461,15 +459,28 @@ class _RideRegister_5State extends State<RideRegister_5> {
                                           child: Column(
                                             children: [
                                               Row(children: [
-                                                Text("Local de retorno: ",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 15)),
-                                                Text(ride.returnAddress,
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 15)),
+                                                Expanded(
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: const TextStyle(
+                                                        fontSize: 14.0,
+                                                        color: Colors.black,
+                                                      ),
+                                                      children: <TextSpan>[
+                                                        TextSpan(
+                                                            text:
+                                                            'Local de retorno: : ',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                FontWeight.bold)),
+                                                        TextSpan(
+                                                            text: ride.returnAddress,
+                                                            style: TextStyle(
+                                                                color: APP_SUB_TEXT)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                                               ]),
                                               Row(children: [
                                                 Text("Data/Horário: ",

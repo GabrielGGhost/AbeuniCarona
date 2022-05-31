@@ -30,4 +30,5 @@ class cRoutes {
   static const PARTAKER = "partaker";
   static const SCHEDULING = "scheduling";
   static const SCHEDULING_HISTORY = "scheduling_history";
+  static const LOCATION = "location";
 }

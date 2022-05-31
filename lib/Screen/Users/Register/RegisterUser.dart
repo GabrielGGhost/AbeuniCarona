@@ -77,11 +77,10 @@ class _RegisterUserState extends State<RegisterUser> {
 
   @override
   Widget build(BuildContext context) {
-    String? title = AppLocalizations.of(context)!.registroDeVeiculo;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text("Registro de Usuário"),
         backgroundColor: APP_BAR_BACKGROUND_COLOR,
       ),
       body: SingleChildScrollView(

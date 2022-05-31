@@ -27,7 +27,7 @@ class _usersListState extends State<usersList> {
   Stream<QuerySnapshot>? _addListenerUsersList() {
     final usersList = db
         .collection(DbData.TABLE_USER)
-        .where(DbData.COLUMN_APPROVED, isEqualTo: "1")
+        .where(DbData.COLUMN_APPROVED, isEqualTo: "1", )
         .snapshots();
 
     usersList.listen((data) {

@@ -31,7 +31,6 @@ class _userRequestsState extends State<userRequests> {
   Stream<QuerySnapshot>? _addListenerBorrowedVehicles() {
     final baseEvents = db
         .collection(DbData.TABLE_USER)
-        .where(DbData.COLUMN_ROLE, isEqualTo: "0")
         .where(DbData.COLUMN_APPROVED, isEqualTo: "0")
         .snapshots();
 
