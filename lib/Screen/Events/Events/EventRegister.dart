@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:abeuni_carona/Constants/DbData.dart';
 import 'package:abeuni_carona/Entity/eEvent.dart';
 import 'package:abeuni_carona/Entity/eEventBase.dart';
+import 'package:abeuni_carona/Services/uuid/PlaceApiProvider.dart';
+import 'package:abeuni_carona/Services/uuid/addressSearch.dart';
 import 'package:abeuni_carona/Styles/MyStyles.dart';
 import 'package:abeuni_carona/Util/Utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +16,7 @@ import 'package:abeuni_carona/Constants/cRoutes.dart';
 import 'package:abeuni_carona/Constants/cStyle.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:uuid/uuid.dart';
 
 class EventRegister extends StatefulWidget {
   DocumentSnapshot? event;
@@ -152,9 +155,29 @@ class _EventRegisterState extends State<EventRegister> {
                   controller: _locationController,
                   textCapitalization: TextCapitalization.sentences,
                   keyboardType: TextInputType.text,
-                  decoration: textFieldDefaultDecoration(
-                      AppLocalizations.of(context)!.localizacao +
-                          AppLocalizations.of(context)!.obr)),
+                  readOnly: true,
+                  onTap: () {
+                    setState(() async {
+                      final sessionToken = Uuid().v4();
+                      final Suggestion? result = await showSearch(
+                        context: context,
+                        delegate: AddressSearch(sessionToken),
+                      );
+                      if (result != null) {
+                        _locationController.text = result.description;
+                      }
+                    });
+                  },
+                  decoration:InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      hintText: "Localização*",
+                      filled: true,
+                      suffixIcon: Icon(Icons.gps_fixed),
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(cStyles.RADIUS_BORDER_TEXT_FIELD)
+                      )
+                  )),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 20),

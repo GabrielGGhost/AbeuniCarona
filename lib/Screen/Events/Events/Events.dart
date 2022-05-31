@@ -166,7 +166,7 @@ class _EventsState extends State<Events> {
                                                           if (!snapshot
                                                               .hasData) {
                                                             return Text(
-                                                                "Falha ao buscar motorista",
+                                                                "Falha ao buscar autor",
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
