@@ -117,7 +117,6 @@ class _ConfigurationsState extends State<Configurations> {
                             Padding(
                               padding: EdgeInsets.only(bottom: 5),
                               child: Text(
-                                //user["name"].toString().split(" ")[0],
                                 _name != null ? _name! : "Carregando...",
                                 style: TextStyle(fontSize: 16),
                               ),
@@ -128,18 +127,6 @@ class _ConfigurationsState extends State<Configurations> {
                             ),
                           ],
                         ),
-                      ),
-                      Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.create_rounded,
-                              size: 25,
-                              color: Colors.grey,
-                            ),
-                          )
-                        ],
                       ),
                     ],
                   ),
