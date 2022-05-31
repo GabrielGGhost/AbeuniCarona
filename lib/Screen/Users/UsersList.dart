@@ -105,7 +105,7 @@ class _usersListState extends State<usersList> {
                                                     child: Column(
                                                       children: [
                                                         Text(
-                                                          "Há " + getDateTimeUntilNow(event[DbData.COLUMN_REGISTRATION_DATE]) + " atrás",
+                                                          "Há " + getDateTimeUntilNow(Utils.getStringDateFromTimestamp(event[DbData.COLUMN_REGISTRATION_DATE], cDate.FORMAT_SLASH_DD_MM_YYYY_KK_MM)!) + " atrás",
                                                           style: TextStyle(
                                                               color:
                                                               Colors.grey,
